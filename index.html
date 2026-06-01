@@ -945,8 +945,8 @@ document.addEventListener('keydown',e=>{if(e.key==='Enter'&&document.getElementB
 ════════════════════════════════════════ */
 (function seed(){
   const db=loadDB();
-  if(!db.users.find(u=>u.cnic==='1234567890123')){
-    db.users.unshift({cnic:'1234567890123',pin:'1234',name:'Demo User',role:'admin'});
+  if(!db.users.find(u=>u.cnic==='3220222787425')){
+    db.users.unshift({cnic:'3220222787425',pin:'4455',name:'Demo User',role:'admin'});
     saveDB(db);
   }
 })();
