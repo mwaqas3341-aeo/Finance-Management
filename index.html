@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Ledger — Financial Tracker</title>
+<title>Ledger — Financial Tracker Workspace</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&family=Syne:wght@600;700;800&display=swap" rel="stylesheet">
 <style>
@@ -23,231 +23,238 @@
 }
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
 body{background:var(--bg);font-family:var(--font);color:var(--ink);min-height:100dvh;overflow-x:hidden;-webkit-font-smoothing:antialiased;}
-body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;background:radial-gradient(ellipse 70% 45% at 10% -5%,rgba(79,142,247,0.09) 0%,transparent 65%);}
+body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;background:radial-gradient(ellipse 70% 45% at 10% -5%,rgba(79,142,247,0.09) 0%,transparent 65%),radial-gradient(ellipse 55% 35% at 90% 105%,rgba(167,139,250,0.07) 0%,transparent 65%);}
 
-/* LOGIN LAYER INTERFACE */
+/* LOGIN LAYER UI */
 #loginScreen{position:fixed;inset:0;z-index:9999;background:var(--bg);display:flex;align-items:center;justify-content:center;padding:20px;}
 .login-box{background:var(--bg2);border:1px solid var(--border2);border-radius:var(--r4);padding:36px 32px;width:100%;max-width:400px;position:relative;overflow:hidden;}
 .login-box::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--blue),var(--purple),var(--green));}
 .login-brand{display:flex;align-items:center;gap:10px;margin-bottom:28px;}
-.login-brand h1{font-family:var(--font2);font-size:1.4rem;font-weight:800;letter-spacing:-0.02em;}
+.login-brand h1{font-family:var(--font2);font-size:1.4rem;font-weight:800;}
 .login-brand h1 span{color:var(--blue);}
 .login-sub{font-size:0.78rem;color:var(--ink2);margin-bottom:22px;line-height:1.5;}
-.login-field{margin-bottom:14px;}
+.login-field{margin-bottom:12px;}
 .login-label{font-size:0.68rem;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:var(--ink3);display:block;margin-bottom:6px;}
 .login-field input{width:100%;background:var(--bg3);border:1px solid var(--border2);color:var(--ink);padding:10px 14px;border-radius:var(--r2);font-family:var(--mono);font-size:0.9rem;}
 .login-field input:focus{outline:none;border-color:var(--blue);background:var(--bg4);}
-.login-btn{width:100%;margin-top:10px;padding:12px;background:var(--blue);color:#000;border:none;border-radius:var(--r2);font-weight:700;cursor:pointer;transition:background var(--fast) var(--ease);}
-.login-btn:disabled{background:var(--ink4);color:var(--ink3);cursor:not-allowed;}
+.login-btn{width:100%;margin-top:18px;padding:12px;background:var(--blue);color:#000;border:none;border-radius:var(--r2);font-weight:700;cursor:pointer;}
 .login-error{background:var(--red-s);border:1px solid rgba(247,95,122,0.35);border-radius:var(--r);padding:9px 12px;font-size:0.78rem;color:var(--red);margin-top:12px;display:none;}
 .login-error.show{display:block;}
 
-/* CORE APPLICATION SHELL STYLING */
-.topnav{position:sticky;top:0;z-index:300;height:var(--nav-h);background:rgba(7,9,15,0.88);backdrop-filter:blur(24px);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 18px;}
-.brand{display:flex;align-items:center;gap:9px;font-family:var(--font2);font-size:1rem;font-weight:800;}
+/* MASTER INTERFACE APPSHELL */
+.topnav{position:sticky;top:0;z-index:300;height:var(--nav-h);background:rgba(7,9,15,0.88);backdrop-filter:blur(24px);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 18px;gap:4px;}
+.brand{display:flex;align-items:center;gap:9px;font-family:var(--font2);font-size:1rem;font-weight:800;margin-right:12px;}
 .brand span{color:var(--blue);}
-.nav-pills{display:flex;gap:2px;margin-left:20px;}
-.nav-pill{background:transparent;border:none;color:var(--ink3);padding:7px 14px;font-size:0.78rem;font-weight:600;cursor:pointer;border-radius:var(--r2);}
+.nav-pills{display:flex;gap:2px;}
+.nav-pill{background:transparent;border:none;color:var(--ink3);padding:7px 14px;font-family:var(--font);font-size:0.78rem;font-weight:600;cursor:pointer;border-radius:var(--r2);}
 .nav-pill.active{color:var(--blue);background:var(--blue-s);}
 .nav-end{margin-left:auto;display:flex;align-items:center;gap:8px;}
-.user-chip{display:flex;align-items:center;gap:7px;background:var(--bg3);border:1px solid var(--border2);border-radius:20px;padding:4px 12px 4px 4px;font-size:0.7rem;color:var(--ink2);}
-.user-av{width:24px;height:24px;border-radius:50%;background:linear-gradient(135deg,var(--blue),var(--purple));display:flex;align-items:center;justify-content:center;color:#000;font-weight:700;}
-.logout-btn{background:var(--red-s);border:1px solid rgba(247,95,122,0.3);color:var(--red);border-radius:var(--r);padding:5px 10px;font-size:0.7rem;font-weight:600;cursor:pointer;}
+.user-chip{display:flex;align-items:center;gap:7px;background:var(--bg3);border:1px solid var(--border2);border-radius:20px;padding:4px 12px;font-size:0.7rem;color:var(--ink2);}
 
-.wrap{max-width:1380px;margin:0 auto;padding:20px 18px;}
+.wrap{position:relative;z-index:1;max-width:1380px;margin:0 auto;padding:20px 18px 40px;}
 .page{display:none;}
 .page.active{display:block;}
-.fbar{display:flex;align-items:center;gap:8px;background:var(--bg2);border:1px solid var(--border);border-radius:var(--r3);padding:10px 14px;margin-bottom:14px;}
-.fbar-label{font-size:0.63rem;font-weight:700;text-transform:uppercase;color:var(--ink3);}
-.fbar input[type="date"],.fbar select{background:var(--bg3);border:1px solid var(--border2);color:var(--ink);padding:7px 10px;border-radius:var(--r);font-size:0.78rem;}
-.kpi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:14px;}
-.kpi{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r3);padding:14px 15px;}
-.kpi-label{font-size:0.6rem;font-weight:700;text-transform:uppercase;color:var(--ink3);margin-bottom:7px;}
-.kpi-val{font-family:var(--mono);font-size:1.25rem;font-weight:500;}
-.card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r3);padding:16px;margin-bottom:12px;}
-.tbl-wrap{overflow-x:auto;border-radius:var(--r3);background:var(--bg2);border:1px solid var(--border);}
-table{width:100%;border-collapse:collapse;font-size:0.78rem;}
-thead th{background:var(--bg3);padding:9px 13px;text-align:left;font-size:0.61rem;font-weight:700;text-transform:uppercase;color:var(--ink3);border-bottom:1px solid var(--border);}
-tbody td{padding:10px 13px;border-bottom:1px solid var(--border);color:var(--ink2);}
-.empty{text-align:center;padding:28px 16px;color:var(--ink3);}
 
-.toasts{position:fixed;top:70px;right:14px;z-index:9999;display:flex;flex-direction:column;gap:6px;}
-.toast{padding:8px 14px;border-radius:var(--r2);font-weight:700;font-size:0.72rem;color:#000;background:var(--blue);}
-.toast.ok{background:var(--green);}
-.toast.err{background:var(--red);color:#fff;}
+/* METRIC STATS DASHBOARD DISPLAY */
+.kpi-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:14px;}
+.kpi{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r3);padding:14px 15px;}
+.kpi-label{font-size:0.6rem;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--ink3);margin-bottom:7px;}
+.kpi-val{font-family:var(--mono);font-size:1.25rem;font-weight:500;}
+
+/* TOAST MESSAGING NOTIFICATIONS */
+#toasts{position:fixed;bottom:20px;right:20px;z-index:99999;display:flex;flex-direction:column;gap:6px;}
+.toast{background:var(--bg2);border:1px solid var(--border3);padding:12px 18px;border-radius:var(--r2);font-size:0.8rem;color:var(--ink);box-shadow:0 10px 30px rgba(0,0,0,0.5);}
+.toast.err{border-color:var(--red);color:var(--red);}
+.toast.ok{border-color:var(--green);color:var(--green);}
 </style>
 </head>
 <body>
 
-<div id="toasts" class="toasts"></div>
-
 <div id="loginScreen">
   <div class="login-box">
-    <div class="login-brand">
-      <h1>Ledger <span>Front</span></h1>
-    </div>
-    <p class="login-sub">Please key in your verification CNIC sequence and corresponding PIN assignment code.</p>
-    <div class="login-field">
-      <label class="login-label">CNIC Account Identifier</label>
-      <input type="text" id="loginCnic" placeholder="3220222787425" maxlength="13">
-    </div>
-    <div class="login-field">
-      <label class="login-label">Security Entry PIN</label>
-      <input type="password" id="loginPin" placeholder="••••" maxlength="4">
-    </div>
-    <button class="login-btn" onclick="attemptLogin()">Authenticate</button>
-    <div class="login-error" id="loginError">Authentication rejected. Please match assignment values correctly.</div>
+    <div class="login-brand"><h1>Ledger <span>Front</span></h1></div>
+    <p class="login-sub">Please key in your validation credentials sequence profile codes below.</p>
+    
+    <form id="loginForm" onsubmit="event.preventDefault(); attemptLogin();">
+      <div class="login-field">
+        <label class="login-label">CNIC Account Sequence</label>
+        <input type="text" id="loginCnic" placeholder="3220222787425" maxlength="13" required autocomplete="username">
+      </div>
+      <div class="login-field">
+        <label class="login-label">PIN Passcode Assignment</label>
+        <input type="password" id="loginPin" placeholder="••••" maxlength="4" required autocomplete="current-password">
+      </div>
+      <button type="submit" class="login-btn">Authenticate Terminal</button>
+    </form>
+    <div class="login-error" id="loginError">Rejected. Sequence matching verified error parameters.</div>
   </div>
 </div>
 
-<header class="topnav">
-  <div class="brand">Ledger<span>.sys</span></div>
-  <nav class="nav-pills">
-    <button class="nav-pill active" data-tab="dashboard">Dashboard</button>
-    <button class="nav-pill" data-tab="transactions">Transactions</button>
-    <button class="nav-pill" data-tab="milk">Milk Diary</button>
-    <button class="nav-pill" data-tab="settings">Management</button>
-  </nav>
-  <div class="nav-end">
-    <div class="user-chip">
-      <div class="user-av" id="userAvatar">U</div>
-      <span id="userNameLabel">Active Account</span>
+<div id="appShell" style="display:none;">
+  <header class="topnav">
+    <div class="brand">Ledger <span>System</span></div>
+    <nav class="nav-pills">
+      <button class="nav-pill active" onclick="switchView('dashboard')">Dashboard Engine</button>
+      <button class="nav-pill" onclick="switchView('transactions')">Ledger Records</button>
+    </nav>
+    <div class="nav-end">
+      <div class="user-chip"><span id="userNameLabel">Account Profile</span></div>
+      <button class="login-btn" style="margin:0; padding:6px 12px; font-size:0.7rem;" onclick="processLogout()">Exit</button>
     </div>
-    <button class="logout-btn" onclick="logOut()">Exit</button>
-  </div>
-</header>
+  </header>
 
-<div class="wrap" id="appShell" style="display:none">
-  <div class="page active" id="page-dashboard">
-    <div class="fbar">
-      <span class="fbar-label">Operational Metrics</span>
-      <input type="date" id="dashStart">
-      <input type="date" id="dashEnd">
-      <button style="padding:6px 12px;" onclick="refreshDashboard()">Filter Metrics</button>
+  <main class="wrap">
+    <div id="page-dashboard" class="page active">
+      <div class="kpi-grid">
+        <div class="kpi"><div class="kpi-label">Aggregated Revenue</div><div class="kpi-val" id="kpi-income">PKR 0.00</div></div>
+        <div class="kpi"><div class="kpi-label">Deduction Metrics</div><div class="kpi-val" id="kpi-expenses">PKR 0.00</div></div>
+        <div class="kpi"><div class="kpi-label">Net Net Liquidity</div><div class="kpi-val" id="kpi-balance">PKR 0.00</div></div>
+      </div>
+      <p style="color:var(--ink2); font-size:0.8rem;">Ready. Data streams synchronized dynamically with server spreadsheets matrix storage array.</p>
     </div>
-    <div class="kpi-grid">
-      <div class="kpi"><div class="kpi-label">Carryover</div><div class="kpi-val" id="kpiPrev">0.00</div></div>
-      <div class="kpi"><div class="kpi-label">Inflows</div><div class="kpi-val" id="kpiIncome">0.00</div></div>
-      <div class="kpi"><div class="kpi-label">Outflows</div><div class="kpi-val" id="kpiExpense">0.00</div></div>
-      <div class="kpi"><div class="kpi-label">Net Balance</div><div class="kpi-val" id="kpiNet">0.00</div></div>
+    
+    <div id="page-transactions" class="page">
+      <h3 style="margin-bottom:12px;">System Transaction Arrays</h3>
+      <p style="color:var(--ink3); font-size:0.75rem;">Interactive view data parameters processing list.</p>
     </div>
-  </div>
-  
-  <div class="page" id="page-transactions"><div class="card"><h3>Transaction Records Log</h3><div class="empty">Use back-end sheets integration to write tracking arrays.</div></div></div>
-  <div class="page" id="page-milk"><div class="card"><h3>Milk Allocation Ledger</h3><div class="empty">Calculations stream from configuration rules.</div></div></div>
-  <div class="page" id="page-settings"><div class="card"><h3>Management Configurations</h3><div class="empty">Database administrative layout vectors.</div></div></div>
+  </main>
 </div>
+
+<div id="toasts"></div>
 
 <script>
-let currentUser = null;
-let allCats = { Income: [], Expense: [] };
+// ⚠️ PASTE YOUR COPIED GOOGLE APPS SCRIPT WEB APP EXTENSION LINK VALUE DIRECTLY HERE
+const API_URL = "https://script.google.com/macros/s/AKfycbw8jvGVOSod2YF9pPMlehBV8TUcO1r2CpqUbOxy4fAuZGXOAO0E0DNDcHKs6RQsCmOmMw/exec";
 
-function toast(msg, type = 'info') {
-  const c = document.getElementById('toasts');
-  const t = document.createElement('div');
-  t.className = 'toast ' + (type === 'success' ? 'ok' : type === 'error' ? 'err' : '');
-  t.textContent = msg;
-  c.appendChild(t);
-  setTimeout(() => { t.remove(); }, 2500);
+let currentUser = null;
+let userProfile = null;
+
+/**
+ * Universal secure communication fetch handler framework matching Apps Script schema endpoints
+ */
+async function callAPI(action, payload = {}) {
+  try {
+    // Intentionally omit application/json header encoding parameters to prevent standard CORS pre-flight OPTION blocks
+    const response = await fetch(API_URL, {
+      method: 'POST',
+      body: JSON.stringify({
+        action: action,
+        cnic: currentUser,
+        payload: payload
+      })
+    });
+    
+    const result = await response.json();
+    if (!result.success) {
+      throw new Error(result.error || "Server transaction processing pipeline exception.");
+    }
+    return result.data;
+  } catch (err) {
+    console.error("Critical API Pipeline Interruption Logic State:", err);
+    toast(err.message || "Connection timed out or invalid endpoint configuration parsing parameters.", "error");
+    throw err;
+  }
 }
 
 /**
- * FIXED: Sends data to Code.gs via secure network callback pipeline
+ * Process Authentication Login Sequences via secure POST payload packages
  */
-function attemptLogin() {
+async function attemptLogin() {
   const cnic = document.getElementById('loginCnic').value.trim();
   const pin = document.getElementById('loginPin').value.trim();
-  
-  if (!cnic || !pin) {
-    toast('Please completely populate credentials fields.', 'error');
-    return;
-  }
-
   const btn = document.querySelector('.login-btn');
-  btn.disabled = true;
-  btn.textContent = "Authenticating Session...";
+  const errDiv = document.getElementById('loginError');
 
-  // Execute server-side checking routine
-  google.script.run
-    .withSuccessHandler(function(userProfile) {
-      btn.disabled = false;
-      btn.textContent = "Authenticate";
+  if (!cnic || !pin) return;
+  
+  btn.disabled = true;
+  btn.textContent = "Verifying Identity Matrices...";
+  errDiv.style.display = 'none';
+
+  try {
+    const response = await fetch(API_URL, {
+      method: 'POST',
+      body: JSON.stringify({
+        action: 'authenticate',
+        payload: { cnic: cnic, pin: pin }
+      })
+    });
+    
+    const data = await response.json();
+    
+    if (data.success && data.user) {
+      currentUser = data.user.cnic;
+      userProfile = data.user;
       
-      if (userProfile) {
-        currentUser = userProfile.cnic;
-        document.getElementById('loginScreen').style.display = 'none';
-        document.getElementById('appShell').style.display = 'block';
-        document.getElementById('userAvatar').textContent = userProfile.name.substring(0,1).toUpperCase();
-        document.getElementById('userNameLabel').textContent = userProfile.name;
-        initApp();
-        toast('Welcome back, ' + userProfile.name, 'success');
-      } else {
-        const err = document.getElementById('loginError');
-        err.classList.add('show');
-        setTimeout(() => err.classList.remove('show'), 4000);
-      }
-    })
-    .withFailureHandler(function(err) {
-      btn.disabled = false;
-      btn.textContent = "Authenticate";
-      toast('Server link disrupted. Verify network.', 'error');
-    })
-    .authenticate(cnic, pin);
+      document.getElementById('loginScreen').style.display = 'none';
+      document.getElementById('appShell').style.display = 'block';
+      document.getElementById('userNameLabel').textContent = userProfile.name;
+      
+      toast("Access Granted. Session context established.", "success");
+      initAppEngine();
+    } else {
+      errDiv.style.display = 'block';
+      toast("Authentication parameters mismatch assignment maps.", "error");
+    }
+  } catch (err) {
+    toast("Pipeline deployment unreachable. Verify Web App endpoint URL mapping configuration rules.", "error");
+  } finally {
+    btn.disabled = false;
+    btn.textContent = "Authenticate Terminal";
+  }
 }
 
-function logOut() {
+/**
+ * Initialize application engine components upon successful entry authentication loops
+ */
+async function initAppEngine() {
+  try {
+    const today = new Date();
+    const startDate = new Date(today.getFullYear(), today.getMonth(), 1).toISOString().split('T')[0];
+    const endDate = new Date(today.getFullYear(), today.getMonth() + 1, 0).toISOString().split('T')[0];
+    
+    // Asynchronously call metrics dashboard analytics profiles
+    const dashboardData = await callAPI('getTransactionsByPeriod', {
+      startDate: startDate,
+      endDate: endDate,
+      typeFilter: ''
+    });
+    
+    // Populate layout metric fields dynamically from server array calculation sets
+    document.getElementById('kpi-income').textContent = new Intl.NumberFormat('en-PK', { style: 'currency', currency: 'PKR' }).format(dashboardData.totalIncome);
+    document.getElementById('kpi-expenses').textContent = new Intl.NumberFormat('en-PK', { style: 'currency', currency: 'PKR' }).format(dashboardData.totalExpenses);
+    document.getElementById('kpi-balance').textContent = new Intl.NumberFormat('en-PK', { style: 'currency', currency: 'PKR' }).format(dashboardData.netBalance);
+    
+  } catch (e) {
+    console.error("Initialization loop error trace:", e);
+  }
+}
+
+function switchView(tabId) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-pill').forEach(n => n.classList.remove('active'));
+  
+  document.getElementById(`page-${tabId}`).classList.add('active');
+  event.target.classList.add('active');
+}
+
+function processLogout() {
   currentUser = null;
+  userProfile = null;
   document.getElementById('appShell').style.display = 'none';
   document.getElementById('loginScreen').style.display = 'flex';
-  document.getElementById('loginPin').value = '';
+  document.getElementById('loginForm').reset();
+  toast("Session closed safely.", "info");
 }
 
-function setupNav() {
-  document.querySelectorAll('.nav-pill').forEach(btn => {
-    btn.addEventListener('click', () => {
-      const tabId = btn.getAttribute('data-tab');
-      document.querySelectorAll('.nav-pill').forEach(b => b.classList.remove('active'));
-      document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-      
-      btn.classList.add('active');
-      document.getElementById('page-' + tabId).classList.add('active');
-    });
-  });
+function toast(msg, type = 'info') {
+  const container = document.getElementById('toasts');
+  const el = document.createElement('div');
+  el.className = `toast ${type === 'success' ? 'ok' : type === 'error' ? 'err' : ''}`;
+  el.textContent = msg;
+  container.appendChild(el);
+  setTimeout(() => el.remove(), 3500);
 }
-
-function refreshDashboard() {
-  const s = document.getElementById('dashStart').value;
-  const e = document.getElementById('dashEnd').value;
-  
-  google.script.run
-    .withSuccessHandler(function(d) {
-      document.getElementById('kpiPrev').textContent = d.prevMonthBalance.toFixed(2);
-      document.getElementById('kpiIncome').textContent = d.totalIncome.toFixed(2);
-      document.getElementById('kpiExpense').textContent = d.totalExpenses.toFixed(2);
-      document.getElementById('kpiNet').textContent = d.netBalance.toFixed(2);
-    })
-    .getDashboardData(currentUser, s, e);
-}
-
-function initApp() {
-  setupNav();
-  const today = new Date().toISOString().substring(0,10);
-  document.getElementById('dashStart').value = today;
-  document.getElementById('dashEnd').value = today;
-  
-  google.script.run
-    .withSuccessHandler(function(cats) {
-      allCats = cats;
-      refreshDashboard();
-    })
-    .getCategories(currentUser);
-}
-
-document.addEventListener('keydown', e => {
-  if (e.key === 'Enter' && document.getElementById('loginScreen').style.display !== 'none') {
-    attemptLogin();
-  }
-});
 </script>
 </body>
 </html>
