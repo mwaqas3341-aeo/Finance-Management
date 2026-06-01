@@ -703,30 +703,19 @@ let curMilkType = 'standard';
 let authToken = localStorage.getItem('ledger_auth') || null;
 
 // ── CUSTOM API BRIDGE (Replaces google.script.run for GitHub) ──
+// Replace your old gs() function with this one
 async function gs(fn, ...args) {
-  if (WEB_APP_URL === "YOUR_WEB_APP_URL_HERE") {
-    toast('Setup Required: Please add your Web App URL to the code.', 'error');
-    throw new Error('Web App URL not configured.');
-  }
+  // REPLACE THE URL BELOW with your "Web App URL" from Google
+  const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbw8jvGVOSod2YF9pPMlehBV8TUcO1r2CpqUbOxy4fAuZGXOAO0E0DNDcHKs6RQsCmOmMw/exec";
 
-  try {
-    const response = await fetch(WEB_APP_URL, {
-      method: 'POST',
-      // text/plain avoids CORS preflight errors with Google Apps Script
-      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-      body: JSON.stringify({ action: fn, args: args, token: authToken })
-    });
-
-    const result = await response.json();
-    if (result.success) {
-      return result.data;
-    } else {
-      throw new Error(result.error);
-    }
-  } catch (e) {
-    console.error('API Error:', e);
-    throw e;
-  }
+  const response = await fetch(WEB_APP_URL, {
+    method: 'POST',
+    body: JSON.stringify({ action: fn, args: args })
+  });
+  
+  const result = await response.json();
+  if (result.success) return result.data;
+  throw new Error(result.error);
 }
 
 // ── FORMAT ──
