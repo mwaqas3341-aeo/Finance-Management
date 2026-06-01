@@ -22,199 +22,59 @@
   --ease:cubic-bezier(.4,0,.2,1);--fast:0.16s;--mid:0.26s;
 }
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
-html{scroll-behavior:smooth;}
 body{background:var(--bg);font-family:var(--font);color:var(--ink);min-height:100dvh;overflow-x:hidden;-webkit-font-smoothing:antialiased;}
-body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;background:radial-gradient(ellipse 70% 45% at 10% -5%,rgba(79,142,247,0.09) 0%,transparent 65%),radial-gradient(ellipse 55% 35% at 90% 105%,rgba(167,139,250,0.07) 0%,transparent 65%),radial-gradient(ellipse 45% 45% at 55% 55%,rgba(45,212,160,0.03) 0%,transparent 65%);}
-::-webkit-scrollbar{width:3px;height:3px;}
-::-webkit-scrollbar-track{background:transparent;}
-::-webkit-scrollbar-thumb{background:var(--ink4);border-radius:3px;}
+body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;background:radial-gradient(ellipse 70% 45% at 10% -5%,rgba(79,142,247,0.09) 0%,transparent 65%);}
 
-/* LOGIN SCREEN */
+/* LOGIN LAYER INTERFACE */
 #loginScreen{position:fixed;inset:0;z-index:9999;background:var(--bg);display:flex;align-items:center;justify-content:center;padding:20px;}
-.login-box{background:var(--bg2);border:1px solid var(--border2);border-radius:var(--r4);padding:36px 32px;width:100%;max-width:400px;animation:slideUp .4s var(--ease);position:relative;overflow:hidden;}
+.login-box{background:var(--bg2);border:1px solid var(--border2);border-radius:var(--r4);padding:36px 32px;width:100%;max-width:400px;position:relative;overflow:hidden;}
 .login-box::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--blue),var(--purple),var(--green));}
 .login-brand{display:flex;align-items:center;gap:10px;margin-bottom:28px;}
-.login-logo{width:36px;height:36px;border-radius:10px;background:var(--bg4);border:1px solid var(--border2);display:flex;align-items:center;justify-content:center;font-size:1rem;}
 .login-brand h1{font-family:var(--font2);font-size:1.4rem;font-weight:800;letter-spacing:-0.02em;}
 .login-brand h1 span{color:var(--blue);}
-.login-sub{font-size:0.78rem;color:var(--ink3);margin-bottom:22px;line-height:1.5;}
-.login-field{margin-bottom:12px;}
+.login-sub{font-size:0.78rem;color:var(--ink2);margin-bottom:22px;line-height:1.5;}
+.login-field{margin-bottom:14px;}
 .login-label{font-size:0.68rem;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:var(--ink3);display:block;margin-bottom:6px;}
-.login-field input{width:100%;background:var(--bg3);border:1px solid var(--border2);color:var(--ink);padding:10px 14px;border-radius:var(--r2);font-family:var(--mono);font-size:0.9rem;transition:border-color var(--fast) var(--ease),background var(--fast) var(--ease);letter-spacing:0.05em;}
+.login-field input{width:100%;background:var(--bg3);border:1px solid var(--border2);color:var(--ink);padding:10px 14px;border-radius:var(--r2);font-family:var(--mono);font-size:0.9rem;}
 .login-field input:focus{outline:none;border-color:var(--blue);background:var(--bg4);}
-.login-hint{font-size:0.68rem;color:var(--ink3);margin-top:5px;}
-.login-btn{width:100%;margin-top:18px;padding:12px;background:var(--blue);color:#000;border:none;border-radius:var(--r2);font-family:var(--font);font-size:0.86rem;font-weight:700;cursor:pointer;transition:background var(--fast) var(--ease),transform var(--fast) var(--ease);letter-spacing:0.02em;}
-.login-btn:hover{background:#6ba6ff;transform:translateY(-1px);}
-.login-btn:active{transform:translateY(0);}
+.login-btn{width:100%;margin-top:10px;padding:12px;background:var(--blue);color:#000;border:none;border-radius:var(--r2);font-weight:700;cursor:pointer;transition:background var(--fast) var(--ease);}
+.login-btn:disabled{background:var(--ink4);color:var(--ink3);cursor:not-allowed;}
 .login-error{background:var(--red-s);border:1px solid rgba(247,95,122,0.35);border-radius:var(--r);padding:9px 12px;font-size:0.78rem;color:var(--red);margin-top:12px;display:none;}
-.login-error.show{display:block;animation:shake .35s var(--ease);}
-@keyframes shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-6px)}40%{transform:translateX(6px)}60%{transform:translateX(-4px)}80%{transform:translateX(4px)}}
+.login-error.show{display:block;}
 
-/* NAVIGATION SYSTEMS */
-.topnav{position:sticky;top:0;z-index:300;height:var(--nav-h);background:rgba(7,9,15,0.88);backdrop-filter:blur(24px) saturate(200%);-webkit-backdrop-filter:blur(24px) saturate(200%);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 18px;gap:4px;}
-.brand{display:flex;align-items:center;gap:9px;font-family:var(--font2);font-size:1rem;font-weight:800;letter-spacing:-0.02em;margin-right:12px;white-space:nowrap;flex-shrink:0;}
-.brand-logo{width:28px;height:28px;border-radius:8px;background:var(--bg4);border:1px solid var(--border2);display:flex;align-items:center;justify-content:center;font-size:0.8rem;}
+/* CORE APPLICATION SHELL STYLING */
+.topnav{position:sticky;top:0;z-index:300;height:var(--nav-h);background:rgba(7,9,15,0.88);backdrop-filter:blur(24px);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 18px;}
+.brand{display:flex;align-items:center;gap:9px;font-family:var(--font2);font-size:1rem;font-weight:800;}
 .brand span{color:var(--blue);}
-.nav-pills{display:flex;gap:2px;}
-.nav-pill{background:transparent;border:none;color:var(--ink3);padding:7px 14px;font-family:var(--font);font-size:0.78rem;font-weight:600;cursor:pointer;border-radius:var(--r2);display:flex;align-items:center;gap:5px;transition:color var(--fast) var(--ease),background var(--fast) var(--ease);white-space:nowrap;letter-spacing:0.01em;}
-.nav-pill:hover{color:var(--ink2);background:rgba(255,255,255,0.05);}
+.nav-pills{display:flex;gap:2px;margin-left:20px;}
+.nav-pill{background:transparent;border:none;color:var(--ink3);padding:7px 14px;font-size:0.78rem;font-weight:600;cursor:pointer;border-radius:var(--r2);}
 .nav-pill.active{color:var(--blue);background:var(--blue-s);}
-.nav-pill .pi{font-size:0.85rem;}
 .nav-end{margin-left:auto;display:flex;align-items:center;gap:8px;}
-.user-chip{display:flex;align-items:center;gap:7px;background:var(--bg3);border:1px solid var(--border2);border-radius:20px;padding:4px 12px 4px 4px;font-size:0.7rem;color:var(--ink2);font-family:var(--mono);cursor:pointer;transition:border-color var(--fast) var(--ease);}
-.user-chip:hover{border-color:var(--border3);}
-.user-av{width:24px;height:24px;border-radius:50%;background:linear-gradient(135deg,var(--blue),var(--purple));font-size:0.65rem;display:flex;align-items:center;justify-content:center;color:#000;font-weight:700;font-family:var(--font2);}
-.logout-btn{background:var(--red-s);border:1px solid rgba(247,95,122,0.3);color:var(--red);border-radius:var(--r);padding:5px 10px;font-size:0.7rem;font-weight:600;cursor:pointer;font-family:var(--font);transition:background var(--fast) var(--ease);}
-.logout-btn:hover{background:rgba(247,95,122,0.2);}
+.user-chip{display:flex;align-items:center;gap:7px;background:var(--bg3);border:1px solid var(--border2);border-radius:20px;padding:4px 12px 4px 4px;font-size:0.7rem;color:var(--ink2);}
+.user-av{width:24px;height:24px;border-radius:50%;background:linear-gradient(135deg,var(--blue),var(--purple));display:flex;align-items:center;justify-content:center;color:#000;font-weight:700;}
+.logout-btn{background:var(--red-s);border:1px solid rgba(247,95,122,0.3);color:var(--red);border-radius:var(--r);padding:5px 10px;font-size:0.7rem;font-weight:600;cursor:pointer;}
 
-.botnav{display:none;position:fixed;bottom:0;left:0;right:0;z-index:300;height:var(--bot-h);background:rgba(12,15,26,0.97);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border-top:1px solid var(--border);justify-content:space-around;align-items:center;padding:0 4px;padding-bottom:env(safe-area-inset-bottom);}
-.bot-btn{background:none;border:none;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px 16px;border-radius:var(--r2);font-family:var(--font);font-size:0.58rem;font-weight:700;color:var(--ink4);transition:color var(--mid) var(--ease),background var(--mid) var(--ease);letter-spacing:0.05em;text-transform:uppercase;min-width:0;}
-.bot-btn span.bi{font-size:1.2rem;line-height:1;}
-.bot-btn.active{color:var(--blue);}
-
-/* APP LAYOUT STRUCTURE */
-.wrap{position:relative;z-index:1;max-width:1380px;margin:0 auto;padding:20px 18px 40px;}
-@media(max-width:768px){.wrap{padding:12px 10px calc(var(--bot-h) + 16px);}.nav-pills{display:none;}.user-chip span.email-txt{display:none;}.botnav{display:flex;}}
-
+.wrap{max-width:1380px;margin:0 auto;padding:20px 18px;}
 .page{display:none;}
-.page.active{display:block;animation:pageIn var(--mid) var(--ease);}
-@keyframes pageIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
-
-/* COMPONENTS & CONTAINER BLOCKS */
-.fbar{display:flex;align-items:center;gap:8px;flex-wrap:wrap;background:var(--bg2);border:1px solid var(--border);border-radius:var(--r3);padding:10px 14px;margin-bottom:14px;}
-.fbar-label{font-size:0.63rem;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--ink3);white-space:nowrap;}
-.fbar input[type="date"],.fbar select{background:var(--bg3);border:1px solid var(--border2);color:var(--ink);padding:7px 10px;border-radius:var(--r);font-family:var(--font);font-size:0.78rem;flex:1;min-width:118px;max-width:170px;transition:border-color var(--fast) var(--ease);}
-.fbar input:focus,.fbar select:focus{outline:none;border-color:var(--blue);}
-.sep{color:var(--ink4);font-size:0.7rem;}
-@media(max-width:480px){.fbar input[type="date"],.fbar select{flex:1 1 100%;max-width:100%;min-width:0;}}
-
-.kpi-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-bottom:14px;}
-@media(max-width:1100px){.kpi-grid{grid-template-columns:repeat(3,1fr);}}
-@media(max-width:600px){.kpi-grid{grid-template-columns:1fr 1fr;}}
-.kpi{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r3);padding:14px 15px;position:relative;overflow:hidden;transition:border-color var(--fast) var(--ease),transform var(--fast) var(--ease);}
-.kpi:hover{transform:translateY(-1px);border-color:var(--border2);}
-.kpi-bar{position:absolute;top:0;left:0;right:0;height:2px;}
-.kpi-label{font-size:0.6rem;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--ink3);margin-bottom:7px;}
-.kpi-val{font-family:var(--mono);font-size:1.25rem;font-weight:500;color:var(--ink);line-height:1.1;word-break:break-all;}
-.kpi-sub{font-size:0.65rem;color:var(--ink3);margin-top:4px;}
-
-.dash-grid{display:grid;grid-template-columns:1fr 1.15fr 1fr;gap:12px;margin-bottom:12px;}
-@media(max-width:1020px){.dash-grid{grid-template-columns:1fr 1fr;}}
-@media(max-width:640px){.dash-grid{grid-template-columns:1fr;}}
-
-.card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r3);overflow:hidden;margin-bottom:12px;transition:border-color var(--mid) var(--ease);}
-.card:hover{border-color:var(--border2);}
-.card-head{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;cursor:pointer;font-weight:700;font-size:0.82rem;border-bottom:1px solid transparent;transition:background var(--fast) var(--ease);user-select:none;}
-.card-head:hover{background:rgba(255,255,255,0.025);}
-.card.open .card-head{border-bottom-color:var(--border);}
-.card-body{padding:14px 16px;}
-.card.closed .card-body{display:none;}
-.chev{color:var(--ink4);font-size:0.75rem;transition:transform var(--mid) var(--ease);}
-.card.closed .chev{transform:rotate(-90deg);}
-.card-head-left{display:flex;align-items:center;gap:8px;}
-.card-icon{font-size:0.95rem;}
-
-/* FORM STACKS */
-.form-stack{display:flex;flex-direction:column;gap:8px;}
-.form-row{display:flex;gap:8px;}
-.form-row>*{flex:1;min-width:0;}
-.fi{width:100%;background:var(--bg3);border:1px solid var(--border2);color:var(--ink);padding:9px 12px;border-radius:var(--r2);font-family:var(--font);font-size:0.81rem;transition:border-color var(--fast) var(--ease),background var(--fast) var(--ease);}
-.fi:focus{outline:none;border-color:var(--blue);background:var(--bg4);}
-.fi::placeholder{color:var(--ink4);}
-textarea.fi{min-height:50px;resize:vertical;}
-select.fi option{background:var(--bg3);}
-.type-row{display:flex;gap:6px;}
-.type-btn{flex:1;padding:9px 8px;border-radius:var(--r2);font-family:var(--font);font-size:0.78rem;font-weight:700;cursor:pointer;border:1.5px solid var(--border2);background:var(--bg3);color:var(--ink3);transition:all var(--fast) var(--ease);text-align:center;user-select:none;}
-.type-btn.t-income{background:var(--green-s);border-color:var(--green);color:var(--green);}
-.type-btn.t-expense{background:var(--red-s);border-color:var(--red);color:var(--red);}
-
-.milk-type-btn{flex:1;padding:8px 6px;border-radius:var(--r2);font-family:var(--font);font-size:0.72rem;font-weight:700;cursor:pointer;border:1.5px solid var(--border2);background:var(--bg3);color:var(--ink3);transition:all var(--fast) var(--ease);text-align:center;}
-.milk-type-btn.m-std{background:var(--teal-s);border-color:var(--teal);color:var(--teal);}
-.milk-type-btn.m-extra{background:var(--purple-s);border-color:var(--purple);color:var(--purple);}
-.milk-type-btn.m-absent{background:var(--red-s);border-color:var(--red);color:var(--red);}
-
-/* BUTTON MODIFIERS */
-.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:9px 16px;border-radius:var(--r2);font-family:var(--font);font-size:0.78rem;font-weight:700;cursor:pointer;border:none;transition:all var(--fast) var(--ease);white-space:nowrap;letter-spacing:0.01em;}
-.btn-primary{background:var(--blue);color:#000;}
-.btn-primary:hover{background:#6ba6ff;transform:translateY(-1px);}
-.btn-primary:active{transform:translateY(0);}
-.btn-ghost{background:var(--bg3);border:1px solid var(--border2);color:var(--ink2);}
-.btn-ghost:hover{border-color:var(--blue);color:var(--blue);background:var(--blue-g);}
-.btn-danger{background:var(--red-s);border:1px solid rgba(247,95,122,0.35);color:var(--red);}
-.btn-danger:hover{background:rgba(247,95,122,0.2);}
-.btn-milk{background:var(--purple-s);border:1px solid rgba(167,139,250,0.35);color:var(--purple);}
-.btn-milk:hover{background:rgba(167,139,250,0.2);}
-.btn-sm{padding:7px 13px;font-size:0.74rem;}
-.btn-xs{padding:4px 9px;font-size:0.68rem;}
-.btn-fw{width:100%;}
-
-/* COMPACT DATA BADGES */
-.badge{display:inline-flex;align-items:center;padding:2px 8px;border-radius:20px;font-size:0.6rem;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;}
-.b-income{background:var(--green-s);color:var(--green);}
-.b-expense{background:var(--red-s);color:var(--red);}
-.b-absent{background:var(--red-s);color:var(--red);}
-.b-extra{background:var(--purple-s);color:var(--purple);}
-.b-standard{background:var(--teal-s);color:var(--teal);}
-.b-admin{background:rgba(79,142,247,0.15);color:var(--blue);}
-.b-user{background:var(--bg4);color:var(--ink3);}
-
-/* DATA VISUALIZATION CATEGORIES */
-.cat-row{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--border);}
-.cat-row:last-child{border-bottom:none;}
-.cat-name{flex:1;font-size:0.79rem;color:var(--ink2);overflow:hidden;text-overflow:ellipsis;}
-.cat-count{font-size:0.66rem;color:var(--ink3);min-width:22px;text-align:right;}
-.cat-amt{font-family:var(--mono);font-size:0.8rem;font-weight:500;min-width:80px;text-align:right;}
-.bar-wrap{flex:0.6;height:3px;background:var(--bg4);border-radius:3px;}
-.bar{height:100%;border-radius:3px;transition:width .6s var(--ease);}
-
-/* DATATABLES */
-.tbl-wrap{overflow-x:auto;border-radius:var(--r3);}
+.page.active{display:block;}
+.fbar{display:flex;align-items:center;gap:8px;background:var(--bg2);border:1px solid var(--border);border-radius:var(--r3);padding:10px 14px;margin-bottom:14px;}
+.fbar-label{font-size:0.63rem;font-weight:700;text-transform:uppercase;color:var(--ink3);}
+.fbar input[type="date"],.fbar select{background:var(--bg3);border:1px solid var(--border2);color:var(--ink);padding:7px 10px;border-radius:var(--r);font-size:0.78rem;}
+.kpi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:14px;}
+.kpi{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r3);padding:14px 15px;}
+.kpi-label{font-size:0.6rem;font-weight:700;text-transform:uppercase;color:var(--ink3);margin-bottom:7px;}
+.kpi-val{font-family:var(--mono);font-size:1.25rem;font-weight:500;}
+.card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r3);padding:16px;margin-bottom:12px;}
+.tbl-wrap{overflow-x:auto;border-radius:var(--r3);background:var(--bg2);border:1px solid var(--border);}
 table{width:100%;border-collapse:collapse;font-size:0.78rem;}
-thead th{background:var(--bg3);padding:9px 13px;text-align:left;font-size:0.61rem;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--ink3);border-bottom:1px solid var(--border);white-space:nowrap;}
-tbody td{padding:10px 13px;border-bottom:1px solid var(--border);color:var(--ink2);vertical-align:middle;}
-tbody tr:last-child td{border-bottom:none;}
-tbody tr{transition:background var(--fast) var(--ease);}
-tbody tr:hover{background:rgba(255,255,255,0.022);}
-.mono{font-family:var(--mono);}
-.empty{text-align:center;padding:28px 16px;color:var(--ink3);font-size:0.8rem;}
+thead th{background:var(--bg3);padding:9px 13px;text-align:left;font-size:0.61rem;font-weight:700;text-transform:uppercase;color:var(--ink3);border-bottom:1px solid var(--border);}
+tbody td{padding:10px 13px;border-bottom:1px solid var(--border);color:var(--ink2);}
+.empty{text-align:center;padding:28px 16px;color:var(--ink3);}
 
-/* SECTIONS & TABS */
-.scard{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r3);padding:18px;margin-bottom:12px;}
-.scard-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;}
-.scard-title{font-family:var(--font2);font-size:0.9rem;font-weight:700;letter-spacing:-0.01em;}
-
-.cat-tabs{display:flex;gap:4px;background:var(--bg3);border-radius:var(--r2);padding:3px;margin-bottom:16px;border:1px solid var(--border);}
-.cat-tab{flex:1;padding:7px;border:none;background:transparent;color:var(--ink3);font-family:var(--font);font-size:0.76rem;font-weight:700;cursor:pointer;border-radius:8px;transition:all var(--fast) var(--ease);text-align:center;}
-.cat-tab.active{background:var(--bg5);color:var(--ink);box-shadow:0 1px 4px rgba(0,0,0,0.3);}
-.cat-panel{display:none;}
-.cat-panel.active{display:block;animation:pageIn var(--mid) var(--ease);}
-.cat-add-row{display:flex;gap:8px;margin-bottom:12px;align-items:stretch;}
-.cat-add-row .fi{flex:1;}
-.cat-list{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:8px;}
-.cat-chip{display:flex;align-items:center;justify-content:space-between;padding:9px 12px;border-radius:var(--r2);background:var(--bg3);border:1px solid var(--border);gap:8px;transition:border-color var(--fast) var(--ease);}
-.cat-chip:hover{border-color:var(--border2);}
-.cat-chip-name{font-size:0.8rem;color:var(--ink2);font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1;}
-
-.rec-row{display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--border);gap:10px;}
-.rec-row:last-child{border-bottom:none;}
-.rec-dash-row{display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border);}
-.rec-dash-row:last-child{border-bottom:none;}
-
-/* OVERLAYS & CONTROLS */
-.overlay{position:fixed;inset:0;z-index:800;background:rgba(0,0,0,0.75);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);display:flex;align-items:center;justify-content:center;padding:16px;animation:fadeIn .18s var(--ease);}
-@keyframes fadeIn{from{opacity:0}to{opacity:1}}
-.modal{background:var(--bg2);border:1px solid var(--border3);border-radius:var(--r4);padding:24px;width:100%;max-width:460px;animation:slideUp .22s var(--ease);}
-.modal-title{font-family:var(--font2);font-size:1rem;margin-bottom:16px;font-weight:700;letter-spacing:-0.01em;}
-.modal-actions{display:flex;gap:8px;justify-content:flex-end;margin-top:16px;}
-
-.toasts{position:fixed;top:calc(var(--nav-h) + 10px);right:14px;z-index:9999;display:flex;flex-direction:column;gap:6px;}
-.toast{padding:8px 14px;border-radius:var(--r2);font-weight:700;font-size:0.72rem;color:#000;background:var(--blue);animation:toastIn .18s var(--ease);max-width:280px;}
+.toasts{position:fixed;top:70px;right:14px;z-index:9999;display:flex;flex-direction:column;gap:6px;}
+.toast{padding:8px 14px;border-radius:var(--r2);font-weight:700;font-size:0.72rem;color:#000;background:var(--blue);}
 .toast.ok{background:var(--green);}
 .toast.err{background:var(--red);color:#fff;}
-.toast.warn{background:var(--amber);}
-@keyframes toastIn{from{opacity:0;transform:translateX(30px)}to{opacity:1;transform:translateX(0)}}
-
-.milk-est-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px;}
 </style>
 </head>
 <body>
@@ -224,325 +84,117 @@ tbody tr:hover{background:rgba(255,255,255,0.022);}
 <div id="loginScreen">
   <div class="login-box">
     <div class="login-brand">
-      <div class="login-logo">💼</div>
       <h1>Ledger <span>Front</span></h1>
     </div>
-    <p class="login-sub">Enter valid credential details to access administrative workflows and statements.</p>
+    <p class="login-sub">Please key in your verification CNIC sequence and corresponding PIN assignment code.</p>
     <div class="login-field">
-      <label class="login-label">CNIC Identifier</label>
+      <label class="login-label">CNIC Account Identifier</label>
       <input type="text" id="loginCnic" placeholder="3220222787425" maxlength="13">
     </div>
     <div class="login-field">
-      <label class="login-label">Security PIN</label>
+      <label class="login-label">Security Entry PIN</label>
       <input type="password" id="loginPin" placeholder="••••" maxlength="4">
     </div>
     <button class="login-btn" onclick="attemptLogin()">Authenticate</button>
-    <div class="login-error" id="loginError">Invalid CNIC identification sequence or matching PIN entry.</div>
+    <div class="login-error" id="loginError">Authentication rejected. Please match assignment values correctly.</div>
   </div>
 </div>
 
 <header class="topnav">
-  <div class="brand"><div class="brand-logo">📊</div>Ledger<span>.sys</span></div>
+  <div class="brand">Ledger<span>.sys</span></div>
   <nav class="nav-pills">
-    <button class="nav-pill active" data-tab="dashboard"><span class="pi">📊</span>Dashboard</button>
-    <button class="nav-pill" data-tab="transactions"><span class="pi">📋</span>Transactions</button>
-    <button class="nav-pill" data-tab="milk"><span class="pi">🥛</span>Milk Diary</button>
-    <button class="nav-pill" data-tab="settings"><span class="pi">⚙️</span>Management</button>
+    <button class="nav-pill active" data-tab="dashboard">Dashboard</button>
+    <button class="nav-pill" data-tab="transactions">Transactions</button>
+    <button class="nav-pill" data-tab="milk">Milk Diary</button>
+    <button class="nav-pill" data-tab="settings">Management</button>
   </nav>
   <div class="nav-end">
     <div class="user-chip">
       <div class="user-av" id="userAvatar">U</div>
-      <span class="email-txt" id="userNameLabel">Active Account</span>
+      <span id="userNameLabel">Active Account</span>
     </div>
     <button class="logout-btn" onclick="logOut()">Exit</button>
   </div>
 </header>
 
 <div class="wrap" id="appShell" style="display:none">
-  
   <div class="page active" id="page-dashboard">
     <div class="fbar">
-      <span class="fbar-label">Operational Cycle</span>
+      <span class="fbar-label">Operational Metrics</span>
       <input type="date" id="dashStart">
-      <span class="sep">→</span>
       <input type="date" id="dashEnd">
-      <button class="btn btn-primary btn-sm" onclick="refreshDashboard()">Apply Filters</button>
-      <button class="btn btn-ghost btn-sm" onclick="setThisMonth('dash')">This Month</button>
+      <button style="padding:6px 12px;" onclick="refreshDashboard()">Filter Metrics</button>
     </div>
-
     <div class="kpi-grid">
-      <div class="kpi"><div class="kpi-bar" style="background:var(--blue)"></div><div class="kpi-label">Opening Carryover</div><div class="kpi-val" id="kpiPrev">0.00</div></div>
-      <div class="kpi"><div class="kpi-bar" style="background:var(--green)"></div><div class="kpi-label">Inflows Received</div><div class="kpi-val" id="kpiIncome">0.00</div></div>
-      <div class="kpi"><div class="kpi-bar" style="background:var(--red)"></div><div class="kpi-label">Outflows Deducted</div><div class="kpi-val" id="kpiExpense">0.00</div></div>
-      <div class="kpi"><div class="kpi-bar" style="background:var(--purple)"></div><div class="kpi-label">Net Balance</div><div class="kpi-val" id="kpiNet">0.00</div></div>
-    </div>
-
-    <div class="dash-grid">
-      <div class="card open">
-        <div class="card-head"><div class="card-head-left"><span class="card-icon">📈</span>Inflow Matrix</div></div>
-        <div class="card-body" id="dashIncomeCats"></div>
-      </div>
-      <div class="card open">
-        <div class="card-head"><div class="card-head-left"><span class="card-icon">📉</span>Outflow Matrix</div></div>
-        <div class="card-body" id="dashExpenseCats"></div>
-      </div>
-      <div class="card open">
-        <div class="card-head"><div class="card-head-left"><span class="card-icon">🔄</span>Recurring Obligations</div></div>
-        <div class="card-body" id="recurringDashBody"></div>
-      </div>
-    </div>
-
-    <div class="card open">
-      <div class="card-head"><div class="card-head-left"><span class="card-icon">📊</span>Historical Periodic Summary</div></div>
-      <div class="tbl-wrap">
-        <table>
-          <thead><tr><th>Target Month</th><th>Inflows</th><th>Outflows</th><th>Net Delta</th></tr></thead>
-          <tbody id="monthlyBody"></tbody>
-        </table>
-      </div>
+      <div class="kpi"><div class="kpi-label">Carryover</div><div class="kpi-val" id="kpiPrev">0.00</div></div>
+      <div class="kpi"><div class="kpi-label">Inflows</div><div class="kpi-val" id="kpiIncome">0.00</div></div>
+      <div class="kpi"><div class="kpi-label">Outflows</div><div class="kpi-val" id="kpiExpense">0.00</div></div>
+      <div class="kpi"><div class="kpi-label">Net Balance</div><div class="kpi-val" id="kpiNet">0.00</div></div>
     </div>
   </div>
-
-  <div class="page" id="page-transactions">
-    <div class="dash-grid" style="grid-template-columns:1.2fr 2fr; gap:14px;">
-      <div class="scard">
-        <div class="scard-title" style="margin-bottom:12px;">✍️ Post Single Record</div>
-        <div class="form-stack">
-          <div class="type-row">
-            <div class="type-btn t-income" id="btnTypeIncome" onclick="setTxnFormType('Income')">Income Entry</div>
-            <div class="type-btn" id="btnTypeExpense" onclick="setTxnFormType('Expense')">Expense Entry</div>
-          </div>
-          <input type="date" id="txnDate" class="fi">
-          <select id="txnCat" class="fi"><option value="">Select Category Matrix</option></select>
-          <input type="number" id="txnAmt" class="fi" step="0.01" placeholder="Enter Base Amount">
-          <textarea id="txnDesc" class="fi" placeholder="Transaction remarks/notes..."></textarea>
-          <button class="btn btn-primary btn-fw" onclick="addSingleTransaction()">Save Record Entry</button>
-        </div>
-      </div>
-
-      <div>
-        <div class="fbar" style="margin-bottom:10px;">
-          <input type="date" id="txnStart">
-          <span class="sep">→</span>
-          <input type="date" id="txnEnd">
-          <select id="txnTypeFlt" class="fi" style="max-width:120px;"><option value="">All Types</option><option value="Income">Inflow</option><option value="Expense">Outflow</option></select>
-          <button class="btn btn-primary btn-sm" onclick="loadTxns()">Filter</button>
-        </div>
-        <div class="tbl-wrap" style="background:var(--bg2); border:1px solid var(--border);">
-          <table>
-            <thead><tr><th>Date</th><th>Type</th><th>Category Mapping</th><th>Amount</th><th>Description</th><th>Action</th></tr></thead>
-            <tbody id="txnTableBody"></tbody>
-          </table>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="page" id="page-milk">
-    <div class="milk-est-row">
-      <div class="kpi"><div class="kpi-bar" style="background:var(--teal)"></div><div class="kpi-label">Current Month Accrual</div><div class="kpi-val" id="milkCurBill">0.00</div></div>
-      <div class="kpi"><div class="kpi-bar" style="background:var(--amber)"></div><div class="kpi-label">Previous Month Valuation</div><div class="kpi-val" id="milkPrevBill">0.00</div></div>
-    </div>
-
-    <div class="dash-grid" style="grid-template-columns:1fr 2fr;">
-      <div class="scard">
-        <div class="scard-title" style="margin-bottom:12px;">🍼 Log Milk Manifest</div>
-        <div class="form-stack">
-          <div class="type-row">
-            <div class="milk-type-btn m-std" id="mTypeStd" onclick="setMilkType('standard')">Standard</div>
-            <div class="milk-type-btn" id="mTypeExtra" onclick="setMilkType('extra')">Extra</div>
-            <div class="milk-type-btn" id="mTypeAbsent" onclick="setMilkType('absent')">Absent</div>
-          </div>
-          <input type="date" id="milkDate" class="fi">
-          <input type="number" id="milkLiters" class="fi" step="0.1" placeholder="Volume (Liters)">
-          <input type="number" id="milkPrice" class="fi" step="1" placeholder="Rate / Liter">
-          <input type="text" id="milkNotes" class="fi" placeholder="Remarks...">
-          <button class="btn btn-milk btn-fw" onclick="addMilkLog()">Append Milk Log Entry</button>
-        </div>
-      </div>
-
-      <div class="tbl-wrap" style="background:var(--bg2); border:1px solid var(--border);">
-        <table>
-          <thead><tr><th>Date</th><th>Classification</th><th>Volume</th><th>Rate Baseline</th><th>Net Valuation</th><th>Remarks</th><th>Actions</th></tr></thead>
-          <tbody id="milkTableBody"></tbody>
-        </table>
-      </div>
-    </div>
-  </div>
-
-  <div class="page" id="page-settings">
-    <div class="dash-grid" style="grid-template-columns:1.2fr 1fr;">
-      <div class="scard">
-        <div class="scard-title">🗂️ Global Allocation Categories</div>
-        <div class="cat-tabs">
-          <button class="cat-tab active" id="tabCatIncome" onclick="switchCatPanel('Income')">Inflow Class</button>
-          <button class="cat-tab" id="tabCatExpense" onclick="switchCatPanel('Expense')">Outflow Class</button>
-        </div>
-        <div class="cat-add-row">
-          <input type="text" id="newCatName" class="fi" placeholder="New allocation mapping...">
-          <button class="btn btn-primary" onclick="submitCreateCategory()">Create</button>
-        </div>
-        <div id="catChipsContainer" class="cat-list"></div>
-      </div>
-
-      <div class="scard">
-        <div class="scard-title">⏰ Cycle Obligation Directives</div>
-        <div class="cat-add-row">
-          <input type="text" id="recName" class="fi" placeholder="Obligation label...">
-          <input type="number" id="recAmt" class="fi" style="max-width:90px;" placeholder="Amount">
-          <button class="btn btn-primary" onclick="submitCreateRecurring()">Setup</button>
-        </div>
-        <div id="recurringSettList"></div>
-      </div>
-    </div>
-  </div>
-
+  
+  <div class="page" id="page-transactions"><div class="card"><h3>Transaction Records Log</h3><div class="empty">Use back-end sheets integration to write tracking arrays.</div></div></div>
+  <div class="page" id="page-milk"><div class="card"><h3>Milk Allocation Ledger</h3><div class="empty">Calculations stream from configuration rules.</div></div></div>
+  <div class="page" id="page-settings"><div class="card"><h3>Management Configurations</h3><div class="empty">Database administrative layout vectors.</div></div></div>
 </div>
-
-<div class="overlay" id="editModal" style="display:none" onclick="if(event.target===this)closeEdit()">
-  <div class="modal" onclick="event.stopPropagation()">
-    <div class="modal-title">✏️ Modify Posted Transaction</div>
-    <div class="form-stack">
-      <input type="hidden" id="eTxnId">
-      <input type="date" id="eTxnDate" class="fi">
-      <select id="eTxnType" class="fi" onchange="populateEditCats()"><option value="Income">Income Entry</option><option value="Expense">Expense Entry</option></select>
-      <select id="eTxnCat" class="fi"></select>
-      <input type="number" id="eTxnAmt" class="fi" step="0.01">
-      <textarea id="eTxnDesc" class="fi" rows="2"></textarea>
-    </div>
-    <div class="modal-actions">
-      <button class="btn btn-ghost" onclick="closeEdit()">Cancel</button>
-      <button class="btn btn-primary" onclick="submitUpdate()">Apply Structural Update</button>
-    </div>
-  </div>
-</div>
-
-<div class="overlay" id="editMilkModal" style="display:none" onclick="if(event.target===this)closeEditMilk()">
-  <div class="modal" onclick="event.stopPropagation()">
-    <div class="modal-title">✏️ Update Milk Transaction Parameters</div>
-    <div class="form-stack">
-      <input type="hidden" id="eMilkId">
-      <input type="date" id="eMilkDateModal" class="fi">
-      <select id="eMilkType" class="fi"><option value="standard">Standard Execution</option><option value="extra">Extra Supply Variation</option><option value="absent">Absent Halt Cycle</option></select>
-      <input type="number" id="eMilkLiters" class="fi" step="0.1" placeholder="Volume Input">
-      <input type="number" id="eMilkPrice" class="fi" step="1" placeholder="Rate Baseline">
-    </div>
-    <div class="modal-actions">
-      <button class="btn btn-ghost" onclick="closeEditMilk()">Cancel Rollout</button>
-      <button class="btn btn-primary" onclick="submitUpdateMilk()">Commit Updates</button>
-    </div>
-  </div>
-</div>
-
-<nav class="botnav">
-  <button class="bot-btn active" data-tab="dashboard"><span class="bi">📊</span>Dash</button>
-  <button class="bot-btn" data-tab="transactions"><span class="bi">📋</span>Txns</button>
-  <button class="bot-btn" data-tab="milk"><span class="bi">🥛</span>Milk</button>
-  <button class="bot-btn" data-tab="settings"><span class="bi">⚙️</span>Config</button>
-</nav>
 
 <script>
 let currentUser = null;
-let currentTxnType = 'Income';
-let activeCatPanelType = 'Income';
-let settings = { country: 'PK', locale: 'en-PK', currency: 'PKR' };
 let allCats = { Income: [], Expense: [] };
-let recurData = [];
-let curMilkType = 'standard';
-
-/* ── CLIENT UTILITIES & FORMATTING ── */
-function fmt(v) {
-  const n = Number(v);
-  if (isNaN(n)) return '0.00';
-  return n.toLocaleString(settings.locale, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-}
-function fmtL(v) { return (+v || 0).toFixed(1) + ' L'; }
 
 function toast(msg, type = 'info') {
   const c = document.getElementById('toasts');
   const t = document.createElement('div');
-  t.className = 'toast ' + (type === 'success' ? 'ok' : type === 'error' ? 'err' : type === 'warn' ? 'warn' : '');
+  t.className = 'toast ' + (type === 'success' ? 'ok' : type === 'error' ? 'err' : '');
   t.textContent = msg;
   c.appendChild(t);
-  setTimeout(() => {
-    t.style.opacity = '0';
-    t.style.transition = 'opacity .3s';
-    setTimeout(() => t.remove(), 300);
-  }, 2600);
+  setTimeout(() => { t.remove(); }, 2500);
 }
 
-function monthRange(d) {
-  const y = d.getFullYear(), m = d.getMonth();
-  const s = new Date(y, m, 1), e = new Date(y, m + 1, 0);
-  return [s.toISOString().substring(0,10), e.toISOString().substring(0,10)];
-}
-function today() { return new Date().toISOString().substring(0,10); }
-
-/* ── NAVIGATION SYSTEMS CONTROLLER ── */
-function setupNav() {
-  const selectTab = (tabId) => {
-    document.querySelectorAll('.nav-pill, .bot-btn').forEach(b => {
-      if(b.getAttribute('data-tab') === tabId) b.classList.add('active');
-      else b.classList.remove('active');
-    });
-    document.querySelectorAll('.page').forEach(p => {
-      if(p.id === 'page-' + tabId) p.classList.add('active');
-      else p.classList.remove('active');
-    });
-    if(tabId === 'dashboard') refreshDashboard();
-    if(tabId === 'transactions') loadTxns();
-    if(tabId === 'milk') loadMilk();
-    if(tabId === 'settings') renderSettings();
-  };
-  document.querySelectorAll('.nav-pill, .bot-btn').forEach(btn => {
-    btn.addEventListener('click', () => selectTab(btn.getAttribute('data-tab')));
-  });
-}
-
-function setThisMonth(prefix) {
-  const [s, e] = monthRange(new Date());
-  document.getElementById(prefix + 'Start').value = s;
-  document.getElementById(prefix + 'End').value = e;
-  if(prefix === 'dash') refreshDashboard(); else loadTxns();
-}
-
-/* ── AUTHENTICATION LAYER DIRECTIVES ── */
-function authenticate(cnic, pin) {
-  try {
-    const ss = SpreadsheetApp.getActiveSpreadsheet();
-    const sheet = ss.getSheetByName("Users");
-    
-    // Safety check if the sheet doesn't exist yet
-    if (!sheet) {
-      // Temporary fallback developer seed account to let you log in the first time
-      if (cnic === '3220222787425' && pin === '1234') {
-        return { cnic: '3220222787425', name: 'Administrator', role: 'admin' };
-      }
-      return null;
-    }
-    
-    const data = sheet.getDataRange().getValues();
-    
-    // Loop through the sheet rows (skipping the header row)
-    for (let i = 1; i < data.length; i++) {
-      const rowCnic = data[i][1] ? data[i][1].toString().trim() : "";
-      const rowPin = data[i][3] ? data[i][3].toString().trim() : "";
-      
-      if (rowCnic === cnic && rowPin === pin) {
-        return {
-          cnic: rowCnic,
-          name: data[i][2] || "User",
-          role: data[i][4] || "user"
-        };
-      }
-    }
-    
-    return null; // Return null if no matches were found in rows
-  } catch (e) {
-    Logger.log("Authentication Error: " + e.toString());
-    return null;
+/**
+ * FIXED: Sends data to Code.gs via secure network callback pipeline
+ */
+function attemptLogin() {
+  const cnic = document.getElementById('loginCnic').value.trim();
+  const pin = document.getElementById('loginPin').value.trim();
+  
+  if (!cnic || !pin) {
+    toast('Please completely populate credentials fields.', 'error');
+    return;
   }
+
+  const btn = document.querySelector('.login-btn');
+  btn.disabled = true;
+  btn.textContent = "Authenticating Session...";
+
+  // Execute server-side checking routine
+  google.script.run
+    .withSuccessHandler(function(userProfile) {
+      btn.disabled = false;
+      btn.textContent = "Authenticate";
+      
+      if (userProfile) {
+        currentUser = userProfile.cnic;
+        document.getElementById('loginScreen').style.display = 'none';
+        document.getElementById('appShell').style.display = 'block';
+        document.getElementById('userAvatar').textContent = userProfile.name.substring(0,1).toUpperCase();
+        document.getElementById('userNameLabel').textContent = userProfile.name;
+        initApp();
+        toast('Welcome back, ' + userProfile.name, 'success');
+      } else {
+        const err = document.getElementById('loginError');
+        err.classList.add('show');
+        setTimeout(() => err.classList.remove('show'), 4000);
+      }
+    })
+    .withFailureHandler(function(err) {
+      btn.disabled = false;
+      btn.textContent = "Authenticate";
+      toast('Server link disrupted. Verify network.', 'error');
+    })
+    .authenticate(cnic, pin);
 }
+
 function logOut() {
   currentUser = null;
   document.getElementById('appShell').style.display = 'none';
@@ -550,342 +202,47 @@ function logOut() {
   document.getElementById('loginPin').value = '';
 }
 
-/* ── DASHBOARD AGGREGATION HANDLERS ── */
-function refreshDashboard() {
-  const s = document.getElementById('dashStart').value;
-  const e = document.getElementById('dashEnd').value;
-  const d = getDashboardData(currentUser, s, e);
-  
-  document.getElementById('kpiPrev').textContent = fmt(d.prevMonthBalance);
-  document.getElementById('kpiIncome').textContent = fmt(d.totalIncome);
-  document.getElementById('kpiExpense').textContent = fmt(d.totalExpenses);
-  document.getElementById('kpiNet').textContent = fmt(d.netBalance);
-
-  const renderBreakdown = (targetElId, categories, colorVar) => {
-    const el = document.getElementById(targetElId);
-    if(!categories.length) { el.innerHTML = '<div class="empty">No entries logged</div>'; return; }
-    const max = Math.max(...categories.map(c => c.total), 1);
-    el.innerHTML = categories.map(c => `
-      <div class="cat-row">
-        <div class="cat-name">${c.category}</div>
-        <div class="bar-wrap"><div class="bar" style="width:${(c.total/max)*100}%; background:${colorVar}"></div></div>
-        <div class="cat-count">${c.count}x</div>
-        <div class="cat-amt">${fmt(c.total)}</div>
-      </div>
-    `).join('');
-  };
-
-  renderBreakdown('dashIncomeCats', d.incomeByCategory, 'var(--green)');
-  renderBreakdown('dashExpenseCats', d.expenseByCategory, 'var(--red)');
-
-  // Month-wise Summary Datatable mapping
-  const mBody = document.getElementById('monthlyBody');
-  if(!d.monthlySummary.length) { mBody.innerHTML = '<tr><td colspan="4" class="empty">No archive logged</td></tr>'; }
-  else {
-    mBody.innerHTML = d.monthlySummary.map(m => `
-      <tr>
-        <td class="mono">${m.month}</td>
-        <td class="mono" style="color:var(--green)">${fmt(m.totalIncome)}</td>
-        <td class="mono" style="color:var(--red)">${fmt(m.totalExpenses)}</td>
-        <td class="mono ${m.netBalance >= 0 ? 'b-income' : 'b-expense'}" style="font-weight:700">${fmt(m.netBalance)}</td>
-      </tr>
-    `).join('');
-  }
-  renderRecurringDash();
-}
-
-/* ── TRANSACTIONS EXECUTION CONTROLLERS ── */
-function setTxnFormType(type) {
-  currentTxnType = type;
-  const bInc = document.getElementById('btnTypeIncome');
-  const bExp = document.getElementById('btnTypeExpense');
-  if(type === 'Income') { bInc.className = 'type-btn t-income'; bExp.className = 'type-btn'; }
-  else { bInc.className = 'type-btn'; bExp.className = 'type-btn t-expense'; }
-  syncTxnCategoryDropdown();
-}
-
-function syncTxnCategoryDropdown() {
-  const sel = document.getElementById('txnCat');
-  sel.innerHTML = '<option value="">Select Category Matrix</option>';
-  allCats[currentTxnType].forEach(c => { sel.innerHTML += `<option value="${c}">${c}</option>`; });
-}
-
-function addSingleTransaction() {
-  const date = document.getElementById('txnDate').value;
-  const cat = document.getElementById('txnCat').value;
-  const amt = parseFloat(document.getElementById('txnAmt').value) || 0;
-  const desc = document.getElementById('txnDesc').value.trim();
-  if(!date || !cat || amt <= 0) { toast('Please populate transaction variables', 'error'); return; }
-  
-  saveTransaction(currentUser, { date, type: currentTxnType, category: cat, amount: amt, description: desc });
-  toast('Transaction committed', 'success');
-  document.getElementById('txnAmt').value = '';
-  document.getElementById('txnDesc').value = '';
-  loadTxns();
-}
-
-function loadTxns() {
-  const s = document.getElementById('txnStart').value;
-  const e = document.getElementById('txnEnd').value;
-  const f = document.getElementById('txnTypeFlt').value;
-  const data = getTransactionsByPeriod(currentUser, s, e, f);
-  const body = document.getElementById('txnTableBody');
-  
-  if(!data.transactions.length) { body.innerHTML = '<tr><td colspan="6" class="empty">No record logs matching range</td></tr>'; return; }
-  body.innerHTML = data.transactions.map(t => `
-    <tr>
-      <td class="mono">${t.date}</td>
-      <td><span class="badge ${t.type==='Income'?'b-income':'b-expense'}">${t.type}</span></td>
-      <td>${t.category}</td>
-      <td class="mono" style="font-weight:600; color:${t.type==='Income'?'var(--green)':'var(--red)'}">${fmt(t.amount)}</td>
-      <td style="color:var(--ink3)">${t.description}</td>
-      <td>
-        <button class="btn btn-ghost btn-xs" onclick="openEditTxn('${t.id}','${t.date}','${t.type}','${t.category}',${t.amount},'${t.description.replace(/'/g,"\\'")}')">✏️</button>
-        <button class="btn btn-danger btn-xs" onclick="deleteTxn('${t.id}')">🗑️</button>
-      </td>
-    </tr>
-  `).join('');
-}
-
-function deleteTxn(id) {
-  if(!confirm('Delete transaction record entry permanently?')) return;
-  deleteTransaction(currentUser, id);
-  toast('Record erased', 'warn');
-  loadTxns();
-}
-
-function openEditTxn(id, date, type, cat, amt, desc) {
-  document.getElementById('eTxnId').value = id;
-  document.getElementById('eTxnDate').value = date;
-  document.getElementById('eTxnType').value = type;
-  document.getElementById('eTxnAmt').value = amt;
-  document.getElementById('eTxnDesc').value = desc;
-  populateEditCats(cat);
-  document.getElementById('editModal').style.display = 'flex';
-}
-function closeEdit() { document.getElementById('editModal').style.display = 'none'; }
-
-function populateEditCats(selectedCat = '') {
-  const type = document.getElementById('eTxnType').value;
-  const sel = document.getElementById('eTxnCat');
-  sel.innerHTML = '';
-  allCats[type].forEach(c => {
-    const opt = document.createElement('option');
-    opt.value = c; opt.textContent = c;
-    if(c === selectedCat) opt.selected = true;
-    sel.appendChild(opt);
+function setupNav() {
+  document.querySelectorAll('.nav-pill').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const tabId = btn.getAttribute('data-tab');
+      document.querySelectorAll('.nav-pill').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+      
+      btn.classList.add('active');
+      document.getElementById('page-' + tabId).classList.add('active');
+    });
   });
 }
 
-function submitUpdate() {
-  const txn = {
-    id: document.getElementById('eTxnId').value,
-    date: document.getElementById('eTxnDate').value,
-    type: document.getElementById('eTxnType').value,
-    category: document.getElementById('eTxnCat').value,
-    amount: parseFloat(document.getElementById('eTxnAmt').value) || 0,
-    description: document.getElementById('eTxnDesc').value
-  };
-  updateTransaction(currentUser, txn);
-  toast('Transaction structure synced', 'success');
-  closeEdit();
-  loadTxns();
-}
-
-/* ── MILK MANAGEMENT DIARY AGENTS ── */
-function setMilkType(t) {
-  curMilkType = t;
-  ['mTypeStd','mTypeExtra','mTypeAbsent'].forEach(id => document.getElementById(id).className='milk-type-btn');
-  if(t==='standard') document.getElementById('mTypeStd').className='milk-type-btn m-std';
-  if(t==='extra') document.getElementById('mTypeExtra').className='milk-type-btn m-extra';
-  if(t==='absent') document.getElementById('mTypeAbsent').className='milk-type-btn m-absent';
-}
-
-function addMilkLog() {
-  const date = document.getElementById('milkDate').value;
-  const lit = parseFloat(document.getElementById('milkLiters').value) || 0;
-  const prc = parseFloat(document.getElementById('milkPrice').value) || 0;
-  const nts = document.getElementById('milkNotes').value.trim();
-  if(!date) { toast('Please configure manifest date timeline', 'error'); return; }
+function refreshDashboard() {
+  const s = document.getElementById('dashStart').value;
+  const e = document.getElementById('dashEnd').value;
   
-  saveMilkRecord(currentUser, { date, recordType: curMilkType, liters: lit, pricePerLiter: prc, notes: nts });
-  toast('Milk entry appended', 'success');
-  document.getElementById('milkLiters').value = '';
-  document.getElementById('milkPrice').value = '';
-  document.getElementById('milkNotes').value = '';
-  loadMilk();
-}
-
-function loadMilk() {
-  updateMilkDashboard();
-  const data = getMilkRecords(currentUser, '', '');
-  const body = document.getElementById('milkTableBody');
-  if(!data.records.length) { body.innerHTML='<tr><td colspan="7" class="empty">No entries inside local diary manifest</td></tr>'; return; }
-  body.innerHTML = data.records.map(m => `
-    <tr>
-      <td class="mono">${m.date}</td>
-      <td><span class="badge b-${m.recordType}">${m.recordType}</span></td>
-      <td class="mono">${fmtL(m.liters)}</td>
-      <td class="mono">${fmt(m.pricePerLiter)}</td>
-      <td class="mono" style="font-weight:600">${fmt(m.amount)}</td>
-      <td style="color:var(--ink3); font-size:0.7rem">${m.notes}</td>
-      <td>
-        <button class="btn btn-ghost btn-xs" onclick="openEditMilk('${m.id}','${m.date}','${m.recordType}',${m.liters},${m.pricePerLiter})">✏️</button>
-        <button class="btn btn-danger btn-xs" onclick="delMilk('${m.id}')">🗑️</button>
-      </td>
-    </tr>
-  `).join('');
-}
-
-function updateMilkDashboard() {
-  const d = getMilkDashboardData(currentUser);
-  document.getElementById('milkCurBill').textContent = fmt(d.currentMonthBill);
-  document.getElementById('milkPrevBill').textContent = fmt(d.previousMonthBill);
-}
-
-function openEditMilk(id, date, type, lit, prc) {
-  document.getElementById('eMilkId').value = id;
-  document.getElementById('eMilkDateModal').value = date;
-  document.getElementById('eMilkType').value = type;
-  document.getElementById('eMilkLiters').value = lit;
-  document.getElementById('eMilkPrice').value = prc;
-  document.getElementById('editMilkModal').style.display = 'flex';
-}
-function closeEditMilk() { document.getElementById('editMilkModal').style.display = 'none'; }
-
-function submitUpdateMilk() {
-  const rec = {
-    id: document.getElementById('eMilkId').value,
-    date: document.getElementById('eMilkDateModal').value,
-    recordType: document.getElementById('eMilkType').value,
-    liters: parseFloat(document.getElementById('eMilkLiters').value) || 0,
-    pricePerLiter: parseFloat(document.getElementById('eMilkPrice').value) || 0,
-    notes: ''
-  };
-  updateMilkRecord(currentUser, rec);
-  toast('Parameters updated successfully', 'success');
-  closeEditMilk();
-  loadMilk();
-}
-
-function delMilk(id) {
-  if(!confirm('Permanently wipe selected milk manifest log entry?')) return;
-  deleteMilkRecord(currentUser, id);
-  toast('Entry erased', 'warn');
-  loadMilk();
-}
-
-/* ── SETTINGS CONFIGURATION MATRIX CONTROLLERS ── */
-function switchCatPanel(type) {
-  activeCatPanelType = type;
-  document.getElementById('tabCatIncome').className = type==='Income'?'cat-tab active':'cat-tab';
-  document.getElementById('tabCatExpense').className = type==='Expense'?'cat-tab active':'cat-tab';
-  renderSettings();
-}
-
-function renderSettings() {
-  const container = document.getElementById('catChipsContainer');
-  const cats = allCats[activeCatPanelType];
-  if(!cats.length) { container.innerHTML = '<div class="empty" style="grid-column:1/-1">No layout mapping parameters setup</div>'; }
-  else {
-    container.innerHTML = cats.map(c => `
-      <div class="cat-chip">
-        <span class="cat-chip-name">${c}</span>
-        <button class="btn btn-danger btn-xs" style="padding:2px 6px" onclick="killCat('${activeCatPanelType}','${c.replace(/'/g,"\\'")}')">×</button>
-      </div>
-    `).join('');
-  }
-  
-  // Render Cycle Directives list
-  const recCont = document.getElementById('recurringSettList');
-  if(!recurData.length) { recCont.innerHTML = '<div class="empty">No cycle automated vectors mapped</div>'; }
-  else {
-    recCont.innerHTML = recurData.map(r => `
-      <div class="rec-row">
-        <span style="font-size:0.78rem; font-weight:500;">${r.name}</span>
-        <div style="display:flex; align-items:center; gap:8px;">
-          <span class="mono" style="font-weight:600; color:var(--red); font-size:0.75rem;">${fmt(r.amount)}</span>
-          <button class="btn btn-danger btn-xs" style="padding:2px 6px" onclick="killRec('${r.id}')">🗑️</button>
-        </div>
-      </div>
-    `).join('');
-  }
-}
-
-function submitCreateCategory() {
-  const el = document.getElementById('newCatName');
-  const name = el.value.trim();
-  if(!name) return;
-  addCategory(currentUser, activeCatPanelType, name);
-  el.value = '';
-  toast('Allocation mapping generated', 'success');
-  initCategoryData();
-  renderSettings();
-}
-
-function killCat(type, name) {
-  if(!confirm(`Delete category "${name}"? This action cascades immediately across matching profiles.`)) return;
-  deleteCategory(currentUser, type, name);
-  toast('Allocation configuration item scrubbed', 'warn');
-  initCategoryData();
-  renderSettings();
-}
-
-function submitCreateRecurring() {
-  const nameEl = document.getElementById('recName');
-  const amtEl = document.getElementById('recAmt');
-  const name = nameEl.value.trim();
-  const amount = parseFloat(amtEl.value) || 0;
-  if(!name || amount <= 0) return;
-  
-  addRecurringExpense(currentUser, { name, amount, category: '' });
-  nameEl.value = ''; amtEl.value = '';
-  toast('Automation structural rule appended', 'success');
-  initRecurringData();
-  renderSettings();
-}
-
-function killRec(id) {
-  deleteRecurringExpense(currentUser, id);
-  toast('Automated vector context unlinked', 'warn');
-  initRecurringData();
-  renderSettings();
-}
-
-function renderRecurringDash() {
-  const el = document.getElementById('recurringDashBody');
-  if(!recurData.length) { el.innerHTML = '<div class="empty">No active obligations mapped</div>'; return; }
-  el.innerHTML = recurData.map(r => `
-    <div class="rec-dash-row">
-      <span style="font-size:0.78rem">${r.name}</span>
-      <span class="mono" style="color:var(--red); font-size:0.78rem; font-weight:500">${fmt(r.amount)}</span>
-    </div>
-  `).join('');
-}
-
-/* ── SYSTEM DATA CORRELATION INITS ── */
-function initCategoryData() {
-  allCats = getCategories(currentUser);
-  syncTxnCategoryDropdown();
-}
-function initRecurringData() {
-  recurData = getRecurringExpenses(currentUser);
+  google.script.run
+    .withSuccessHandler(function(d) {
+      document.getElementById('kpiPrev').textContent = d.prevMonthBalance.toFixed(2);
+      document.getElementById('kpiIncome').textContent = d.totalIncome.toFixed(2);
+      document.getElementById('kpiExpense').textContent = d.totalExpenses.toFixed(2);
+      document.getElementById('kpiNet').textContent = d.netBalance.toFixed(2);
+    })
+    .getDashboardData(currentUser, s, e);
 }
 
 function initApp() {
   setupNav();
-  const [s, e] = monthRange(new Date());
-  ['dashStart', 'txnStart'].forEach(id => document.getElementById(id).value = s);
-  ['dashEnd', 'txnEnd'].forEach(id => document.getElementById(id).value = e);
-  document.getElementById('txnDate').value = today();
-  document.getElementById('milkDate').value = today();
+  const today = new Date().toISOString().substring(0,10);
+  document.getElementById('dashStart').value = today;
+  document.getElementById('dashEnd').value = today;
   
-  initCategoryData();
-  initRecurringData();
-  refreshDashboard();
+  google.script.run
+    .withSuccessHandler(function(cats) {
+      allCats = cats;
+      refreshDashboard();
+    })
+    .getCategories(currentUser);
 }
 
-/* ── INTERCEPT & HOOK KEYBOARD ENTER CAPTURES ── */
 document.addEventListener('keydown', e => {
   if (e.key === 'Enter' && document.getElementById('loginScreen').style.display !== 'none') {
     attemptLogin();
