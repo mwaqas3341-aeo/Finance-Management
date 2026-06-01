@@ -1,392 +1,1275 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Finance Ledger</title>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --bg: #0a0e14;
-            --bg2: #111820;
-            --bg3: #1a2333;
-            --border: rgba(255,255,255,0.08);
-            --text: #e8f0fe;
-            --text2: #8fa0bc;
-            --text3: #4a5d7a;
-            --azure: #4d9fff;
-            --emerald: #00d68f;
-            --rose: #ff4d6d;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Ledger · Finance Tracker</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* ═══════════════════ DESIGN TOKENS ═══════════════════ */
+:root {
+  --bg:         #080b10;
+  --bg1:        #0d1117;
+  --bg2:        #111820;
+  --bg3:        #151d28;
+  --bg4:        #1a2333;
+  --border:     rgba(255,255,255,0.07);
+  --border2:    rgba(255,255,255,0.12);
+  --ink:        #e8f0fe;
+  --ink2:       #8fa0bc;
+  --ink3:       #4a5d7a;
+  --ink4:       #2d3a4f;
+  --emerald:    #00d68f;
+  --emerald-d:  rgba(0,214,143,0.1);
+  --rose:       #ff4d6d;
+  --rose-d:     rgba(255,77,109,0.1);
+  --azure:      #4d9fff;
+  --azure-d:    rgba(77,159,255,0.1);
+  --amber:      #ffb340;
+  --amber-d:    rgba(255,179,64,0.1);
+  --milk:       #a78bfa;
+  --milk-d:     rgba(167,139,250,0.1);
+  --milk2:      #34d399;
+  --milk2-d:    rgba(52,211,153,0.1);
+  --r:          8px;
+  --r2:         12px;
+  --r3:         16px;
+  --r4:         20px;
+  --font:       'Plus Jakarta Sans', sans-serif;
+  --font2:      'Space Grotesk', sans-serif;
+  --mono:       'Fira Code', monospace;
+  --nav-h:      56px;
+  --bot-h:      64px;
+  --trans:      0.18s cubic-bezier(.4,0,.2,1);
+}
 
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+html { scroll-behavior: smooth; }
+body {
+  background: var(--bg); font-family: var(--font); color: var(--ink);
+  min-height: 100dvh; overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
 
-        body {
-            background: var(--bg);
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            color: var(--text);
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-        }
+body::before {
+  content: ''; position: fixed; inset: 0; z-index: 0;
+  background:
+    radial-gradient(ellipse 60% 35% at 15% 0%, rgba(77,159,255,0.08) 0%, transparent 70%),
+    radial-gradient(ellipse 50% 30% at 85% 100%, rgba(167,139,250,0.06) 0%, transparent 70%),
+    radial-gradient(ellipse 40% 40% at 50% 50%, rgba(0,214,143,0.03) 0%, transparent 70%);
+  pointer-events: none;
+}
 
-        .container {
-            background: var(--bg2);
-            border: 1px solid var(--border);
-            border-radius: 20px;
-            padding: 32px 28px;
-            width: 100%;
-            max-width: 420px;
-        }
+::-webkit-scrollbar { width: 3px; height: 3px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--ink4); border-radius: 3px; }
 
-        h2 {
-            font-size: 1.5rem;
-            margin-bottom: 4px;
-            text-align: center;
-        }
+/* ═══ LOGIN SCREEN ═══ */
+.login-overlay {
+  position: fixed; inset: 0; z-index: 1000;
+  background: var(--bg); display: flex; align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+.login-card {
+  background: var(--bg2); border: 1px solid var(--border2);
+  border-radius: var(--r4); padding: 32px 28px;
+  width: 100%;
+  max-width: 400px;
+  animation: slideUp .3s ease;
+}
+.login-card h2 {
+  font-family: var(--font2); font-size: 1.5rem; margin-bottom: 4px;
+  text-align: center;
+}
+.login-card .subtitle {
+  text-align: center; color: var(--ink3); font-size: 0.82rem;
+  margin-bottom: 24px;
+}
+.login-card label {
+  display: block; font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase; letter-spacing: 0.1em;
+  color: var(--ink3); margin-bottom: 6px;
+}
+.login-card input {
+  width: 100%; background: var(--bg3);
+  border: 1px solid var(--border);
+  color: var(--ink); padding: 12px 14px; border-radius: var(--r2);
+  font-family: var(--mono); font-size: 1rem; margin-bottom: 16px;
+  transition: border-color var(--trans);
+  letter-spacing: 0.05em;
+}
+.login-card input:focus { outline: none; border-color: var(--azure); }
+.login-card input::placeholder { color: var(--ink4); font-family: var(--font); letter-spacing: normal; }
+.login-btn {
+  width: 100%; padding: 13px; background: var(--azure); color: #000;
+  border: none; border-radius: var(--r2); font-family: var(--font);
+  font-size: 0.9rem;
+  font-weight: 700; cursor: pointer;
+  transition: var(--trans); margin-top: 8px;
+}
+.login-btn:hover { background: #6db3ff; transform: translateY(-1px); }
+.login-error {
+  color: var(--rose);
+  font-size: 0.78rem; text-align: center;
+  margin-top: 12px; min-height: 20px;
+}
 
-        .subtitle {
-            text-align: center;
-            color: var(--text2);
-            font-size: 0.82rem;
-            margin-bottom: 24px;
-        }
+/* ═══ TOPNAV ═══ */
+.topnav {
+  position: sticky; top: 0;
+  z-index: 300; height: var(--nav-h);
+  background: rgba(8,11,16,0.88); backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border-bottom: 1px solid var(--border); display: flex; align-items: center;
+  padding: 0 16px; gap: 6px;
+}
+.brand { display: flex; align-items: center; gap: 8px; font-family: var(--font2); font-size: 1rem; font-weight: 700; margin-right: 10px; white-space: nowrap; }
+.brand-icon { width: 30px; height: 30px; background: linear-gradient(135deg, var(--azure), var(--emerald)); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 0.9rem; }
+.brand-dot { color: var(--azure); }
+.nav-pills { display: flex; gap: 2px; }
+.nav-pill { background: transparent; border: none; color: var(--ink3); padding: 7px 14px; font-family: var(--font); font-size: 0.8rem; font-weight: 600; cursor: pointer; border-radius: var(--r2); display: flex; align-items: center; gap: 5px; transition: var(--trans); white-space: nowrap; }
+.nav-pill:hover { color: var(--ink2); background: rgba(255,255,255,0.05); }
+.nav-pill.active { color: var(--azure); background: var(--azure-d); }
+.nav-pill .pi { font-size: 0.9rem; }
+.nav-end { margin-left: auto; display: flex; align-items: center; gap: 8px; }
+.user-chip { display: flex; align-items: center; gap: 6px; background: var(--bg3); border: 1px solid var(--border); border-radius: 20px; padding: 4px 10px 4px 4px; font-size: 0.72rem; color: var(--ink2); font-family: var(--mono); }
+.user-av { width: 22px; height: 22px; border-radius: 50%; background: linear-gradient(135deg, var(--azure), var(--milk)); font-size: 0.65rem; display: flex; align-items: center; justify-content: center; color: #fff; font-weight: 700; }
+.logout-btn {
+  background: var(--rose-d); border: 1px solid var(--rose); color: var(--rose);
+  padding: 5px 10px; border-radius: var(--r); font-size: 0.65rem;
+  font-weight: 700; cursor: pointer; font-family: var(--font);
+  transition: var(--trans);
+}
+.logout-btn:hover { background: rgba(255,77,109,0.2); }
 
-        label {
-            display: block;
-            font-size: 0.7rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            color: var(--text3);
-            margin-bottom: 6px;
-            margin-top: 12px;
-        }
+/* ═══ BOTTOM NAV ═══ */
+.botnav { display: none; position: fixed; bottom: 0; left: 0; right: 0; z-index: 300; height: var(--bot-h); background: rgba(13,17,23,0.96); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border-top: 1px solid var(--border); justify-content: space-around; align-items: center; padding: 0 4px; padding-bottom: env(safe-area-inset-bottom); }
+.bot-btn { background: none; border: none; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 3px; padding: 6px 14px; border-radius: var(--r2); font-family: var(--font); font-size: 0.6rem; font-weight: 700; color: var(--ink4); transition: var(--trans); letter-spacing: 0.03em; text-transform: uppercase; min-width: 0; }
+.bot-btn .bi { font-size: 1.25rem; line-height: 1; }
+.bot-btn.active { color: var(--azure); }
+.bot-btn.active .bi { filter: drop-shadow(0 0 8px rgba(77,159,255,0.6)); }
 
-        input {
-            width: 100%;
-            background: var(--bg3);
-            border: 1px solid var(--border);
-            color: var(--text);
-            padding: 12px 14px;
-            border-radius: 12px;
-            font-family: 'Fira Code', monospace;
-            font-size: 1rem;
-            transition: border-color 0.2s;
-        }
+/* ═══ MAIN ═══ */
+.wrap { position: relative; z-index: 1; max-width: 1360px; margin: 0 auto; padding: 20px 16px 40px; }
+@media (max-width: 768px) { .wrap { padding: 12px 10px calc(var(--bot-h) + 16px); } .nav-pills { display: none; } .user-chip span { display: none; } .botnav { display: flex; } }
 
-        input:focus {
-            outline: none;
-            border-color: var(--azure);
-        }
+.page { display: none; animation: fadeSlide .22s ease; }
+.page.active { display: block; }
+@keyframes fadeSlide { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
 
-        button {
-            width: 100%;
-            padding: 13px;
-            background: var(--azure);
-            color: #000;
-            border: none;
-            border-radius: 12px;
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            font-size: 0.9rem;
-            font-weight: 700;
-            cursor: pointer;
-            transition: 0.2s;
-            margin-top: 16px;
-        }
+/* ═══ FILTER BAR ═══ */
+.fbar { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; background: var(--bg2); border: 1px solid var(--border); border-radius: var(--r3); padding: 10px 14px; margin-bottom: 14px; }
+.fbar-label { font-size: 0.65rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink3); }
+.fbar input[type="date"], .fbar select { background: var(--bg3); border: 1px solid var(--border); color: var(--ink); padding: 7px 10px; border-radius: var(--r); font-family: var(--font); font-size: 0.8rem; flex: 1; min-width: 120px; max-width: 180px; transition: border-color var(--trans); }
+.fbar input:focus, .fbar select:focus { outline: none; border-color: var(--azure); }
+.sep { color: var(--ink4); font-size: 0.8rem; }
+@media (max-width: 480px) { .fbar { gap: 6px; } .fbar input[type="date"], .fbar select { flex: 1 1 100%; max-width: 100%; min-width: 0; } }
 
-        button:hover { background: #6db3ff; }
-        button:disabled { opacity: 0.6; cursor: not-allowed; }
+/* ═══ KPI GRID ═══ */
+.kpi-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; margin-bottom: 14px; }
+@media (max-width: 1100px) { .kpi-grid { grid-template-columns: repeat(3,1fr); } }
+@media (max-width: 600px)  { .kpi-grid { grid-template-columns: 1fr 1fr; } }
+@media (max-width: 360px)  { .kpi-grid { grid-template-columns: 1fr; } }
 
-        .error {
-            color: var(--rose);
-            font-size: 0.78rem;
-            text-align: center;
-            margin-top: 12px;
-            min-height: 20px;
-        }
+.kpi { background: var(--bg2); border: 1px solid var(--border); border-radius: var(--r3); padding: 14px 16px; position: relative; overflow: hidden; transition: border-color var(--trans), transform var(--trans); }
+.kpi:hover { transform: translateY(-1px); }
+.kpi-accent { position: absolute; top: 0; left: 0; right: 0; height: 2px; border-radius: 0; }
+.kpi-label { font-size: 0.62rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink3); margin-bottom: 8px; }
+.kpi-val { font-family: var(--mono); font-size: 1.3rem; font-weight: 500; color: var(--ink); line-height: 1.1; word-break: break-all; }
+.kpi-sub { font-size: 0.68rem; color: var(--ink3); margin-top: 4px; }
+@media (max-width: 480px) { .kpi-val { font-size: 1.05rem; } }
 
-        .status {
-            margin-top: 20px;
-            padding: 12px;
-            border-radius: 12px;
-            text-align: center;
-            font-size: 0.75rem;
-        }
+/* ═══ GRID LAYOUTS ═══ */
+.dash-grid { display: grid; grid-template-columns: 1fr 1.1fr 1fr; gap: 12px; margin-bottom: 12px; }
+@media (max-width: 1000px) { .dash-grid { grid-template-columns: 1fr 1fr; } }
+@media (max-width: 620px)  { .dash-grid { grid-template-columns: 1fr; } }
 
-        .status.success {
-            background: rgba(0,214,143,0.1);
-            color: var(--emerald);
-        }
+/* ═══ CARD ═══ */
+.card { background: var(--bg2); border: 1px solid var(--border); border-radius: var(--r3); overflow: hidden; margin-bottom: 12px; transition: border-color var(--trans); }
+.card:hover { border-color: var(--border2); }
+.card-head { display: flex; align-items: center; justify-content: space-between; padding: 13px 16px; cursor: pointer; font-weight: 700; font-size: 0.84rem; border-bottom: 1px solid transparent; transition: background var(--trans); user-select: none; }
+.card-head:hover { background: rgba(255,255,255,0.03); }
+.card.open .card-head { border-bottom-color: var(--border); }
+.card-body { padding: 14px 16px; }
+.card.closed .card-body { display: none; }
+.chev { color: var(--ink4); font-size: 0.8rem; transition: transform .2s ease; }
+.card.closed .chev { transform: rotate(-90deg); }
+.card-head-left { display: flex; align-items: center; gap: 8px; }
+.card-icon { font-size: 1rem; }
 
-        .status.error {
-            background: rgba(255,77,109,0.1);
-            color: var(--rose);
-        }
+/* ═══ ENTRY FORM ═══ */
+.form-stack { display: flex; flex-direction: column; gap: 8px; }
+.form-row { display: flex; gap: 8px; }
+.form-row > * { flex: 1; min-width: 0; }
+.fi { width: 100%; background: var(--bg3); border: 1px solid var(--border); color: var(--ink); padding: 9px 12px; border-radius: var(--r2); font-family: var(--font); font-size: 0.83rem; transition: border-color var(--trans); }
+.fi:focus { outline: none; border-color: var(--azure); }
+.fi::placeholder { color: var(--ink4); }
+textarea.fi { min-height: 56px; resize: vertical; }
 
-        .info {
-            margin-top: 20px;
-            padding-top: 16px;
-            border-top: 1px solid var(--border);
-            text-align: center;
-            font-size: 0.72rem;
-            color: var(--text3);
-        }
+.type-row { display: flex; gap: 6px; }
+.type-btn { flex: 1; padding: 9px 8px; border-radius: var(--r2); font-family: var(--font); font-size: 0.8rem; font-weight: 700; cursor: pointer; border: 1.5px solid var(--border); background: var(--bg3); color: var(--ink3); transition: var(--trans); }
+.type-btn.t-income  { background: var(--emerald-d); border-color: var(--emerald); color: var(--emerald); }
+.type-btn.t-expense { background: var(--rose-d);    border-color: var(--rose);    color: var(--rose); }
 
-        code {
-            background: var(--bg3);
-            padding: 2px 6px;
-            border-radius: 4px;
-            font-family: 'Fira Code', monospace;
-        }
-    </style>
+/* Milk type buttons */
+.milk-type-btn { flex: 1; padding: 9px 8px; border-radius: var(--r2); font-family: var(--font); font-size: 0.8rem; font-weight: 700; cursor: pointer; border: 1.5px solid var(--border); background: var(--bg3); color: var(--ink3); transition: var(--trans); text-align: center; }
+.milk-type-btn.m-absent { background: var(--rose-d); border-color: var(--rose); color: var(--rose); }
+.milk-type-btn.m-extra  { background: var(--milk-d); border-color: var(--milk); color: var(--milk); }
+
+/* ═══ BUTTONS ═══ */
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 6px; padding: 9px 16px; border-radius: var(--r2); font-family: var(--font); font-size: 0.8rem; font-weight: 700; cursor: pointer; border: none; transition: var(--trans); white-space: nowrap; }
+.btn-primary { background: var(--azure); color: #000; }
+.btn-primary:hover { background: #6db3ff; transform: translateY(-1px); }
+.btn-primary:active { transform: translateY(0); }
+.btn-ghost { background: var(--bg3); border: 1px solid var(--border); color: var(--ink2); }
+.btn-ghost:hover { border-color: var(--azure); color: var(--azure); }
+.btn-danger { background: var(--rose-d); border: 1px solid var(--rose); color: var(--rose); }
+.btn-danger:hover { background: rgba(255,77,109,0.2); }
+.btn-milk { background: var(--milk-d); border: 1px solid var(--milk); color: var(--milk); }
+.btn-milk:hover { background: rgba(167,139,250,0.2); }
+.btn-sm  { padding: 7px 13px; font-size: 0.76rem; }
+.btn-xs  { padding: 4px 9px;  font-size: 0.7rem; }
+.btn-fw  { width: 100%; }
+
+/* ═══ BADGE ═══ */
+.badge { display: inline-block; padding: 2px 8px; border-radius: 20px; font-size: 0.62rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; }
+.b-income  { background: var(--emerald-d); color: var(--emerald); }
+.b-expense { background: var(--rose-d); color: var(--rose); }
+.b-absent  { background: var(--rose-d); color: var(--rose); }
+.b-extra   { background: var(--milk-d); color: var(--milk); }
+.b-standard { background: var(--milk2-d); color: var(--milk2); }
+
+/* ═══ CAT ROWS ═══ */
+.cat-row { display: flex; align-items: center; gap: 10px; padding: 8px 0; border-bottom: 1px solid var(--border); }
+.cat-row:last-child { border-bottom: none; }
+.cat-name { flex: 1; font-size: 0.8rem; color: var(--ink2); }
+.cat-count { font-size: 0.68rem; color: var(--ink3); min-width: 24px; text-align: right; }
+.cat-amt { font-family: var(--mono); font-size: 0.82rem; font-weight: 500; min-width: 85px; text-align: right; }
+.bar-wrap { flex: 0.7; height: 3px; background: var(--bg4); border-radius: 3px; }
+.bar { height: 100%; border-radius: 3px; transition: width .5s ease; }
+
+/* ═══ TABLE ═══ */
+.tbl-wrap { overflow-x: auto; border-radius: var(--r3); }
+table { width: 100%; border-collapse: collapse; font-size: 0.8rem; }
+thead th { background: var(--bg3); padding: 10px 13px; text-align: left; font-size: 0.64rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.07em; color: var(--ink3); border-bottom: 1px solid var(--border); white-space: nowrap; }
+tbody td { padding: 10px 13px; border-bottom: 1px solid var(--border); color: var(--ink2); vertical-align: middle; }
+tbody tr:last-child td { border-bottom: none; }
+tbody tr { transition: background var(--trans); }
+tbody tr:hover { background: rgba(255,255,255,0.025); }
+.mono { font-family: var(--mono); }
+.empty { text-align: center; padding: 28px 16px; color: var(--ink3); font-size: 0.82rem; }
+
+/* ═══ SETTINGS ═══ */
+.scard { background: var(--bg2); border: 1px solid var(--border); border-radius: var(--r3); padding: 18px; margin-bottom: 12px; }
+.scard h3 { font-size: 0.86rem; font-weight: 700; margin-bottom: 14px; color: var(--ink); }
+.srow { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; margin-bottom: 10px; }
+.srow .fi { flex: 1; min-width: 0; }
+.cat-chip { display: flex; align-items: center; justify-content: space-between; padding: 9px 12px; border-radius: var(--r2); background: var(--bg3); border: 1px solid var(--border); margin-bottom: 6px; gap: 10px; }
+.cat-chip-left { display: flex; align-items: center; gap: 8px; }
+.cat-chip-actions { display: flex; gap: 5px; }
+.rec-row { display: flex; align-items: center; justify-content: space-between; padding: 9px 0; border-bottom: 1px solid var(--border); gap: 10px; }
+.rec-row:last-child { border-bottom: none; }
+
+/* ═══ MODALS ═══ */
+.overlay { position: fixed; inset: 0; z-index: 800; background: rgba(0,0,0,0.72); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); display: flex; align-items: center; justify-content: center; padding: 16px; animation: fadeIn .15s ease; }
+@keyframes fadeIn { from { opacity:0; } to { opacity:1; } }
+.modal { background: var(--bg2); border: 1px solid var(--border2); border-radius: var(--r4); padding: 22px; width: 100%; max-width: 460px; animation: slideUp .2s ease; }
+@keyframes slideUp { from { transform:translateY(16px); opacity:0; } to { transform:translateY(0); opacity:1; } }
+.modal h3 { font-size: 0.95rem; margin-bottom: 14px; font-weight: 700; }
+.modal-actions { display: flex; gap: 8px; justify-content: flex-end; margin-top: 14px; }
+
+/* ═══ TOAST ═══ */
+.toasts { position: fixed; top: calc(var(--nav-h) + 8px); right: 12px; z-index: 9999; display: flex; flex-direction: column; gap: 6px; }
+.toast { padding: 8px 14px; border-radius: var(--r2); font-weight: 700; font-size: 0.74rem; color: #000; background: var(--azure); animation: toastIn .18s ease; max-width: 280px; }
+.toast.ok  { background: var(--emerald); }
+.toast.err { background: var(--rose); color: #fff; }
+.toast.warn { background: var(--amber); }
+@keyframes toastIn { from { opacity:0; transform:translateX(30px); } to { opacity:1; transform:translateX(0); } }
+
+/* ═══ MISC ═══ */
+.section-label { font-size: 0.64rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink3); margin: 0 0 8px; }
+.divider { height: 1px; background: var(--border); margin: 12px 0; }
+.text-emerald { color: var(--emerald); }
+.text-rose    { color: var(--rose); }
+.text-azure   { color: var(--azure); }
+.text-amber   { color: var(--amber); }
+.text-milk    { color: var(--milk); }
+.text-milk2   { color: var(--milk2); }
+.text-muted   { color: var(--ink3); }
+.rec-dash-row { display: flex; align-items: center; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid var(--border); }
+.rec-dash-row:last-child { border-bottom: none; }
+.mn-pos { color: var(--emerald); font-family: var(--mono); }
+.mn-neg { color: var(--rose); font-family: var(--mono); }
+
+@media print {
+  .topnav, .botnav, .toasts { display: none !important; }
+  body { background: #fff; color: #000; }
+}
+</style>
 </head>
 <body>
 
-<div class="container" id="loginContainer">
-    <h2>📒 Finance Ledger</h2>
-    <p class="subtitle">Multi-User Finance Tracker</p>
+<div class="login-overlay" id="loginScreen">
+  <div class="login-card">
+    <h2>📒 Ledger<span style="color:var(--azure)">.</span></h2>
+    <p class="subtitle">Sign in with your credentials</p>
     
-    <div class="status" id="connectionStatus">
-        Checking connection...
-    </div>
+    <label for="loginCNIC">CNIC Number (13 digits)</label>
+    <input type="text" id="loginCNIC" placeholder="00000-0000000-0" maxlength="15" inputmode="numeric" pattern="[0-9\-]+" autocomplete="off">
     
-    <label for="loginCNIC">CNIC Number</label>
-    <input type="text" id="loginCNIC" placeholder="32202-2278742-5" maxlength="15" autocomplete="off">
+    <label for="loginPIN">PIN (4 digits)</label>
+    <input type="password" id="loginPIN" placeholder="••••" maxlength="4" inputmode="numeric" pattern="[0-9]{4}" autocomplete="off">
     
-    <label for="loginPIN">PIN Code</label>
-    <input type="password" id="loginPIN" placeholder="••••" maxlength="4" autocomplete="off">
-    
-    <button id="loginBtn" onclick="handleLogin()">🔐 Sign In</button>
-    <div class="error" id="loginError"></div>
-    
-    <div class="info">
-        <p>Your CNIC: <code>3220222787425</code></p>
-        <p>Your PIN: <code>4455</code></p>
-    </div>
+    <button class="login-btn" id="loginBtn" onclick="handleLogin()">🔐 Sign In</button>
+    <div class="login-error" id="loginError"></div>
+  </div>
 </div>
 
+<div id="appContent" style="display:none">
+
+<nav class="topnav">
+  <div class="brand">
+    <div class="brand-icon">📒</div>
+    Ledger<span class="brand-dot">.</span>
+  </div>
+  <div class="nav-pills">
+    <button class="nav-pill active" data-tab="dashboard"><span class="pi">📊</span> Dashboard</button>
+    <button class="nav-pill" data-tab="transactions"><span class="pi">📋</span> Transactions</button>
+    <button class="nav-pill" data-tab="settings"><span class="pi">⚙️</span> Settings</button>
+  </div>
+  <div class="nav-end">
+    <div class="user-chip">
+      <div class="user-av" id="userAv">?</div>
+      <span id="userNameDisplay">Loading…</span>
+    </div>
+    <button class="logout-btn" onclick="handleLogout()">🚪 Logout</button>
+  </div>
+</nav>
+
+<nav class="botnav">
+  <button class="bot-btn active" data-tab="dashboard"><span class="bi">📊</span>Dash</button>
+  <button class="bot-btn" data-tab="transactions"><span class="bi">📋</span>Txns</button>
+  <button class="bot-btn" data-tab="settings"><span class="bi">⚙️</span>More</button>
+</nav>
+
+<div class="wrap">
+
+  <div class="page active" id="page-dashboard">
+    <div class="fbar">
+      <span class="fbar-label">Period</span>
+      <input type="date" id="dashStart">
+      <span class="sep">→</span>
+      <input type="date" id="dashEnd">
+      <button class="btn btn-primary btn-sm" onclick="refreshDashboard()">Apply</button>
+      <button class="btn btn-ghost btn-sm" onclick="setThisMonth('dash')">This Month</button>
+      <button class="btn btn-ghost btn-sm" onclick="setLastMonth()">Last Month</button>
+    </div>
+
+   <div class="kpi-grid">
+      <div class="kpi">
+        <div class="kpi-accent" style="background:var(--milk)"></div>
+        <div class="kpi-label">Prev Balance</div>
+        <div class="kpi-val" id="kPrev">—</div>
+      </div>
+      <div class="kpi">
+        <div class="kpi-accent" style="background:var(--azure)"></div>
+        <div class="kpi-label">Period Income</div>
+        <div class="kpi-val text-azure" id="kIncome">—</div>
+      </div>
+      <div class="kpi">
+        <div class="kpi-accent" style="background:var(--emerald)"></div>
+        <div class="kpi-label">Total Income</div>
+        <div class="kpi-val text-emerald" id="kTotal">—</div>
+      </div>
+      <div class="kpi">
+        <div class="kpi-accent" style="background:var(--rose)"></div>
+        <div class="kpi-label">Period Expenses</div>
+        <div class="kpi-val text-rose" id="kExpenses">—</div>
+      </div>
+      <div class="kpi">
+        <div class="kpi-accent" style="background:var(--amber)"></div>
+        <div class="kpi-label">Remaining</div>
+        <div class="kpi-val text-amber" id="kRemaining">—</div>
+      </div>
+    </div>
+
+    <div class="dash-grid">
+      
+      <div class="card open" id="cIncomeCat">
+        <div class="card-head" onclick="toggleCard('cIncomeCat')">
+          <div class="card-head-left"><span class="card-icon">💰</span>Income by Category</div>
+          <span class="chev">▾</span>
+        </div>
+        <div class="card-body" id="incomeCatBody"><div class="empty">No data</div></div>
+      </div>
+
+      <div style="display:flex; flex-direction:column; gap:12px">
+        
+        <div class="card open" id="cEntry">
+          <div class="card-head" onclick="toggleCard('cEntry')">
+            <div class="card-head-left"><span class="card-icon">📝</span>Add Transaction</div>
+            <span class="chev">▾</span>
+          </div>
+          <div class="card-body">
+            <div class="form-stack">
+              <input type="date" id="txnDate" class="fi">
+              <div class="type-row">
+                <button class="type-btn t-income" id="btnIncome" onclick="setTxnType('Income')">💵 Income</button>
+                <button class="type-btn" id="btnExpense" onclick="setTxnType('Expense')">💸 Expense</button>
+              </div>
+              <input type="hidden" id="txnType" value="Income">
+              <select id="txnCat" class="fi"><option value="">Category…</option></select>
+              <input type="number" id="txnAmt" class="fi" placeholder="Amount" step="0.01" min="0.01">
+              <textarea id="txnDesc" class="fi" placeholder="Description (optional)"></textarea>
+              <button class="btn btn-primary btn-fw" onclick="saveTxn()">💾 Save Transaction</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="card open" id="cMilkQuick">
+          <div class="card-head" onclick="toggleCard('cMilkQuick')">
+            <div class="card-head-left"><span class="card-icon">🥛</span>Milk Quick Entry</div>
+            <span class="chev">▾</span>
+          </div>
+          <div class="card-body">
+            <div class="form-stack">
+              <div class="type-row" style="margin-bottom:4px">
+                <button class="milk-type-btn m-extra" id="btnStd" onclick="setMilkType('standard')" style="font-size:0.7rem">⚙️ Standard</button>
+                <button class="milk-type-btn" id="btnExtra" onclick="setMilkType('extra')" style="font-size:0.7rem">➕ Extra</button>
+                <button class="milk-type-btn" id="btnAbs" onclick="setMilkType('absent')" style="font-size:0.7rem">❌ Absent</button>
+              </div>
+
+              <input type="date" id="milkDate" class="fi">
+
+              <div class="form-row" id="rowStd">
+                <input type="number" id="milkStdLiters" class="fi" placeholder="Daily L" step="0.1">
+                <input type="number" id="milkStdPrice" class="fi" placeholder="Rate/L" step="0.01">
+              </div>
+
+              <div class="form-row" id="rowExtra" style="display:none">
+                <input type="number" id="milkExtraLiters" class="fi" placeholder="Extra Liters" step="0.1">
+              </div>
+
+              <div style="display:flex; gap:8px; margin-top:8px; margin-bottom:8px;">
+                
+                <div style="flex:1; background:var(--bg3); padding:10px 8px; border-radius:var(--r2); border:1px solid var(--border); text-align:center;">
+                  <div style="font-size:0.6rem; color:var(--ink3); text-transform:uppercase; font-weight:700; letter-spacing:0.05em">Prev Month</div>
+                  <div style="font-size:0.55rem; color:var(--ink4); margin-bottom:4px;">(To pay now)</div>
+                  <div class="mono" id="milkPrevEst" style="font-size:1.05rem; color:var(--ink); font-weight:700">—</div>
+                </div>
+
+                <div style="flex:1; background:var(--bg3); padding:10px 8px; border-radius:var(--r2); border:1px solid var(--milk); text-align:center; position:relative; overflow:hidden;">
+                  <div style="position:absolute; top:0; left:0; right:0; height:2px; background:var(--milk);"></div>
+                  <div style="font-size:0.6rem; color:var(--ink3); text-transform:uppercase; font-weight:700; letter-spacing:0.05em">Current Month</div>
+                  <div style="font-size:0.55rem; color:var(--ink4); margin-bottom:4px;">(Next month's bill)</div>
+                  <div class="mono" id="milkEst" style="font-size:1.05rem; color:var(--milk); font-weight:700">—</div>
+                </div>
+
+              </div>
+
+              <button class="btn btn-milk btn-fw" onclick="saveMilk()">💾 Save Milk Record</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="card closed" id="cMilkTable">
+          <div class="card-head" onclick="toggleCard('cMilkTable')">
+            <div class="card-head-left"><span class="card-icon">📋</span>Milk Records</div>
+            <span class="chev">▾</span>
+          </div>
+          <div class="card-body" style="padding:0">
+            <div class="tbl-wrap">
+              <table>
+                <thead><tr><th>Date</th><th>Type</th><th>L</th><th>Rate</th><th>Total</th><th></th></tr></thead>
+                <tbody id="milkTableBody"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card open" id="cExpenseCat">
+        <div class="card-head" onclick="toggleCard('cExpenseCat')">
+          <div class="card-head-left"><span class="card-icon">💸</span>Expenses by Category</div>
+          <span class="chev">▾</span>
+        </div>
+        <div class="card-body" id="expenseCatBody"><div class="empty">No data</div></div>
+      </div>
+    </div>
+
+    <div class="card open" id="cRecurring">
+      <div class="card-head" onclick="toggleCard('cRecurring')">
+        <div class="card-head-left"><span class="card-icon">🔄</span>Recurring Monthly Expenses</div>
+        <span class="chev">▾</span>
+      </div>
+      <div class="card-body" id="recurringDashBody"><div class="empty">None set</div></div>
+    </div>
+
+    <div class="card open" id="cMonthly">
+      <div class="card-head" onclick="toggleCard('cMonthly')">
+        <div class="card-head-left"><span class="card-icon">📊</span>Month-wise Summary</div>
+        <span class="chev">▾</span>
+      </div>
+      <div class="card-body">
+        <div class="tbl-wrap">
+          <table>
+            <thead><tr><th>Month</th><th>Income</th><th>Expenses</th><th>Net</th></tr></thead>
+            <tbody id="monthlyBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="page" id="page-transactions">
+    <div class="fbar">
+      <span class="fbar-label">Filter</span>
+      <input type="date" id="txnStart">
+      <span class="sep">→</span>
+      <input type="date" id="txnEnd">
+      <button class="btn btn-primary btn-sm" onclick="loadTxns()">Filter</button>
+      <button class="btn btn-ghost btn-sm" onclick="setThisMonth('txn')">This Month</button>
+      <select id="txnTypeFlt" class="fi" style="flex:0 1 120px;max-width:120px" onchange="loadTxns()">
+        <option value="">All</option>
+        <option value="Income">Income</option>
+        <option value="Expense">Expense</option>
+      </select>
+      <button class="btn btn-ghost btn-sm" onclick="exportCSV()">📥 CSV</button>
+      <button class="btn btn-ghost btn-sm" onclick="window.print()">🖨️</button>
+    </div>
+
+    <div class="kpi-grid" style="grid-template-columns:repeat(3,1fr)">
+      <div class="kpi"><div class="kpi-accent" style="background:var(--emerald)"></div><div class="kpi-label">Income</div><div class="kpi-val text-emerald" id="tKpiIncome">—</div></div>
+      <div class="kpi"><div class="kpi-accent" style="background:var(--rose)"></div><div class="kpi-label">Expenses</div><div class="kpi-val text-rose" id="tKpiExpenses">—</div></div>
+      <div class="kpi"><div class="kpi-accent" style="background:var(--azure)"></div><div class="kpi-label">Net</div><div class="kpi-val text-azure" id="tKpiNet">—</div></div>
+    </div>
+
+    <div class="card">
+      <div class="tbl-wrap">
+        <table>
+          <thead><tr><th>Date</th><th>Type</th><th>Category</th><th>Amount</th><th>Description</th><th></th></tr></thead>
+          <tbody id="txnTableBody"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="page" id="page-settings">
+    <div class="scard">
+      <h3>🌍 Country & Currency</h3>
+      <p style="font-size:0.82rem;color:var(--ink2);margin-bottom:12px">Current: <strong id="curCountry" style="color:var(--ink)"></strong></p>
+      <button class="btn btn-ghost btn-sm" onclick="openCountryModal()">Change Country / Currency</button>
+    </div>
+
+    <div class="scard">
+      <h3>💰 Income Categories</h3>
+      <div class="srow">
+        <input type="text" id="newIncomeCat" class="fi" placeholder="New income category…">
+        <button class="btn btn-primary btn-sm" onclick="addCat('Income')">+ Add</button>
+      </div>
+      <div id="incomeCatList"></div>
+    </div>
+
+    <div class="scard">
+      <h3>💸 Expense Categories</h3>
+      <div class="srow">
+        <input type="text" id="newExpenseCat" class="fi" placeholder="New expense category…">
+        <button class="btn btn-primary btn-sm" onclick="addCat('Expense')">+ Add</button>
+      </div>
+      <div id="expenseCatList"></div>
+    </div>
+
+    <div class="scard">
+      <h3>🔄 Recurring Monthly Expenses</h3>
+      <div class="srow">
+        <input type="text" id="newRecName" class="fi" placeholder="Name" style="flex:2">
+        <input type="number" id="newRecAmt" class="fi" placeholder="Amount" style="flex:1;min-width:80px">
+        <select id="newRecCat" class="fi" style="flex:1;min-width:100px"><option value="">Category</option></select>
+        <button class="btn btn-primary btn-sm" onclick="addRecurring()">+ Add</button>
+      </div>
+      <div id="recurringSettList"></div>
+    </div>
+  </div>
+</div>
+
+</div><div class="overlay" id="editModal" style="display:none" onclick="if(event.target===this)closeEdit()">
+  <div class="modal" onclick="event.stopPropagation()">
+    <h3>✏️ Edit Transaction</h3>
+    <div class="form-stack">
+      <input type="hidden" id="eTxnId">
+      <input type="date" id="eTxnDate" class="fi">
+      <select id="eTxnType" class="fi" onchange="populateEditCats()"><option value="Income">Income</option><option value="Expense">Expense</option></select>
+      <select id="eTxnCat" class="fi"></select>
+      <input type="number" id="eTxnAmt" class="fi" step="0.01">
+      <textarea id="eTxnDesc" class="fi" placeholder="Description"></textarea>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" onclick="closeEdit()">Cancel</button>
+      <button class="btn btn-primary" onclick="submitUpdate()">Update</button>
+    </div>
+  </div>
+</div>
+
+<div class="overlay" id="editMilkModal" style="display:none" onclick="if(event.target===this)closeEditMilk()">
+  <div class="modal" onclick="event.stopPropagation()">
+    <h3>✏️ Edit Milk Record</h3>
+    <div class="form-stack">
+      <input type="hidden" id="eMilkId">
+      <input type="date" id="eMilkDateModal" class="fi">
+      <select id="eMilkType" class="fi"><option value="absent">❌ Absent</option><option value="extra">➕ Extra</option><option value="standard">⚙️ Standard</option></select>
+      <div class="form-row">
+        <input type="number" id="eMilkLiters" class="fi" placeholder="Liters" step="0.1">
+        <input type="number" id="eMilkPrice" class="fi" placeholder="Price/L" step="0.01">
+      </div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" onclick="closeEditMilk()">Cancel</button>
+      <button class="btn btn-milk" onclick="submitUpdateMilk()">Update</button>
+    </div>
+  </div>
+</div>
+
+<div class="overlay" id="countryModal" style="display:none" onclick="if(event.target===this)closeCountryModal()">
+  <div class="modal" onclick="event.stopPropagation()">
+    <h3>🌍 Select Country & Currency</h3>
+    <select id="countrySelect" class="fi" style="width:100%;margin-bottom:4px"></select>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" onclick="closeCountryModal()">Cancel</button>
+      <button class="btn btn-primary" onclick="saveCountry()">Save</button>
+    </div>
+  </div>
+</div>
+
+<div class="toasts" id="toasts"></div>
+
 <script>
-// ═══════════════════════════════════════════
-// ⚠️ REPLACE THIS WITH YOUR ACTUAL GAS URL
-// ═══════════════════════════════════════════
-const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbw8jvGVOSod2YF9pPMlehBV8TUcO1r2CpqUbOxy4fAuZGXOAO0E0DNDcHKs6RQsCmOmMw/exec';
-
-// ═══════════════════════════════════════════
-// Check if URL is configured
-// ═══════════════════════════════════════════
-if (SCRIPT_URL.includes('YOUR_SCRIPT_ID')) {
-    document.getElementById('connectionStatus').className = 'status error';
-    document.getElementById('connectionStatus').textContent = 
-        '⚠️ Please configure SCRIPT_URL with your Google Apps Script Web App URL';
-    document.getElementById('loginBtn').disabled = true;
+'use strict';
+// ── COUNTRIES ──
+const COUNTRIES = {
+  IN:{ locale:'en-IN', currency:'INR', flag:'🇮🇳', name:'India' },
+  PK:{ locale:'ur-PK', currency:'PKR', flag:'🇵🇰', name:'Pakistan' },
+  US:{ locale:'en-US', currency:'USD', flag:'🇺🇸', name:'USA' },
+  GB:{ locale:'en-GB', currency:'GBP', flag:'🇬🇧', name:'UK' },
+  EU:{ locale:'de-DE', currency:'EUR', flag:'🇪🇺', name:'Eurozone' },
+  JP:{ locale:'ja-JP', currency:'JPY', flag:'🇯🇵', name:'Japan' },
+  AU:{ locale:'en-AU', currency:'AUD', flag:'🇦🇺', name:'Australia' },
+  CA:{ locale:'en-CA', currency:'CAD', flag:'🇨🇦', name:'Canada' },
+  AE:{ locale:'ar-AE', currency:'AED', flag:'🇦🇪', name:'UAE' },
+  SA:{ locale:'ar-SA', currency:'SAR', flag:'🇸🇦', name:'Saudi Arabia' },
+};
+// ── STATE ──
+let settings   = { country:'IN', locale:'en-IN', currency:'INR' };
+let allCats    = { Income:[], Expense:[] };
+let recurData  = [];
+let curMilkType = 'standard';
+// ── GAS BRIDGE ──
+function gs(fn, ...args) {
+  return new Promise((res,rej) => {
+    if(typeof google==='undefined'||!google.script||!google.script.run)
+      return rej(new Error('Must run as Google Apps Script.'));
+    google.script.run.withSuccessHandler(res).withFailureHandler(rej)[fn](...args);
+  });
 }
 
-// ═══════════════════════════════════════════
-// API Call Function
-// ═══════════════════════════════════════════
-async function callGAS(functionName, params = {}) {
-    const url = new URL(SCRIPT_URL);
-    
-    // Add function name and parameters
-    const payload = {
-        function: functionName,
-        parameters: params
-    };
-    
-    try {
-        const response = await fetch(url, {
-            method: 'POST',
-            mode: 'no-cors', // Important for cross-origin requests
-            cache: 'no-cache',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            redirect: 'follow',
-            body: JSON.stringify(payload)
-        });
-        
-        // With no-cors, we can't read the response directly
-        // We need to use a different approach
-        return { success: true, message: 'Request sent' };
-        
-    } catch (error) {
-        console.error('API Error:', error);
-        throw error;
+// ── FORMAT ──
+function fmt(v) {
+  const n = Number(v); if(isNaN(n)) return '0.00';
+  try { return new Intl.NumberFormat(settings.locale,{style:'currency',currency:settings.currency,minimumFractionDigits:2}).format(n); }
+  catch(e) { return n.toFixed(2); }
+}
+function fmtL(v) { return (+v||0).toFixed(1)+' L'; }
+
+// ── TOAST ──
+function toast(msg, type='info') {
+  const c = document.getElementById('toasts');
+  const t = document.createElement('div');
+  t.className = 'toast ' + (type==='success'?'ok': type==='error'?'err': type==='warn'?'warn':'');
+  t.textContent = msg; c.appendChild(t);
+  setTimeout(()=>{ t.style.opacity='0'; t.style.transition='opacity .3s'; setTimeout(()=>t.remove(),300); }, 2400);
+}
+
+// ── LOGIN HANDLERS ──
+function formatCNICInput(input) {
+  // Remove all non-digits
+  let digits = input.replace(/\D/g, '');
+  // Limit to 13 digits
+  digits = digits.substring(0, 13);
+  // Format as 00000-0000000-0
+  if (digits.length > 5) {
+    digits = digits.substring(0,5) + '-' + digits.substring(5);
+  }
+  if (digits.length > 13) {
+    digits = digits.substring(0,13) + '-' + digits.substring(13);
+  }
+  return digits;
+}
+
+function getRawCNIC(input) {
+  return input.replace(/\D/g, '');
+}
+
+async function handleLogin() {
+  const cnicInput = document.getElementById('loginCNIC').value;
+  const pin = document.getElementById('loginPIN').value;
+  const errorEl = document.getElementById('loginError');
+  
+  const rawCNIC = getRawCNIC(cnicInput);
+  // Validate CNIC (13 digits)
+  if (rawCNIC.length !== 13) {
+    errorEl.textContent = 'Please enter a valid 13-digit CNIC number.';
+    return;
+  }
+  
+  // Validate PIN (4 digits)
+  if (pin.length !== 4 || !/^\d{4}$/.test(pin)) {
+    errorEl.textContent = 'Please enter a valid 4-digit PIN.';
+    return;
+  }
+  
+  // Disable button and show loading
+  const btn = document.getElementById('loginBtn');
+  btn.textContent = 'Signing in…';
+  btn.disabled = true;
+  errorEl.textContent = '';
+  
+  try {
+    const result = await gs('login', rawCNIC, pin);
+    if (result.success) {
+      // Show main app
+      document.getElementById('loginScreen').style.display = 'none';
+      document.getElementById('appContent').style.display = 'block';
+      
+      // Update user display
+      const userName = result.user.name || 'User';
+      document.getElementById('userNameDisplay').textContent = userName;
+      document.getElementById('userAv').textContent = userName[0].toUpperCase();
+      
+      // Initialize app
+      await initApp();
+    } else {
+      errorEl.textContent = result.message || 'Invalid credentials.';
+      btn.textContent = '🔐 Sign In';
+      btn.disabled = false;
     }
+  } catch (e) {
+    errorEl.textContent = 'Connection error. Please try again.';
+    console.error(e);
+    btn.textContent = '🔐 Sign In';
+    btn.disabled = false;
+  }
 }
 
-// ═══════════════════════════════════════════
-// Alternative: Use JSONP-style callback
-// ═══════════════════════════════════════════
-function callGASWithCallback(functionName, params, callback) {
-    // Create a unique callback name
-    const callbackName = 'gasCallback_' + Date.now();
+async function handleLogout() {
+  try {
+    await gs('logout');
+  } catch (e) {
+    console.error('Logout error:', e);
+  }
+  
+  // Hide app, show login
+  document.getElementById('appContent').style.display = 'none';
+  document.getElementById('loginScreen').style.display = 'flex';
+  // Clear login fields
+  document.getElementById('loginCNIC').value = '';
+  document.getElementById('loginPIN').value = '';
+  document.getElementById('loginError').textContent = '';
+  document.getElementById('loginBtn').textContent = '🔐 Sign In';
+  document.getElementById('loginBtn').disabled = false;
+}
+
+// ── APPLY COUNTRY ──
+function applyCountry(code) {
+  const c = COUNTRIES[code] || COUNTRIES.IN;
+  settings = { country:code, locale:c.locale, currency:c.currency };
+  const el = document.getElementById('curCountry');
+  if(el) el.textContent = c.flag+' '+c.name+' ('+c.currency+')';
+}
+
+function fillCountryDrop(id) {
+  const el = document.getElementById(id); if(!el) return;
+  el.innerHTML = '<option value="">— Select —</option>';
+  Object.keys(COUNTRIES).forEach(code => {
+    const c = COUNTRIES[code];
+    el.innerHTML += `<option value="${code}">${c.flag} ${c.name} (${c.currency})</option>`;
+  });
+  el.value = settings.country;
+}
+
+function openCountryModal() { fillCountryDrop('countrySelect'); document.getElementById('countryModal').style.display='flex'; }
+function closeCountryModal() { document.getElementById('countryModal').style.display='none'; }
+async function saveCountry() {
+  const code = document.getElementById('countrySelect').value;
+  if(!code) return toast('Select a country.','error');
+  try {
+    await gs('saveUserSettings',{country:code});
+    applyCountry(code); closeCountryModal();
+    refreshDashboard(); loadTxns();
+    toast('Currency updated','success');
+  } catch(e) { toast('Save failed','error'); }
+}
+
+// ── TOGGLE CARD ──
+function toggleCard(id) {
+  const card = document.getElementById(id);
+  const isOpen = card.classList.contains('open');
+  card.classList.toggle('open', !isOpen);
+  card.classList.toggle('closed', isOpen);
+}
+
+// ── NAVIGATION ──
+function setupNav() {
+  document.querySelectorAll('[data-tab]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const tab = btn.dataset.tab;
+      document.querySelectorAll('[data-tab]').forEach(b => b.classList.toggle('active', b.dataset.tab===tab));
+      document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+      document.getElementById('page-'+tab).classList.add('active');
+      if(tab==='transactions') loadTxns();
+      if(tab==='settings') { loadCatsForSettings(); renderRecurringSett(); }
+      if(tab==='dashboard') refreshDashboard();
+    });
+  });
+}
+
+// ── DATE HELPERS ──
+function today() { return new Date().toISOString().split('T')[0]; }
+function monthRange(d) {
+  const y=d.getFullYear(), m=String(d.getMonth()+1).padStart(2,'0');
+  const last = new Date(y, d.getMonth()+1, 0).getDate();
+  return [`${y}-${m}-01`, `${y}-${m}-${last}`];
+}
+function setThisMonth(ctx) {
+  const [s,e] = monthRange(new Date());
+  if(ctx==='dash') { document.getElementById('dashStart').value=s; document.getElementById('dashEnd').value=e; refreshDashboard(); }
+  if(ctx==='txn')  { document.getElementById('txnStart').value=s; document.getElementById('txnEnd').value=e; loadTxns(); }
+}
+function setLastMonth() {
+  const d=new Date();
+  d.setMonth(d.getMonth()-1);
+  const [s,e] = monthRange(d);
+  document.getElementById('dashStart').value=s; document.getElementById('dashEnd').value=e; refreshDashboard();
+}
+
+// ── DASHBOARD ──
+async function refreshDashboard() {
+  const s=document.getElementById('dashStart').value, e=document.getElementById('dashEnd').value;
+  if(!s||!e) return;
+  try {
+    const d = await gs('getDashboardData',s,e);
+    const prev=d.prevMonthBalance||0, inc=d.totalIncome||0, exp=d.totalExpenses||0;
+    const total=prev+inc, rem=total-exp;
+    document.getElementById('kPrev').textContent       = fmt(prev);
+    document.getElementById('kIncome').textContent     = fmt(inc);
+    document.getElementById('kTotal').textContent      = fmt(total);
+    document.getElementById('kExpenses').textContent   = fmt(exp);
+    document.getElementById('kRemaining').textContent  = fmt(rem);
+    document.getElementById('kRemaining').className    = 'kpi-val '+(rem>=0?'text-emerald':'text-rose');
+    renderCatRows(d.incomeByCategory, 'incomeCatBody', 'emerald');
+    renderCatRows(d.expenseByCategory, 'expenseCatBody', 'rose');
+    renderMonthly(d.monthlySummary);
     
-    // Store callback
-    window[callbackName] = function(response) {
-        callback(response);
-        // Cleanup
-        delete window[callbackName];
-        document.getElementById('gasScript')?.remove();
-    };
+    updateMilkDashboard();
+    loadMilk();
+  } catch(e2) { toast('Dashboard error','error'); console.error(e2); }
+}
+
+function renderCatRows(arr, id, color) {
+  const el = document.getElementById(id);
+  if(!arr||!arr.length) { el.innerHTML='<div class="empty">No data</div>'; return; }
+  const total = arr.reduce((s,i)=>s+i.total,0)||1;
+  arr.sort((a,b)=>b.total-a.total);
+  el.innerHTML = arr.map(c => {
+    const pct = Math.round((c.total/total)*100);
+    return `<div class="cat-row">
+      <span class="cat-name">${c.category}</span>
+      <span class="cat-count text-muted">${c.count}x</span>
+      <div class="bar-wrap"><div class="bar" style="width:${pct}%;background:var(--${color})"></div></div>
+      <span class="cat-amt text-${color}">${fmt(c.total)}</span>
+    </div>`;
+  }).join('');
+}
+
+function renderMonthly(arr) {
+  const tb = document.getElementById('monthlyBody');
+  if(!arr||!arr.length) { tb.innerHTML='<tr><td colspan="4" class="empty">No data</td></tr>'; return; }
+  tb.innerHTML = arr.reverse().map(s =>
+    `<tr>
+      <td class="mono">${s.month}</td>
+      <td class="mono text-emerald">${fmt(s.totalIncome)}</td>
+      <td class="mono text-rose">${fmt(s.totalExpenses)}</td>
+      <td class="${s.netBalance>=0?'mn-pos':'mn-neg'}">${fmt(s.netBalance)}</td>
+    </tr>`
+  ).join('');
+}
+
+// ── TRANSACTION TYPE ──
+function setTxnType(type) {
+  document.getElementById('txnType').value = type;
+  document.getElementById('btnIncome').className  = 'type-btn'+(type==='Income'?' t-income':'');
+  document.getElementById('btnExpense').className = 'type-btn'+(type==='Expense'?' t-expense':'');
+  fillTxnCatDrop();
+}
+function fillTxnCatDrop() {
+  const type = document.getElementById('txnType').value;
+  const sel  = document.getElementById('txnCat');
+  sel.innerHTML = '<option value="">Category…</option>';
+  (allCats[type]||[]).forEach(c => sel.innerHTML += `<option>${c}</option>`);
+}
+function fillRecCatDrop() {
+  const sel = document.getElementById('newRecCat'); if(!sel) return;
+  sel.innerHTML = '<option value="">Category</option>';
+  (allCats.Expense||[]).forEach(c => sel.innerHTML += `<option>${c}</option>`);
+}
+
+// ── SAVE TXN ──
+async function saveTxn() {
+  const txn = {
+    date: document.getElementById('txnDate').value,
+    type: document.getElementById('txnType').value,
+    category: document.getElementById('txnCat').value,
+    amount: parseFloat(document.getElementById('txnAmt').value),
+    description: document.getElementById('txnDesc').value
+  };
+  if(!txn.date||!txn.category||isNaN(txn.amount)||txn.amount<=0) return toast('Fill all required fields','error');
+  try {
+    await gs('saveTransaction', txn);
+    toast('Saved!','success');
+    document.getElementById('txnAmt').value=''; document.getElementById('txnDesc').value='';
+    document.getElementById('txnDate').value=today(); setTxnType('Income');
+    refreshDashboard();
+  } catch(e) { toast('Save failed','error'); }
+}
+
+// ── LOAD TRANSACTIONS ──
+async function loadTxns() {
+  const s=document.getElementById('txnStart').value, e=document.getElementById('txnEnd').value;
+  const filter=document.getElementById('txnTypeFlt').value;
+  if(!s||!e) return;
+  try {
+    const res = await gs('getTransactionsByPeriod',s,e,filter);
+    document.getElementById('tKpiIncome').textContent   = fmt(res.totalIncome);
+    document.getElementById('tKpiExpenses').textContent = fmt(res.totalExpenses);
+    document.getElementById('tKpiNet').textContent      = fmt(res.netBalance);
+    document.getElementById('tKpiNet').className = 'kpi-val '+(res.netBalance>=0?'text-emerald':'text-rose');
+    renderTxnTable(res.transactions);
+  } catch(e2) { toast('Error loading transactions','error'); }
+}
+
+function renderTxnTable(txns) {
+  const tb = document.getElementById('txnTableBody');
+  if(!txns.length) { tb.innerHTML='<tr><td colspan="6" class="empty">No transactions found</td></tr>'; return; }
+  tb.innerHTML = txns.map(t => {
+    const isInc = t.type==='Income';
+    return `<tr>
+      <td class="mono">${t.date}</td>
+      <td><span class="badge ${isInc?'b-income':'b-expense'}">${t.type}</span></td>
+      <td>${t.category}</td>
+      <td class="mono ${isInc?'text-emerald':'text-rose'}">${isInc?'+':'−'}${fmt(t.amount)}</td>
+      <td style="font-size:0.75rem;color:var(--ink3)">${t.description||'—'}</td>
+      <td style="white-space:nowrap">
+        <button class="btn btn-ghost btn-xs" onclick='openEdit(${JSON.stringify(t)})'>✏️</button>
+        <button class="btn btn-danger btn-xs" onclick="delTxn('${t.id.replace(/'/g,"\\'")}')">🗑</button>
+      </td>
+    </tr>`;
+  }).join('');
+}
+
+function openEdit(t) {
+  document.getElementById('eTxnId').value=t.id;
+  document.getElementById('eTxnDate').value=t.date;
+  document.getElementById('eTxnType').value=t.type;
+  document.getElementById('eTxnAmt').value=t.amount;
+  document.getElementById('eTxnDesc').value=t.description||'';
+  populateEditCats();
+  setTimeout(()=>{ document.getElementById('eTxnCat').value=t.category; },60);
+  document.getElementById('editModal').style.display='flex';
+}
+function closeEdit() { document.getElementById('editModal').style.display='none'; }
+function populateEditCats() {
+  const type=document.getElementById('eTxnType').value;
+  const sel=document.getElementById('eTxnCat');
+  sel.innerHTML='<option value="">Select…</option>';
+  (allCats[type]||[]).forEach(c=>sel.innerHTML+=`<option>${c}</option>`);
+}
+async function submitUpdate() {
+  const txn={ id:document.getElementById('eTxnId').value, date:document.getElementById('eTxnDate').value, type:document.getElementById('eTxnType').value, category:document.getElementById('eTxnCat').value, amount:parseFloat(document.getElementById('eTxnAmt').value), description:document.getElementById('eTxnDesc').value };
+  try { await gs('updateTransaction',txn); toast('Updated!','success'); closeEdit();
+  loadTxns(); refreshDashboard(); } catch(e) { toast('Update failed','error'); }
+}
+async function delTxn(id) {
+  if(!confirm('Delete this transaction?')) return;
+  try { await gs('deleteTransaction',id);
+  toast('Deleted','warn'); loadTxns(); refreshDashboard(); } catch(e) { toast('Delete failed','error'); }
+}
+
+async function exportCSV() {
+  const s=document.getElementById('txnStart').value, e=document.getElementById('txnEnd').value;
+  const filter=document.getElementById('txnTypeFlt').value;
+  if(!s||!e) return toast('Choose a period first','error');
+  try {
+    const res = await gs('getTransactionsByPeriod',s,e,filter);
+    let csv='Date,Type,Category,Amount,Description\n';
+    res.transactions.forEach(t=>{ csv+=`${t.date},${t.type},"${t.category}",${t.amount},"${t.description||''}"\n`; });
+    const a=document.createElement('a'); a.href='data:text/csv;charset=utf-8,'+encodeURIComponent(csv);
+    a.download=`transactions_${s}_${e}.csv`; a.click();
+    toast('CSV exported!','success');
+  } catch(e) { toast('Export failed','error'); }
+}
+
+// ── CATEGORIES ──
+async function loadCatsForSettings() {
+  const cats = await gs('getCategories');
+  allCats = cats||{Income:[],Expense:[]};
+  renderSettingsCats(); fillTxnCatDrop(); fillRecCatDrop();
+}
+function renderSettingsCats() {
+  document.getElementById('incomeCatList').innerHTML  = (allCats.Income||[]).map(c=>catChipHTML('Income',c)).join('')||'<div class="empty">No categories</div>';
+  document.getElementById('expenseCatList').innerHTML = (allCats.Expense||[]).map(c=>catChipHTML('Expense',c)).join('')||'<div class="empty">No categories</div>';
+}
+function catChipHTML(type,c) {
+  const s=c.replace(/'/g,"\\'").replace(/"/g,'&quot;');
+  return `<div class="cat-chip">
+    <div class="cat-chip-left"><span class="badge ${type==='Income'?'b-income':'b-expense'}">${type}</span><span style="font-size:0.82rem">${c}</span></div>
+    <div class="cat-chip-actions">
+      <button class="btn btn-ghost btn-xs" onclick="editCat('${type}','${s}')">✏️</button>
+      <button class="btn btn-danger btn-xs" onclick="deleteCat('${type}','${s}')">🗑</button>
+    </div>
+  </div>`;
+}
+async function addCat(type) {
+  const inp=document.getElementById(type==='Income'?'newIncomeCat':'newExpenseCat');
+  const name=inp.value.trim(); if(!name) return;
+  await gs('addCategory',type,name); inp.value=''; loadCatsForSettings(); toast('Added!','success');
+}
+async function editCat(type,old) {
+  const n=prompt('Rename:',old); if(!n||n===old) return;
+  await gs('updateCategory',type,old,n); loadCatsForSettings(); refreshDashboard(); toast('Renamed','success');
+}
+async function deleteCat(type,name) {
+  if(!confirm(`Delete "${name}"?`)) return;
+  await gs('deleteCategory',type,name); loadCatsForSettings(); refreshDashboard(); toast('Deleted','warn');
+}
+
+// ── RECURRING ──
+async function loadRecurring() {
+  recurData = (await gs('getRecurringExpenses'))||[];
+  renderRecurringDash(); renderRecurringSett();
+}
+async function addRecurring() {
+  const name=document.getElementById('newRecName').value.trim();
+  const amount=parseFloat(document.getElementById('newRecAmt').value);
+  const category=document.getElementById('newRecCat').value;
+  if(!name||isNaN(amount)||amount<=0) return toast('Invalid input','error');
+  await gs('addRecurringExpense',{name,amount,category});
+  document.getElementById('newRecName').value=''; document.getElementById('newRecAmt').value='';
+  loadRecurring();
+  toast('Added!','success');
+}
+async function delRecurring(id) {
+  if(!confirm('Remove?')) return;
+  await gs('deleteRecurringExpense',id); loadRecurring();
+}
+function renderRecurringDash() {
+  const el=document.getElementById('recurringDashBody');
+  if(!recurData.length) { el.innerHTML='<div class="empty">No recurring expenses</div>'; return; }
+  el.innerHTML=recurData.map(r=>`<div class="rec-dash-row"><span style="font-size:0.82rem">${r.name}${r.category?` <span style="color:var(--ink3);font-size:0.72rem">(${r.category})</span>`:''}</span><span class="mono text-rose" style="font-size:0.82rem">${fmt(r.amount)}/mo</span></div>`).join('');
+}
+function renderRecurringSett() {
+  const el=document.getElementById('recurringSettList');
+  if(!recurData.length) { el.innerHTML='<div class="empty">None</div>'; return; }
+  el.innerHTML=recurData.map(r=>`<div class="rec-row"><span style="font-size:0.82rem">${r.name} – <span class="mono text-rose">${fmt(r.amount)}/mo</span></span><button class="btn btn-danger btn-xs" onclick="delRecurring('${r.id}')">🗑</button></div>`).join('');
+}
+
+// ── MILK (DASHBOARD INTEGRATION) ──
+function setMilkType(type) {
+  curMilkType = type;
+  document.getElementById('btnStd').className   = 'milk-type-btn' + (type==='standard' ? ' m-extra' : '');
+  document.getElementById('btnExtra').className = 'milk-type-btn' + (type==='extra' ? ' m-extra' : '');
+  document.getElementById('btnAbs').className   = 'milk-type-btn' + (type==='absent' ? ' m-absent' : '');
+
+  document.getElementById('rowStd').style.display   = (type==='standard') ? 'flex' : 'none';
+  document.getElementById('rowExtra').style.display = (type==='extra') ? 'flex' : 'none';
+}
+
+async function saveMilk() {
+  const record = {
+    date: document.getElementById('milkDate').value,
+    recordType: curMilkType,
+    notes: ''
+  };
+  if (!record.date) return toast('Choose a date', 'error');
+
+  if (curMilkType === 'standard') {
+    record.liters = parseFloat(document.getElementById('milkStdLiters').value) || 0;
+    record.pricePerLiter = parseFloat(document.getElementById('milkStdPrice').value) || 0;
+    if (record.liters <= 0 || record.pricePerLiter <= 0) return toast('Enter standard liters and rate', 'error');
+  } else if (curMilkType === 'extra') {
+    record.liters = parseFloat(document.getElementById('milkExtraLiters').value) || 0;
+    if (record.liters <= 0) return toast('Enter extra liters', 'error');
+  } 
+
+  try {
+    await gs('saveMilkRecord', record);
+    toast('Milk record saved!', 'success');
+    document.getElementById('milkStdLiters').value = '';
+    document.getElementById('milkExtraLiters').value = '';
     
-    // Build URL with parameters
-    let url = SCRIPT_URL + '?callback=' + callbackName;
-    url += '&function=' + encodeURIComponent(functionName);
-    
-    // Add parameters
-    Object.keys(params).forEach(key => {
-        url += '&' + encodeURIComponent(key) + '=' + encodeURIComponent(params[key]);
+    updateMilkDashboard();
+    loadMilk(); 
+  } catch (e) { toast('Save failed', 'error'); }
+}
+
+async function updateMilkDashboard() {
+  const elCur = document.getElementById('milkEst');
+  const elPrev = document.getElementById('milkPrevEst');
+  if (!elCur || !elPrev) return;
+  try {
+    const data = await gs('getMilkDashboardData');
+    elCur.textContent = fmt(data.currentMonthBill);
+    elPrev.textContent = fmt(data.previousMonthBill);
+  } catch (e) {
+    console.error(e);
+  }
+}
+
+async function loadMilk() {
+  const s=document.getElementById('dashStart').value, e=document.getElementById('dashEnd').value;
+  try {
+    const d = await gs('getMilkRecords',s,e);
+    renderMilkTable(d.records);
+  } catch(e2) { toast('Error loading milk records','error'); console.error(e2); }
+}
+
+function renderMilkTable(records) {
+  const tb=document.getElementById('milkTableBody');
+  if(!records.length) { tb.innerHTML='<tr><td colspan="6" class="empty">No milk records found</td></tr>'; return; }
+  tb.innerHTML=records.map(r=>{
+    let badgeClass = 'b-absent'; let badgeLabel = 'Absent';
+    if(r.recordType === 'extra') { badgeClass = 'b-extra'; badgeLabel = 'Extra'; }
+    if(r.recordType === 'standard') { badgeClass = 'b-standard'; badgeLabel = 'Standard'; }
+
+    let amountHtml = '';
+    if (r.recordType === 'absent') amountHtml = `<span class="text-emerald">+${fmt(r.amount)}</span>`;
+    else if (r.recordType === 'extra') amountHtml = `<span class="text-rose">−${fmt(r.amount)}</span>`;
+    else amountHtml = `<span style="color:var(--ink3)">—</span>`;
+
+    return `<tr>
+      <td class="mono" style="font-size:0.75rem">${r.date}</td>
+      <td><span class="badge ${badgeClass}">${badgeLabel}</span></td>
+      <td class="mono">${fmtL(r.liters)}</td>
+      <td class="mono">${fmt(r.pricePerLiter)}</td>
+      <td class="mono">${amountHtml}</td>
+      <td style="white-space:nowrap;text-align:right">
+        <button class="btn btn-ghost btn-xs" onclick='openEditMilk(${JSON.stringify(r)})'>✏️</button>
+        <button class="btn btn-danger btn-xs" onclick="delMilk('${r.id.replace(/'/g,"\\'")}')">🗑</button>
+      </td>
+    </tr>`
+  }).join('');
+}
+
+function openEditMilk(r) {
+  document.getElementById('eMilkId').value=r.id;
+  document.getElementById('eMilkDateModal').value=r.date;
+  document.getElementById('eMilkType').value=r.recordType;
+  document.getElementById('eMilkLiters').value=r.liters;
+  document.getElementById('eMilkPrice').value=r.pricePerLiter;
+  document.getElementById('editMilkModal').style.display='flex';
+}
+function closeEditMilk() { document.getElementById('editMilkModal').style.display='none'; }
+async function submitUpdateMilk() {
+  const rec={
+    id:document.getElementById('eMilkId').value,
+    date:document.getElementById('eMilkDateModal').value,
+    recordType:document.getElementById('eMilkType').value,
+    liters:parseFloat(document.getElementById('eMilkLiters').value)||0,
+    pricePerLiter:parseFloat(document.getElementById('eMilkPrice').value)||0,
+    notes:''
+  };
+  try { 
+    await gs('updateMilkRecord',rec); 
+    toast('Updated!','success'); 
+    closeEditMilk(); 
+    loadMilk(); 
+    updateMilkDashboard();
+  } catch(e) { toast('Update failed','error'); }
+}
+async function delMilk(id) {
+  if(!confirm('Delete this milk record?')) return;
+  try { await gs('deleteMilkRecord',id); toast('Deleted','warn'); loadMilk(); updateMilkDashboard(); } catch(e) { toast('Delete failed','error'); }
+}
+
+// ── INIT APP (after login) ──
+async function initApp() {
+  setupNav();
+  // Set initial dates
+  const [s,e] = monthRange(new Date()), td = today();
+  ['dashStart','txnStart'].forEach(id => document.getElementById(id).value=s);
+  ['dashEnd','txnEnd'].forEach(id => document.getElementById(id).value=e);
+  document.getElementById('txnDate').value=td;
+  document.getElementById('milkDate').value=td;
+
+  // Load settings
+  try { const sv=await gs('getUserSettings'); applyCountry((sv&&sv.country)?sv.country:'IN'); } catch(e) { applyCountry('IN'); }
+
+  // Load data
+  try {
+    const cats = await gs('getCategories');
+    allCats = cats||{Income:[],Expense:[]};
+    fillTxnCatDrop();
+    fillRecCatDrop();
+    await Promise.all([refreshDashboard(), loadRecurring()]);
+  } catch(e) { toast('Error loading data.','error'); console.error(e); }
+}
+
+// ── CNIC INPUT FORMATTING (Login Screen) ──
+document.addEventListener('DOMContentLoaded', () => {
+  const cnicInput = document.getElementById('loginCNIC');
+  const pinInput = document.getElementById('loginPIN');
+  
+  if (cnicInput) {
+    cnicInput.addEventListener('input', function(e) {
+      const cursorPosition = this.selectionStart;
+      const oldLength = this.value.length;
+      this.value = formatCNICInput(this.value);
+      const newLength = this.value.length;
+      
+      // Adjust cursor position
+      if (newLength > oldLength && (newLength === 6 || newLength === 14)) {
+        this.setSelectionRange(cursorPosition + 1, cursorPosition + 1);
+      } else {
+        this.setSelectionRange(cursorPosition, cursorPosition);
+      }
     });
     
-    // Create script tag
-    const script = document.createElement('script');
-    script.id = 'gasScript';
-    script.src = url;
-    document.body.appendChild(script);
-}
-
-// ═══════════════════════════════════════════
-// Test Connection
-// ═══════════════════════════════════════════
-async function testConnection() {
-    if (SCRIPT_URL.includes('YOUR_SCRIPT_ID')) {
-        return;
+    // Allow only digits and hyphens
+    cnicInput.addEventListener('keypress', function(e) {
+      if (!/[\d\-]/.test(e.key) && e.key !== 'Backspace' && e.key !== 'Delete' && e.key !== 'ArrowLeft' && e.key !== 'ArrowRight' && e.key !== 'Tab') {
+        e.preventDefault();
+      }
+    });
+  }
+  
+  if (pinInput) {
+    pinInput.addEventListener('input', function(e) {
+      this.value = this.value.replace(/\D/g, '').substring(0, 4);
+    });
+    pinInput.addEventListener('keypress', function(e) {
+      if (!/\d/.test(e.key) && e.key !== 'Backspace' && e.key !== 'Delete' && e.key !== 'ArrowLeft' && e.key !== 'ArrowRight' && e.key !== 'Tab') {
+        e.preventDefault();
+      }
+    });
+  }
+  
+  // Allow Enter key to submit login
+  document.addEventListener('keypress', function(e) {
+    if (e.key === 'Enter' && document.getElementById('loginScreen').style.display !== 'none') {
+      handleLogin();
     }
-    
-    try {
-        // Try to call whoAmI to test connection
-        const testUrl = SCRIPT_URL + '?function=whoAmI';
-        const response = await fetch(testUrl, {
-            method: 'GET',
-            mode: 'cors'
-        });
-        
-        if (response.ok) {
-            const data = await response.json();
-            if (data && !data.error) {
-                document.getElementById('connectionStatus').className = 'status success';
-                document.getElementById('connectionStatus').textContent = '✅ Connected to server';
-            }
-        }
-    } catch (e) {
-        document.getElementById('connectionStatus').className = 'status error';
-        document.getElementById('connectionStatus').textContent = 
-            '⚠️ Cannot connect. Make sure URL is correct and web app is deployed';
-    }
-}
-
-// ═══════════════════════════════════════════
-// Login Function
-// ═══════════════════════════════════════════
-async function handleLogin() {
-    const cnicInput = document.getElementById('loginCNIC');
-    const pinInput = document.getElementById('loginPIN');
-    const errorEl = document.getElementById('loginError');
-    const btn = document.getElementById('loginBtn');
-    
-    const cnic = cnicInput.value.replace(/\D/g, '');
-    const pin = pinInput.value;
-    
-    errorEl.textContent = '';
-    
-    // Validate CNIC
-    if (cnic.length !== 13) {
-        errorEl.textContent = 'Please enter a valid 13-digit CNIC number';
-        return;
-    }
-    
-    // Validate PIN
-    if (pin.length !== 4 || !/^\d{4}$/.test(pin)) {
-        errorEl.textContent = 'Please enter a valid 4-digit PIN';
-        return;
-    }
-    
-    // Check if URL is configured
-    if (SCRIPT_URL.includes('YOUR_SCRIPT_ID')) {
-        errorEl.textContent = 'SCRIPT_URL not configured in the code';
-        return;
-    }
-    
-    btn.textContent = 'Signing in...';
-    btn.disabled = true;
-    
-    try {
-        // Try direct fetch first
-        const loginUrl = SCRIPT_URL + '?function=login&cnic=' + cnic + '&pin=' + pin;
-        
-        const response = await fetch(loginUrl, {
-            method: 'GET',
-            mode: 'cors',
-            headers: {
-                'Accept': 'application/json'
-            }
-        });
-        
-        if (!response.ok) {
-            throw new Error('Server error: ' + response.status);
-        }
-        
-        const result = await response.json();
-        
-        if (result.success) {
-            errorEl.style.color = 'var(--emerald)';
-            errorEl.textContent = '✅ Login successful! Welcome ' + result.user.name;
-            
-            // Store user info
-            localStorage.setItem('user', JSON.stringify(result.user));
-            
-            // Reload or redirect
-            setTimeout(() => {
-                alert('Login successful!\nUser: ' + result.user.name + '\nCNIC: ' + result.user.cnic);
-            }, 500);
-            
-        } else {
-            errorEl.textContent = result.message || 'Invalid credentials';
-            btn.textContent = '🔐 Sign In';
-            btn.disabled = false;
-        }
-        
-    } catch (e) {
-        console.error('Login error:', e);
-        errorEl.textContent = 'Connection error: ' + e.message + 
-            '\n\nMake sure:\n1. SCRIPT_URL is correct\n2. Web app is deployed\n3. Web app has access set to "Anyone"';
-        btn.textContent = '🔐 Sign In';
-        btn.disabled = false;
-    }
-}
-
-// ═══════════════════════════════════════════
-// CNIC Input Formatting
-// ═══════════════════════════════════════════
-document.getElementById('loginCNIC').addEventListener('input', function(e) {
-    let digits = this.value.replace(/\D/g, '').substring(0, 13);
-    if (digits.length > 5) {
-        digits = digits.substring(0, 5) + '-' + digits.substring(5);
-    }
-    if (digits.length > 13) {
-        digits = digits.substring(0, 13) + '-' + digits.substring(13);
-    }
-    this.value = digits;
+  });
 });
-
-// PIN input - numbers only
-document.getElementById('loginPIN').addEventListener('input', function(e) {
-    this.value = this.value.replace(/\D/g, '').substring(0, 4);
-});
-
-// Enter key to submit
-document.addEventListener('keypress', function(e) {
-    if (e.key === 'Enter') {
-        handleLogin();
-    }
-});
-
-// Test connection on load
-testConnection();
 </script>
-
 </body>
 </html>
