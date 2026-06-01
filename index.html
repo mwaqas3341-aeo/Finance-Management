@@ -312,6 +312,7 @@ tbody tr:hover { background: rgba(255,255,255,0.025); }
 </head>
 <body>
 
+<!-- ══════════ LOGIN SCREEN ══════════ -->
 <div class="login-overlay" id="loginScreen">
   <div class="login-card">
     <h2>📒 Ledger<span style="color:var(--azure)">.</span></h2>
@@ -328,8 +329,10 @@ tbody tr:hover { background: rgba(255,255,255,0.025); }
   </div>
 </div>
 
+<!-- ══════════ MAIN APP (Hidden until login) ══════════ -->
 <div id="appContent" style="display:none">
 
+<!-- ══════════ TOP NAV ══════════ -->
 <nav class="topnav">
   <div class="brand">
     <div class="brand-icon">📒</div>
@@ -349,14 +352,17 @@ tbody tr:hover { background: rgba(255,255,255,0.025); }
   </div>
 </nav>
 
+<!-- ══════════ BOTTOM NAV ══════════ -->
 <nav class="botnav">
   <button class="bot-btn active" data-tab="dashboard"><span class="bi">📊</span>Dash</button>
   <button class="bot-btn" data-tab="transactions"><span class="bi">📋</span>Txns</button>
   <button class="bot-btn" data-tab="settings"><span class="bi">⚙️</span>More</button>
 </nav>
 
+<!-- ══════════ MAIN ══════════ -->
 <div class="wrap">
 
+  <!-- ▌ DASHBOARD ▐ -->
   <div class="page active" id="page-dashboard">
     <div class="fbar">
       <span class="fbar-label">Period</span>
@@ -398,6 +404,7 @@ tbody tr:hover { background: rgba(255,255,255,0.025); }
 
     <div class="dash-grid">
       
+      <!-- Left Column: Income by cat -->
       <div class="card open" id="cIncomeCat">
         <div class="card-head" onclick="toggleCard('cIncomeCat')">
           <div class="card-head-left"><span class="card-icon">💰</span>Income by Category</div>
@@ -406,8 +413,10 @@ tbody tr:hover { background: rgba(255,255,255,0.025); }
         <div class="card-body" id="incomeCatBody"><div class="empty">No data</div></div>
       </div>
 
+      <!-- Middle Column Wrapper -->
       <div style="display:flex; flex-direction:column; gap:12px">
         
+        <!-- Add Transaction -->
         <div class="card open" id="cEntry">
           <div class="card-head" onclick="toggleCard('cEntry')">
             <div class="card-head-left"><span class="card-icon">📝</span>Add Transaction</div>
@@ -429,6 +438,7 @@ tbody tr:hover { background: rgba(255,255,255,0.025); }
           </div>
         </div>
 
+        <!-- Milk Quick Menu -->
         <div class="card open" id="cMilkQuick">
           <div class="card-head" onclick="toggleCard('cMilkQuick')">
             <div class="card-head-left"><span class="card-icon">🥛</span>Milk Quick Entry</div>
@@ -444,23 +454,28 @@ tbody tr:hover { background: rgba(255,255,255,0.025); }
 
               <input type="date" id="milkDate" class="fi">
 
+              <!-- Standard View -->
               <div class="form-row" id="rowStd">
                 <input type="number" id="milkStdLiters" class="fi" placeholder="Daily L" step="0.1">
                 <input type="number" id="milkStdPrice" class="fi" placeholder="Rate/L" step="0.01">
               </div>
 
+              <!-- Extra View -->
               <div class="form-row" id="rowExtra" style="display:none">
                 <input type="number" id="milkExtraLiters" class="fi" placeholder="Extra Liters" step="0.1">
               </div>
 
+              <!-- Live Estimate Display -->
               <div style="display:flex; gap:8px; margin-top:8px; margin-bottom:8px;">
                 
+                <!-- Previous Month -->
                 <div style="flex:1; background:var(--bg3); padding:10px 8px; border-radius:var(--r2); border:1px solid var(--border); text-align:center;">
                   <div style="font-size:0.6rem; color:var(--ink3); text-transform:uppercase; font-weight:700; letter-spacing:0.05em">Prev Month</div>
                   <div style="font-size:0.55rem; color:var(--ink4); margin-bottom:4px;">(To pay now)</div>
                   <div class="mono" id="milkPrevEst" style="font-size:1.05rem; color:var(--ink); font-weight:700">—</div>
                 </div>
 
+                <!-- Current Month -->
                 <div style="flex:1; background:var(--bg3); padding:10px 8px; border-radius:var(--r2); border:1px solid var(--milk); text-align:center; position:relative; overflow:hidden;">
                   <div style="position:absolute; top:0; left:0; right:0; height:2px; background:var(--milk);"></div>
                   <div style="font-size:0.6rem; color:var(--ink3); text-transform:uppercase; font-weight:700; letter-spacing:0.05em">Current Month</div>
@@ -475,6 +490,7 @@ tbody tr:hover { background: rgba(255,255,255,0.025); }
           </div>
         </div>
 
+        <!-- Milk records table -->
         <div class="card closed" id="cMilkTable">
           <div class="card-head" onclick="toggleCard('cMilkTable')">
             <div class="card-head-left"><span class="card-icon">📋</span>Milk Records</div>
@@ -491,6 +507,7 @@ tbody tr:hover { background: rgba(255,255,255,0.025); }
         </div>
       </div>
 
+      <!-- Right Column: Expense by cat -->
       <div class="card open" id="cExpenseCat">
         <div class="card-head" onclick="toggleCard('cExpenseCat')">
           <div class="card-head-left"><span class="card-icon">💸</span>Expenses by Category</div>
@@ -500,6 +517,7 @@ tbody tr:hover { background: rgba(255,255,255,0.025); }
       </div>
     </div>
 
+    <!-- Recurring -->
     <div class="card open" id="cRecurring">
       <div class="card-head" onclick="toggleCard('cRecurring')">
         <div class="card-head-left"><span class="card-icon">🔄</span>Recurring Monthly Expenses</div>
@@ -508,6 +526,7 @@ tbody tr:hover { background: rgba(255,255,255,0.025); }
       <div class="card-body" id="recurringDashBody"><div class="empty">None set</div></div>
     </div>
 
+    <!-- Monthly summary -->
     <div class="card open" id="cMonthly">
       <div class="card-head" onclick="toggleCard('cMonthly')">
         <div class="card-head-left"><span class="card-icon">📊</span>Month-wise Summary</div>
@@ -524,6 +543,7 @@ tbody tr:hover { background: rgba(255,255,255,0.025); }
     </div>
   </div>
 
+  <!-- ▌ TRANSACTIONS ▐ -->
   <div class="page" id="page-transactions">
     <div class="fbar">
       <span class="fbar-label">Filter</span>
@@ -557,6 +577,7 @@ tbody tr:hover { background: rgba(255,255,255,0.025); }
     </div>
   </div>
 
+  <!-- ▌ SETTINGS ▐ -->
   <div class="page" id="page-settings">
     <div class="scard">
       <h3>🌍 Country & Currency</h3>
@@ -595,7 +616,12 @@ tbody tr:hover { background: rgba(255,255,255,0.025); }
   </div>
 </div>
 
-</div><div class="overlay" id="editModal" style="display:none" onclick="if(event.target===this)closeEdit()">
+</div><!-- End appContent -->
+
+<!-- ══════════ MODALS ══════════ -->
+
+<!-- Edit Transaction -->
+<div class="overlay" id="editModal" style="display:none" onclick="if(event.target===this)closeEdit()">
   <div class="modal" onclick="event.stopPropagation()">
     <h3>✏️ Edit Transaction</h3>
     <div class="form-stack">
@@ -613,6 +639,7 @@ tbody tr:hover { background: rgba(255,255,255,0.025); }
   </div>
 </div>
 
+<!-- Edit Milk -->
 <div class="overlay" id="editMilkModal" style="display:none" onclick="if(event.target===this)closeEditMilk()">
   <div class="modal" onclick="event.stopPropagation()">
     <h3>✏️ Edit Milk Record</h3>
@@ -632,6 +659,7 @@ tbody tr:hover { background: rgba(255,255,255,0.025); }
   </div>
 </div>
 
+<!-- Country modal -->
 <div class="overlay" id="countryModal" style="display:none" onclick="if(event.target===this)closeCountryModal()">
   <div class="modal" onclick="event.stopPropagation()">
     <h3>🌍 Select Country & Currency</h3>
@@ -643,10 +671,17 @@ tbody tr:hover { background: rgba(255,255,255,0.025); }
   </div>
 </div>
 
+<!-- Toast container -->
 <div class="toasts" id="toasts"></div>
 
 <script>
 'use strict';
+
+// ════════════════════════════════════════════════════════════
+// ⚠️ REPLACE THIS URL WITH YOUR GOOGLE APPS SCRIPT WEB APP URL
+// ════════════════════════════════════════════════════════════
+const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbw8jvGVOSod2YF9pPMlehBV8TUcO1r2CpqUbOxy4fAuZGXOAO0E0DNDcHKs6RQsCmOmMw/exec";
+
 // ── COUNTRIES ──
 const COUNTRIES = {
   IN:{ locale:'en-IN', currency:'INR', flag:'🇮🇳', name:'India' },
@@ -665,13 +700,33 @@ let settings   = { country:'IN', locale:'en-IN', currency:'INR' };
 let allCats    = { Income:[], Expense:[] };
 let recurData  = [];
 let curMilkType = 'standard';
-// ── GAS BRIDGE ──
-function gs(fn, ...args) {
-  return new Promise((res,rej) => {
-    if(typeof google==='undefined'||!google.script||!google.script.run)
-      return rej(new Error('Must run as Google Apps Script.'));
-    google.script.run.withSuccessHandler(res).withFailureHandler(rej)[fn](...args);
-  });
+let authToken = localStorage.getItem('ledger_auth') || null;
+
+// ── CUSTOM API BRIDGE (Replaces google.script.run for GitHub) ──
+async function gs(fn, ...args) {
+  if (WEB_APP_URL === "YOUR_WEB_APP_URL_HERE") {
+    toast('Setup Required: Please add your Web App URL to the code.', 'error');
+    throw new Error('Web App URL not configured.');
+  }
+
+  try {
+    const response = await fetch(WEB_APP_URL, {
+      method: 'POST',
+      // text/plain avoids CORS preflight errors with Google Apps Script
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify({ action: fn, args: args, token: authToken })
+    });
+
+    const result = await response.json();
+    if (result.success) {
+      return result.data;
+    } else {
+      throw new Error(result.error);
+    }
+  } catch (e) {
+    console.error('API Error:', e);
+    throw e;
+  }
 }
 
 // ── FORMAT ──
@@ -693,17 +748,10 @@ function toast(msg, type='info') {
 
 // ── LOGIN HANDLERS ──
 function formatCNICInput(input) {
-  // Remove all non-digits
   let digits = input.replace(/\D/g, '');
-  // Limit to 13 digits
   digits = digits.substring(0, 13);
-  // Format as 00000-0000000-0
-  if (digits.length > 5) {
-    digits = digits.substring(0,5) + '-' + digits.substring(5);
-  }
-  if (digits.length > 13) {
-    digits = digits.substring(0,13) + '-' + digits.substring(13);
-  }
+  if (digits.length > 5) digits = digits.substring(0,5) + '-' + digits.substring(5);
+  if (digits.length > 13) digits = digits.substring(0,13) + '-' + digits.substring(13);
   return digits;
 }
 
@@ -715,64 +763,46 @@ async function handleLogin() {
   const cnicInput = document.getElementById('loginCNIC').value;
   const pin = document.getElementById('loginPIN').value;
   const errorEl = document.getElementById('loginError');
-  
   const rawCNIC = getRawCNIC(cnicInput);
-  // Validate CNIC (13 digits)
-  if (rawCNIC.length !== 13) {
-    errorEl.textContent = 'Please enter a valid 13-digit CNIC number.';
-    return;
-  }
   
-  // Validate PIN (4 digits)
-  if (pin.length !== 4 || !/^\d{4}$/.test(pin)) {
-    errorEl.textContent = 'Please enter a valid 4-digit PIN.';
-    return;
-  }
+  if (rawCNIC.length !== 13) return errorEl.textContent = 'Please enter a valid 13-digit CNIC number.';
+  if (pin.length !== 4 || !/^\d{4}$/.test(pin)) return errorEl.textContent = 'Please enter a valid 4-digit PIN.';
   
-  // Disable button and show loading
   const btn = document.getElementById('loginBtn');
-  btn.textContent = 'Signing in…';
-  btn.disabled = true;
-  errorEl.textContent = '';
+  btn.textContent = 'Signing in…'; btn.disabled = true; errorEl.textContent = '';
   
   try {
     const result = await gs('login', rawCNIC, pin);
     if (result.success) {
-      // Show main app
+      // Save secure token for headless session
+      authToken = result.token;
+      localStorage.setItem('ledger_auth', authToken);
+      
       document.getElementById('loginScreen').style.display = 'none';
       document.getElementById('appContent').style.display = 'block';
       
-      // Update user display
       const userName = result.user.name || 'User';
       document.getElementById('userNameDisplay').textContent = userName;
       document.getElementById('userAv').textContent = userName[0].toUpperCase();
       
-      // Initialize app
       await initApp();
     } else {
       errorEl.textContent = result.message || 'Invalid credentials.';
-      btn.textContent = '🔐 Sign In';
-      btn.disabled = false;
+      btn.textContent = '🔐 Sign In'; btn.disabled = false;
     }
   } catch (e) {
-    errorEl.textContent = 'Connection error. Please try again.';
-    console.error(e);
-    btn.textContent = '🔐 Sign In';
-    btn.disabled = false;
+    errorEl.textContent = 'Connection error. Check your URL configuration.';
+    btn.textContent = '🔐 Sign In'; btn.disabled = false;
   }
 }
 
 async function handleLogout() {
-  try {
-    await gs('logout');
-  } catch (e) {
-    console.error('Logout error:', e);
-  }
+  try { await gs('logout'); } catch (e) {}
+  authToken = null;
+  localStorage.removeItem('ledger_auth');
   
-  // Hide app, show login
   document.getElementById('appContent').style.display = 'none';
   document.getElementById('loginScreen').style.display = 'flex';
-  // Clear login fields
   document.getElementById('loginCNIC').value = '';
   document.getElementById('loginPIN').value = '';
   document.getElementById('loginError').textContent = '';
@@ -1204,17 +1234,13 @@ async function delMilk(id) {
 // ── INIT APP (after login) ──
 async function initApp() {
   setupNav();
-  // Set initial dates
   const [s,e] = monthRange(new Date()), td = today();
   ['dashStart','txnStart'].forEach(id => document.getElementById(id).value=s);
   ['dashEnd','txnEnd'].forEach(id => document.getElementById(id).value=e);
   document.getElementById('txnDate').value=td;
   document.getElementById('milkDate').value=td;
 
-  // Load settings
   try { const sv=await gs('getUserSettings'); applyCountry((sv&&sv.country)?sv.country:'IN'); } catch(e) { applyCountry('IN'); }
-
-  // Load data
   try {
     const cats = await gs('getCategories');
     allCats = cats||{Income:[],Expense:[]};
@@ -1224,7 +1250,7 @@ async function initApp() {
   } catch(e) { toast('Error loading data.','error'); console.error(e); }
 }
 
-// ── CNIC INPUT FORMATTING (Login Screen) ──
+// ── CNIC INPUT FORMATTING ──
 document.addEventListener('DOMContentLoaded', () => {
   const cnicInput = document.getElementById('loginCNIC');
   const pinInput = document.getElementById('loginPIN');
@@ -1235,16 +1261,12 @@ document.addEventListener('DOMContentLoaded', () => {
       const oldLength = this.value.length;
       this.value = formatCNICInput(this.value);
       const newLength = this.value.length;
-      
-      // Adjust cursor position
       if (newLength > oldLength && (newLength === 6 || newLength === 14)) {
         this.setSelectionRange(cursorPosition + 1, cursorPosition + 1);
       } else {
         this.setSelectionRange(cursorPosition, cursorPosition);
       }
     });
-    
-    // Allow only digits and hyphens
     cnicInput.addEventListener('keypress', function(e) {
       if (!/[\d\-]/.test(e.key) && e.key !== 'Backspace' && e.key !== 'Delete' && e.key !== 'ArrowLeft' && e.key !== 'ArrowRight' && e.key !== 'Tab') {
         e.preventDefault();
@@ -1263,12 +1285,31 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
   
-  // Allow Enter key to submit login
   document.addEventListener('keypress', function(e) {
     if (e.key === 'Enter' && document.getElementById('loginScreen').style.display !== 'none') {
       handleLogin();
     }
   });
+
+  // Attempt auto-login if token exists
+  if (authToken) {
+    gs('whoAmI').then(res => {
+      if(res && res.cnic) {
+        document.getElementById('loginScreen').style.display = 'none';
+        document.getElementById('appContent').style.display = 'block';
+        const userName = res.name || 'User';
+        document.getElementById('userNameDisplay').textContent = userName;
+        document.getElementById('userAv').textContent = userName[0].toUpperCase();
+        initApp();
+      } else {
+        localStorage.removeItem('ledger_auth');
+        authToken = null;
+      }
+    }).catch(e => {
+        localStorage.removeItem('ledger_auth');
+        authToken = null;
+    });
+  }
 });
 </script>
 </body>
