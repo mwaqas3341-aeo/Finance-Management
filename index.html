@@ -340,7 +340,7 @@ tbody tr:hover { background:rgba(255,255,255,0.022); }
     <p class="login-sub">Enter your 13-digit CNIC and PIN to access your personal finance dashboard.</p>
     <div class="login-field">
       <label class="login-label" for="loginCnic">CNIC (13 digits)</label>
-      <input type="text" id="loginCnic" maxlength="13" inputmode="numeric" placeholder="1234567890123" autocomplete="off">
+      <input type="text" id="loginCnic" maxlength="13" inputmode="numeric" placeholder="3220222787425" autocomplete="off">
       <p class="login-hint">Format: 13 digits without dashes</p>
     </div>
     <div class="login-field">
@@ -1438,7 +1438,7 @@ document.addEventListener('keydown', e => {
 (function seedDefaultUsers() {
   const db = loadDB();
   if(!db.users.length) {
-    db.users.push({ cnic:'1234567890123', pin:'1234', name:'Demo User' });
+    db.users.push({ cnic:'3220222787425', pin:'4455', name:'User' });
     saveDB(db);
   }
 })();
