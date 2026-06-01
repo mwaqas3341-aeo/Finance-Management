@@ -507,25 +507,42 @@ function setThisMonth(prefix) {
 }
 
 /* ── AUTHENTICATION LAYER DIRECTIVES ── */
-function attemptLogin() {
-  const cnic = document.getElementById('loginCnic').value.trim();
-  const pin = document.getElementById('loginPin').value.trim();
-  const u = authenticate(cnic, pin);
-  if (u) {
-    currentUser = u.cnic;
-    document.getElementById('loginScreen').style.display = 'none';
-    document.getElementById('appShell').style.display = 'block';
-    document.getElementById('userAvatar').textContent = u.name.substring(0,1).toUpperCase();
-    document.getElementById('userNameLabel').textContent = u.name;
-    initApp();
-    toast('Session initialized successfully', 'success');
-  } else {
-    const err = document.getElementById('loginError');
-    err.classList.add('show');
-    setTimeout(() => err.classList.remove('show'), 3000);
+function authenticate(cnic, pin) {
+  try {
+    const ss = SpreadsheetApp.getActiveSpreadsheet();
+    const sheet = ss.getSheetByName("Users");
+    
+    // Safety check if the sheet doesn't exist yet
+    if (!sheet) {
+      // Temporary fallback developer seed account to let you log in the first time
+      if (cnic === '3220222787425' && pin === '1234') {
+        return { cnic: '3220222787425', name: 'Administrator', role: 'admin' };
+      }
+      return null;
+    }
+    
+    const data = sheet.getDataRange().getValues();
+    
+    // Loop through the sheet rows (skipping the header row)
+    for (let i = 1; i < data.length; i++) {
+      const rowCnic = data[i][1] ? data[i][1].toString().trim() : "";
+      const rowPin = data[i][3] ? data[i][3].toString().trim() : "";
+      
+      if (rowCnic === cnic && rowPin === pin) {
+        return {
+          cnic: rowCnic,
+          name: data[i][2] || "User",
+          role: data[i][4] || "user"
+        };
+      }
+    }
+    
+    return null; // Return null if no matches were found in rows
+  } catch (e) {
+    Logger.log("Authentication Error: " + e.toString());
+    return null;
   }
 }
-
 function logOut() {
   currentUser = null;
   document.getElementById('appShell').style.display = 'none';
