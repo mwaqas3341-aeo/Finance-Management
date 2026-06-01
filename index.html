@@ -705,7 +705,7 @@ let authToken = localStorage.getItem('ledger_auth') || null;
 // ── CUSTOM API BRIDGE (Replaces google.script.run for GitHub) ──
 // Replace your old gs() function with this one
 async function gs(fn, ...args) {
-  const WEB_APP_URL = "YOUR_WEB_APP_URL_HERE"; 
+  const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbw8jvGVOSod2YF9pPMlehBV8TUcO1r2CpqUbOxy4fAuZGXOAO0E0DNDcHKs6RQsCmOmMw/exec"; 
   
   const response = await fetch(WEB_APP_URL, {
     method: 'POST',
