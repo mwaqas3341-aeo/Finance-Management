@@ -1,260 +1,934 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Ledger — Financial Tracker Workspace</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&family=Syne:wght@600;700;800&display=swap" rel="stylesheet">
-<style>
-:root {
-  --bg:#07090f;--bg1:#0c0f1a;--bg2:#111520;--bg3:#181d2e;--bg4:#1f2540;--bg5:#252d4a;
-  --border:rgba(255,255,255,0.06);--border2:rgba(255,255,255,0.11);--border3:rgba(255,255,255,0.18);
-  --ink:#eef0f8;--ink2:#8892b0;--ink3:#4a5375;--ink4:#2a3050;
-  --blue:#4f8ef7;--blue-s:rgba(79,142,247,0.12);--blue-g:rgba(79,142,247,0.06);
-  --green:#2dd4a0;--green-s:rgba(45,212,160,0.12);
-  --red:#f75f7a;--red-s:rgba(247,95,122,0.12);
-  --amber:#f5a623;--amber-s:rgba(245,166,35,0.12);
-  --purple:#a78bfa;--purple-s:rgba(167,139,250,0.12);
-  --teal:#22d3ee;--teal-s:rgba(34,211,238,0.12);
-  --font:'DM Sans',sans-serif;--font2:'Syne',sans-serif;--mono:'DM Mono',monospace;
-  --r:6px;--r2:10px;--r3:14px;--r4:18px;--nav-h:58px;--bot-h:66px;
-  --ease:cubic-bezier(.4,0,.2,1);--fast:0.16s;--mid:0.26s;
-}
-*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
-body{background:var(--bg);font-family:var(--font);color:var(--ink);min-height:100dvh;overflow-x:hidden;-webkit-font-smoothing:antialiased;}
-body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;background:radial-gradient(ellipse 70% 45% at 10% -5%,rgba(79,142,247,0.09) 0%,transparent 65%),radial-gradient(ellipse 55% 35% at 90% 105%,rgba(167,139,250,0.07) 0%,transparent 65%);}
-
-/* LOGIN LAYER UI */
-#loginScreen{position:fixed;inset:0;z-index:9999;background:var(--bg);display:flex;align-items:center;justify-content:center;padding:20px;}
-.login-box{background:var(--bg2);border:1px solid var(--border2);border-radius:var(--r4);padding:36px 32px;width:100%;max-width:400px;position:relative;overflow:hidden;}
-.login-box::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--blue),var(--purple),var(--green));}
-.login-brand{display:flex;align-items:center;gap:10px;margin-bottom:28px;}
-.login-brand h1{font-family:var(--font2);font-size:1.4rem;font-weight:800;}
-.login-brand h1 span{color:var(--blue);}
-.login-sub{font-size:0.78rem;color:var(--ink2);margin-bottom:22px;line-height:1.5;}
-.login-field{margin-bottom:12px;}
-.login-label{font-size:0.68rem;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:var(--ink3);display:block;margin-bottom:6px;}
-.login-field input{width:100%;background:var(--bg3);border:1px solid var(--border2);color:var(--ink);padding:10px 14px;border-radius:var(--r2);font-family:var(--mono);font-size:0.9rem;}
-.login-field input:focus{outline:none;border-color:var(--blue);background:var(--bg4);}
-.login-btn{width:100%;margin-top:18px;padding:12px;background:var(--blue);color:#000;border:none;border-radius:var(--r2);font-weight:700;cursor:pointer;}
-.login-error{background:var(--red-s);border:1px solid rgba(247,95,122,0.35);border-radius:var(--r);padding:9px 12px;font-size:0.78rem;color:var(--red);margin-top:12px;display:none;}
-.login-error.show{display:block;}
-
-/* MASTER INTERFACE APPSHELL */
-.topnav{position:sticky;top:0;z-index:300;height:var(--nav-h);background:rgba(7,9,15,0.88);backdrop-filter:blur(24px);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 18px;gap:4px;}
-.brand{display:flex;align-items:center;gap:9px;font-family:var(--font2);font-size:1rem;font-weight:800;margin-right:12px;}
-.brand span{color:var(--blue);}
-.nav-pills{display:flex;gap:2px;}
-.nav-pill{background:transparent;border:none;color:var(--ink3);padding:7px 14px;font-family:var(--font);font-size:0.78rem;font-weight:600;cursor:pointer;border-radius:var(--r2);}
-.nav-pill.active{color:var(--blue);background:var(--blue-s);}
-.nav-end{margin-left:auto;display:flex;align-items:center;gap:8px;}
-.user-chip{display:flex;align-items:center;gap:7px;background:var(--bg3);border:1px solid var(--border2);border-radius:20px;padding:4px 12px;font-size:0.7rem;color:var(--ink2);}
-
-.wrap{position:relative;z-index:1;max-width:1380px;margin:0 auto;padding:20px 18px 40px;}
-.page{display:none;}
-.page.active{display:block;}
-
-/* METRIC STATS DASHBOARD DISPLAY */
-.kpi-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:14px;}
-.kpi{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r3);padding:14px 15px;}
-.kpi-label{font-size:0.6rem;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--ink3);margin-bottom:7px;}
-.kpi-val{font-family:var(--mono);font-size:1.25rem;font-weight:500;}
-
-/* TOAST MESSAGING NOTIFICATIONS */
-#toasts{position:fixed;bottom:20px;right:20px;z-index:99999;display:flex;flex-direction:column;gap:6px;}
-.toast{background:var(--bg2);border:1px solid var(--border3);padding:12px 18px;border-radius:var(--r2);font-size:0.8rem;color:var(--ink);box-shadow:0 10px 30px rgba(0,0,0,0.5);}
-.toast.err{border-color:var(--red);color:var(--red);}
-.toast.ok{border-color:var(--green);color:var(--green);}
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ledger Matrix Pro</title>
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    [v-cloak] { display: none !important; }
+    body { font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; background-color: #f8fafc; }
+    .custom-scrollbar::-webkit-scrollbar { width: 6px; height: 6px; }
+    .custom-scrollbar::-webkit-scrollbar-track { background: #f1f5f9; }
+    .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+  </style>
 </head>
-<body>
+<body class="text-slate-800 antialiased min-h-screen flex flex-col">
 
-<div id="loginScreen">
-  <div class="login-box">
-    <div class="login-brand"><h1>Ledger <span>Front</span></h1></div>
-    <p class="login-sub">Please key in your validation credentials sequence profile codes below.</p>
-    
-    <form id="loginForm" onsubmit="event.preventDefault(); attemptLogin();">
-      <div class="login-field">
-        <label class="login-label">CNIC Account Sequence</label>
-        <input type="text" id="loginCnic" placeholder="3220222787425" maxlength="13" required autocomplete="username">
-      </div>
-      <div class="login-field">
-        <label class="login-label">PIN Passcode Assignment</label>
-        <input type="password" id="loginPin" placeholder="••••" maxlength="4" required autocomplete="current-password">
-      </div>
-      <button type="submit" class="login-btn">Authenticate Terminal</button>
-    </form>
-    <div class="login-error" id="loginError">Rejected. Sequence matching verified error parameters.</div>
+  <div id="global-loader" class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-50 flex items-center justify-center transition-all duration-300">
+    <div class="bg-white px-6 py-4 rounded-xl shadow-2xl flex items-center space-x-4 border border-slate-100">
+      <i class="fa-solid fa-circle-notch fa-spin text-2xl text-blue-600"></i>
+      <span class="text-sm font-medium text-slate-700 tracking-wide">Syncing Data Nodes...</span>
+    </div>
   </div>
-</div>
 
-<div id="appShell" style="display:none;">
-  <header class="topnav">
-    <div class="brand">Ledger <span>System</span></div>
-    <nav class="nav-pills">
-      <button class="nav-pill active" onclick="switchView('dashboard')">Dashboard Engine</button>
-      <button class="nav-pill" onclick="switchView('transactions')">Ledger Records</button>
-    </nav>
-    <div class="nav-end">
-      <div class="user-chip"><span id="userNameLabel">Account Profile</span></div>
-      <button class="login-btn" style="margin:0; padding:6px 12px; font-size:0.7rem;" onclick="processLogout()">Exit</button>
-    </div>
-  </header>
+  <div class="w-full max-w-[1600px] mx-auto px-3 sm:px-6 lg:px-8 py-4 flex-1 flex flex-col">
 
-  <main class="wrap">
-    <div id="page-dashboard" class="page active">
-      <div class="kpi-grid">
-        <div class="kpi"><div class="kpi-label">Aggregated Revenue</div><div class="kpi-val" id="kpi-income">PKR 0.00</div></div>
-        <div class="kpi"><div class="kpi-label">Deduction Metrics</div><div class="kpi-val" id="kpi-expenses">PKR 0.00</div></div>
-        <div class="kpi"><div class="kpi-label">Net Net Liquidity</div><div class="kpi-val" id="kpi-balance">PKR 0.00</div></div>
+    <div id="view-login" class="flex-1 flex items-center justify-center py-12">
+      <div class="bg-white rounded-2xl shadow-xl border border-slate-200/80 p-8 w-full max-w-md transition-all">
+        <div class="text-center mb-8">
+          <div class="inline-flex items-center justify-center w-14 h-14 bg-blue-50 text-blue-600 rounded-xl mb-3">
+            <i class="fa-solid fa-vault text-2xl"></i>
+          </div>
+          <h2 class="text-2xl font-bold text-slate-900">Ledger Matrix</h2>
+          <p class="text-sm text-slate-500 mt-1">Provide accounting context nodes to authenticate</p>
+        </div>
+
+        <form id="form-login" onsubmit="handleLoginExecution(event)" class="space-y-5">
+          <div>
+            <label class="block text-xs font-semibold text-slate-600 tracking-wider uppercase mb-1.5">User 13-Digit CNIC</label>
+            <div class="relative">
+              <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-slate-400">
+                <i class="fa-solid fa-id-card text-sm"></i>
+              </span>
+              <input type="text" id="login-cnic" required maxlength="13" placeholder="3220222787425"
+                class="w-full pl-10 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:outline-none focus:border-blue-500 focus:bg-white transition-all">
+            </div>
+          </div>
+
+          <div>
+            <label class="block text-xs font-semibold text-slate-600 tracking-wider uppercase mb-1.5">Security Context Access PIN</label>
+            <div class="relative">
+              <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-slate-400">
+                <i class="fa-solid fa-key text-sm"></i>
+              </span>
+              <input type="password" id="login-pin" required maxlength="6" placeholder="••••"
+                class="w-full pl-10 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:outline-none focus:border-blue-500 focus:bg-white transition-all">
+            </div>
+          </div>
+
+          <button type="submit"
+            class="w-full py-3 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg text-sm transition-all shadow-sm flex items-center justify-center space-x-2 cursor-pointer">
+            <span>Verify Credentials</span>
+            <i class="fa-solid fa-arrow-right-to-bracket text-xs"></i>
+          </button>
+        </form>
       </div>
-      <p style="color:var(--ink2); font-size:0.8rem;">Ready. Data streams synchronized dynamically with server spreadsheets matrix storage array.</p>
     </div>
-    
-    <div id="page-transactions" class="page">
-      <h3 style="margin-bottom:12px;">System Transaction Arrays</h3>
-      <p style="color:var(--ink3); font-size:0.75rem;">Interactive view data parameters processing list.</p>
+
+    <div id="view-workspace" class="hidden flex-1 flex flex-col space-y-6">
+      
+      <header class="bg-white rounded-xl shadow-sm border border-slate-200/60 p-4 flex flex-col sm:flex-row items-center justify-between gap-4">
+        <div class="flex items-center space-x-3 self-start sm:self-center">
+          <div class="w-10 h-10 bg-slate-900 text-white rounded-lg flex items-center justify-center font-bold text-lg">
+            <i class="fa-solid fa-chart-pie text-sm"></i>
+          </div>
+          <div>
+            <h1 class="text-base font-bold text-slate-900" id="display-user-name">Loading...</h1>
+            <p class="text-xs text-slate-400 flex items-center gap-1">
+              <i class="fa-solid fa-network-wired"></i> CNIC Scope: <span id="display-user-cnic">000</span>
+            </p>
+          </div>
+        </div>
+
+        <nav class="flex flex-wrap items-center justify-center gap-1 bg-slate-100 p-1 rounded-lg w-full sm:w-auto">
+          <button onclick="switchTabContext('dashboard')"  class="nav-tab px-3 py-1.5 rounded-md text-xs font-medium transition-all cursor-pointer flex items-center gap-1.5 text-blue-700 bg-white shadow-xs" data-target="dashboard"><i class="fa-solid fa-gauge"></i> Dashboard</button>
+          <button onclick="switchTabContext('txns')"       class="nav-tab px-3 py-1.5 rounded-md text-xs font-medium transition-all cursor-pointer flex items-center gap-1.5 text-slate-600 hover:text-slate-900" data-target="txns"><i class="fa-solid fa-list-check"></i> Logs</button>
+          <button onclick="switchTabContext('categories')" class="nav-tab px-3 py-1.5 rounded-md text-xs font-medium transition-all cursor-pointer flex items-center gap-1.5 text-slate-600 hover:text-slate-900" data-target="categories"><i class="fa-solid fa-tags"></i> Taxonomy</button>
+          <button onclick="switchTabContext('recurring')"  class="nav-tab px-3 py-1.5 rounded-md text-xs font-medium transition-all cursor-pointer flex items-center gap-1.5 text-slate-600 hover:text-slate-900" data-target="recurring"><i class="fa-solid fa-rotate"></i> Fixed Schedule</button>
+          <button onclick="switchTabContext('milk')"       class="nav-tab px-3 py-1.5 rounded-md text-xs font-medium transition-all cursor-pointer flex items-center gap-1.5 text-slate-600 hover:text-slate-900" data-target="milk"><i class="fa-solid fa-cow"></i> Dairy Log</button>
+        </nav>
+
+        <button onclick="executeLogOutSequence()" class="px-3 py-1.5 bg-rose-50 hover:bg-rose-100 border border-rose-200/60 text-rose-600 text-xs font-semibold rounded-lg transition-all cursor-pointer flex items-center gap-1.5 self-end sm:self-center">
+          <span>Sign Out</span>
+          <i class="fa-solid fa-power-off"></i>
+        </button>
+      </header>
+
+      <main class="flex-1 flex flex-col">
+
+        <section id="tab-dashboard" class="tab-panel space-y-6">
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            <div class="bg-white p-5 rounded-xl border border-slate-200/70 shadow-xs">
+              <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Previous Carryover Balance</p>
+              <h3 class="text-xl font-bold mt-2" id="kpi-prev">0.00</h3>
+            </div>
+            <div class="bg-white p-5 rounded-xl border border-slate-200/70 shadow-xs">
+              <p class="text-xs font-semibold text-emerald-600 uppercase tracking-wider">Gross Interval Income</p>
+              <h3 class="text-xl font-bold text-emerald-600 mt-2" id="kpi-income">0.00</h3>
+            </div>
+            <div class="bg-white p-5 rounded-xl border border-slate-200/70 shadow-xs">
+              <p class="text-xs font-semibold text-rose-600 uppercase tracking-wider">Gross Interval Expenditures</p>
+              <h3 class="text-xl font-bold text-rose-600 mt-2" id="kpi-expense">0.00</h3>
+            </div>
+            <div class="bg-white p-5 rounded-xl border border-slate-200/70 shadow-xs">
+              <p class="text-xs font-semibold text-blue-600 uppercase tracking-wider">Consolidated Net Asset Value</p>
+              <h3 class="text-xl font-bold text-blue-600 mt-2" id="kpi-net">0.00</h3>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <div class="bg-white p-5 rounded-xl border border-slate-200/70 shadow-xs lg:col-span-2">
+              <h4 class="text-sm font-bold text-slate-900 uppercase tracking-wide mb-4 border-b border-slate-100 pb-2">Periodic Accounting Ledger Summary</h4>
+              <div class="overflow-x-auto custom-scrollbar">
+                <table class="w-full text-left border-collapse">
+                  <thead>
+                    <tr class="bg-slate-50 text-slate-500 font-semibold text-xs border-b border-slate-100">
+                      <th class="py-2.5 px-3">Accounting Cycle Month</th>
+                      <th class="py-2.5 px-3 text-right">Inflow Channels</th>
+                      <th class="py-2.5 px-3 text-right">Outflow Channels</th>
+                      <th class="py-2.5 px-3 text-right">Net Return Matrix</th>
+                    </tr>
+                  </thead>
+                  <tbody id="dash-table-monthly" class="text-xs divide-y divide-slate-100">
+                    <tr><td colspan="4" class="py-4 text-center text-slate-400">No accounting ledger nodes found.</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <div class="space-y-6">
+              <div class="bg-white p-5 rounded-xl border border-slate-200/70 shadow-xs">
+                <h4 class="text-sm font-bold text-slate-900 uppercase tracking-wide mb-4 border-b border-slate-100 pb-2">Revenue Streams allocation</h4>
+                <div class="space-y-3 max-h-[220px] overflow-y-auto custom-scrollbar pr-1" id="dash-income-cat">
+                  <p class="text-xs text-slate-400 text-center py-4">No structural metrics compiled.</p>
+                </div>
+              </div>
+              <div class="bg-white p-5 rounded-xl border border-slate-200/70 shadow-xs">
+                <h4 class="text-sm font-bold text-slate-900 uppercase tracking-wide mb-4 border-b border-slate-100 pb-2">Disbursement Streams allocation</h4>
+                <div class="space-y-3 max-h-[220px] overflow-y-auto custom-scrollbar pr-1" id="dash-expense-cat">
+                  <p class="text-xs text-slate-400 text-center py-4">No structural metrics compiled.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section id="tab-txns" class="tab-panel hidden grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <div class="bg-white p-5 rounded-xl border border-slate-200/70 shadow-xs h-fit">
+            <h4 class="text-sm font-bold text-slate-900 uppercase tracking-wide mb-4 border-b border-slate-100 pb-2" id="txn-form-title">Commit Financial Ledger Event</h4>
+            <form id="form-txn" onsubmit="executeTxnCommitment(event)" class="space-y-4">
+              <input type="hidden" id="txn-id">
+              <div>
+                <label class="block text-xs font-semibold text-slate-500 mb-1">Target Effective Posting Date</label>
+                <input type="date" id="txn-date" required class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-xs focus:outline-none focus:border-blue-500">
+              </div>
+              <div>
+                <label class="block text-xs font-semibold text-slate-500 mb-1">Structural Node Classification</label>
+                <select id="txn-type" required onchange="populateFormCategorySelect()" class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-xs focus:outline-none focus:border-blue-500">
+                  <option value="Expense">Expense / Resource Outflow</option>
+                  <option value="Income">Income / Resource Inflow</option>
+                </select>
+              </div>
+              <div>
+                <label class="block text-xs font-semibold text-slate-500 mb-1">Functional Category Tag</label>
+                <select id="txn-category" required class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-xs focus:outline-none focus:border-blue-500"></select>
+              </div>
+              <div>
+                <label class="block text-xs font-semibold text-slate-500 mb-1">Financial Quantum Volumetric Value</label>
+                <input type="number" step="any" id="txn-amount" required placeholder="0.00" class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-xs focus:outline-none focus:border-blue-500">
+              </div>
+              <div>
+                <label class="block text-xs font-semibold text-slate-500 mb-1">Context Annotation/Description</label>
+                <textarea id="txn-description" rows="2" placeholder="Describe ledger entry context..." class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-xs focus:outline-none focus:border-blue-500"></textarea>
+              </div>
+              <div class="flex items-center space-x-2 pt-2">
+                <button type="submit" class="flex-1 py-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg text-xs transition-all cursor-pointer text-center">Save Record Node</button>
+                <button type="button" onclick="resetTxnFormState()" class="px-3 py-2 bg-slate-100 hover:bg-slate-200 text-slate-600 rounded-lg text-xs transition-all cursor-pointer">Reset</button>
+              </div>
+            </form>
+          </div>
+
+          <div class="bg-white p-5 rounded-xl border border-slate-200/70 shadow-xs lg:col-span-2 flex flex-col">
+            <div class="flex flex-col sm:flex-row items-center justify-between gap-3 mb-4 border-b border-slate-100 pb-3">
+              <h4 class="text-sm font-bold text-slate-900 uppercase tracking-wide">Historical Balance Ledger Register</h4>
+              <div class="flex flex-wrap items-center gap-2 w-full sm:w-auto">
+                <input type="date" id="filter-start" onchange="loadTxnsDatasetTable()" class="px-2 py-1 bg-slate-50 border border-slate-200 rounded-md text-xs focus:outline-none">
+                <input type="date" id="filter-end" onchange="loadTxnsDatasetTable()" class="px-2 py-1 bg-slate-50 border border-slate-200 rounded-md text-xs focus:outline-none">
+                <select id="filter-type" onchange="loadTxnsDatasetTable()" class="px-2 py-1 bg-slate-50 border border-slate-200 rounded-md text-xs focus:outline-none">
+                  <option value="">All Flow Vectors</option>
+                  <option value="Expense">Outflows Only</option>
+                  <option value="Income">Inflows Only</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="overflow-x-auto custom-scrollbar flex-1">
+              <table class="w-full text-left border-collapse">
+                <thead>
+                  <tr class="bg-slate-50 text-slate-500 font-semibold text-xs border-b border-slate-100">
+                    <th class="py-2.5 px-3">Date</th>
+                    <th class="py-2.5 px-3">Classification</th>
+                    <th class="py-2.5 px-3">Category</th>
+                    <th class="py-2.5 px-3 text-right">Quantum Amount</th>
+                    <th class="py-2.5 px-3">Description</th>
+                    <th class="py-2.5 px-3 text-center">Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="txn-table-body" class="text-xs divide-y divide-slate-100">
+                  <tr><td colspan="6" class="py-4 text-center text-slate-400">No atomic balance records extracted.</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <section id="tab-categories" class="tab-panel hidden grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <div class="bg-white p-5 rounded-xl border border-slate-200/70 shadow-xs h-fit">
+            <h4 class="text-sm font-bold text-slate-900 uppercase tracking-wide mb-4 border-b border-slate-100 pb-2">Append Classification Identifier</h4>
+            <form id="form-category" onsubmit="executeCategoryAddition(event)" class="space-y-4">
+              <div>
+                <label class="block text-xs font-semibold text-slate-500 mb-1">Target System Vector</label>
+                <select id="cat-type" required class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-xs focus:outline-none focus:border-blue-500">
+                  <option value="Expense">Expense Node</option>
+                  <option value="Income">Income Node</option>
+                </select>
+              </div>
+              <div>
+                <label class="block text-xs font-semibold text-slate-500 mb-1">Taxon/Category Structural Label String</label>
+                <input type="text" id="cat-name" required placeholder="e.g., Logistics, Base Payroll" class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-xs focus:outline-none focus:border-blue-500">
+              </div>
+              <button type="submit" class="w-full py-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg text-xs transition-all cursor-pointer">Inject Category Label</button>
+            </form>
+          </div>
+
+          <div class="bg-white p-5 rounded-xl border border-slate-200/70 shadow-xs lg:col-span-2 grid grid-cols-1 sm:grid-cols-2 gap-6">
+            <div>
+              <h5 class="text-xs font-bold uppercase tracking-wider text-emerald-600 bg-emerald-50 px-2.5 py-1.5 rounded-md mb-3 flex items-center justify-between">
+                <span>Income Labels Array</span>
+                <i class="fa-solid fa-arrow-trend-up"></i>
+              </h5>
+              <ul id="list-cat-income" class="text-xs font-medium text-slate-700 divide-y divide-slate-100 border border-slate-100 rounded-lg overflow-hidden bg-slate-50/45"></ul>
+            </div>
+            <div>
+              <h5 class="text-xs font-bold uppercase tracking-wider text-rose-600 bg-rose-50 px-2.5 py-1.5 rounded-md mb-3 flex items-center justify-between">
+                <span>Expense Labels Array</span>
+                <i class="fa-solid fa-arrow-trend-down"></i>
+              </h5>
+              <ul id="list-cat-expense" class="text-xs font-medium text-slate-700 divide-y divide-slate-100 border border-slate-100 rounded-lg overflow-hidden bg-slate-50/45"></ul>
+            </div>
+          </div>
+        </section>
+
+        <section id="tab-recurring" class="tab-panel hidden grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <div class="bg-white p-5 rounded-xl border border-slate-200/70 shadow-xs h-fit">
+            <h4 class="text-sm font-bold text-slate-900 uppercase tracking-wide mb-4 border-b border-slate-100 pb-2">Schedule Fixed Charge Template</h4>
+            <form id="form-recurring" onsubmit="executeRecurringAddition(event)" class="space-y-4">
+              <div>
+                <label class="block text-xs font-semibold text-slate-500 mb-1">Target Template Title</label>
+                <input type="text" id="rec-name" required placeholder="e.g., Monthly Infrastructure Cloud Lease" class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-xs focus:outline-none focus:border-blue-500">
+              </div>
+              <div>
+                <label class="block text-xs font-semibold text-slate-500 mb-1">Taxon/Category Classification Link</label>
+                <select id="rec-category" required class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-xs focus:outline-none focus:border-blue-500"></select>
+              </div>
+              <div>
+                <label class="block text-xs font-semibold text-slate-500 mb-1">Expected Matrix Amount Node</label>
+                <input type="number" step="any" id="rec-amount" required placeholder="0.00" class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-xs focus:outline-none focus:border-blue-500">
+              </div>
+              <button type="submit" class="w-full py-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg text-xs transition-all cursor-pointer">Register Fixed Blueprint</button>
+            </form>
+          </div>
+
+          <div class="bg-white p-5 rounded-xl border border-slate-200/70 shadow-xs lg:col-span-2">
+            <h4 class="text-sm font-bold text-slate-900 uppercase tracking-wide mb-4 border-b border-slate-100 pb-2">Active Recurrent Financial Templates Registry</h4>
+            <div class="overflow-x-auto custom-scrollbar">
+              <table class="w-full text-left border-collapse">
+                <thead>
+                  <tr class="bg-slate-50 text-slate-500 font-semibold text-xs border-b border-slate-100">
+                    <th class="py-2.5 px-3">Structural Name Title Blueprint</th>
+                    <th class="py-2.5 px-3">Linked Allocation Category</th>
+                    <th class="py-2.5 px-3 text-right">Standard Volumetric Metric</th>
+                    <th class="py-2.5 px-3 text-center">Purge Vector</th>
+                  </tr>
+                </thead>
+                <tbody id="recurring-table-body" class="text-xs divide-y divide-slate-100">
+                  <tr><td colspan="4" class="py-4 text-center text-slate-400">No scheduled recurring cost modules active.</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <section id="tab-milk" class="tab-panel hidden space-y-6">
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div class="bg-white p-5 rounded-xl border border-slate-200/70 shadow-xs flex items-center justify-between">
+              <div>
+                <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Current Month Projected Liability</p>
+                <h3 class="text-xl font-bold text-slate-900 mt-1" id="milk-kpi-current">0.00</h3>
+              </div>
+              <div class="w-10 h-10 bg-blue-50 text-blue-600 rounded-lg flex items-center justify-center text-sm"><i class="fa-solid fa-calendar-day"></i></div>
+            </div>
+            <div class="bg-white p-5 rounded-xl border border-slate-200/70 shadow-xs flex items-center justify-between">
+              <div>
+                <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Previous Month Certified Settlement</p>
+                <h3 class="text-xl font-bold text-slate-900 mt-1" id="milk-kpi-prev">0.00</h3>
+              </div>
+              <div class="w-10 h-10 bg-slate-50 text-slate-500 rounded-lg flex items-center justify-center text-sm"><i class="fa-solid fa-calendar-check"></i></div>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <div class="bg-white p-5 rounded-xl border border-slate-200/70 shadow-xs h-fit">
+              <h4 class="text-sm font-bold text-slate-900 uppercase tracking-wide mb-4 border-b border-slate-100 pb-2" id="milk-form-title">Commit Dairy Ledger Event</h4>
+              <form id="form-milk" onsubmit="executeMilkRecordCommitment(event)" class="space-y-4">
+                <input type="hidden" id="milk-id">
+                <div>
+                  <label class="block text-xs font-semibold text-slate-500 mb-1">Transaction Log Date</label>
+                  <input type="date" id="milk-date" required class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-xs focus:outline-none focus:border-blue-500">
+                </div>
+                <div>
+                  <label class="block text-xs font-semibold text-slate-500 mb-1">Operational Event Structural Variant</label>
+                  <select id="milk-type" required onchange="handleMilkFormTypeValidation()" class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-xs focus:outline-none focus:border-blue-500">
+                    <option value="standard">Standard Production Baserate</option>
+                    <option value="extra">Supplemental Volumetric Order (Extra)</option>
+                    <option value="absent">Supply Interrupt Sequence (Absent)</option>
+                  </select>
+                </div>
+                <div id="milk-liters-wrapper">
+                  <label class="block text-xs font-semibold text-slate-500 mb-1">Volumetric Capacity (Liters)</label>
+                  <input type="number" step="any" id="milk-liters" placeholder="0.00" class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-xs focus:outline-none focus:border-blue-500">
+                </div>
+                <div id="milk-price-wrapper">
+                  <label class="block text-xs font-semibold text-slate-500 mb-1">Price Quotient Value Per Liter</label>
+                  <input type="number" step="any" id="milk-price" placeholder="0.00" class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-xs focus:outline-none focus:border-blue-500">
+                </div>
+                <div>
+                  <label class="block text-xs font-semibold text-slate-500 mb-1">Annotation Node Context Comments</label>
+                  <input type="text" id="milk-notes" placeholder="Structural deviations metadata..." class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-xs focus:outline-none focus:border-blue-500">
+                </div>
+                <div class="flex items-center space-x-2 pt-2">
+                  <button type="submit" class="flex-1 py-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg text-xs transition-all cursor-pointer text-center">Save Ledger Entry</button>
+                  <button type="button" onclick="resetMilkFormState()" class="px-3 py-2 bg-slate-100 hover:bg-slate-200 text-slate-600 rounded-lg text-xs transition-all cursor-pointer">Reset</button>
+                </div>
+              </form>
+            </div>
+
+            <div class="bg-white p-5 rounded-xl border border-slate-200/70 shadow-xs lg:col-span-2 flex flex-col">
+              <div class="flex flex-col sm:flex-row items-center justify-between gap-3 mb-4 border-b border-slate-100 pb-3">
+                <h4 class="text-sm font-bold text-slate-900 uppercase tracking-wide">Dairy Ledger Tracking Logs Matrix</h4>
+                <div class="flex items-center gap-2 w-full sm:w-auto">
+                  <input type="date" id="milk-filter-start" onchange="loadMilkDatasetTable()" class="px-2 py-1 bg-slate-50 border border-slate-200 rounded-md text-xs focus:outline-none">
+                  <input type="date" id="milk-filter-end" onchange="loadMilkDatasetTable()" class="px-2 py-1 bg-slate-50 border border-slate-200 rounded-md text-xs focus:outline-none">
+                </div>
+              </div>
+
+              <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-4 p-3 bg-slate-50 border border-slate-100 rounded-lg text-center text-xs font-semibold">
+                <div><span class="block text-slate-400 font-medium text-[10px] uppercase tracking-wider">Absent Intervals</span><span id="stat-milk-abs-days" class="text-slate-800 font-bold">0</span></div>
+                <div><span class="block text-slate-400 font-medium text-[10px] uppercase tracking-wider">Deficit Volume</span><span id="stat-milk-abs-liters" class="text-slate-800 font-bold">0 L</span></div>
+                <div><span class="block text-slate-400 font-medium text-[10px] uppercase tracking-wider">Surplus Volume</span><span id="stat-milk-extra-liters" class="text-slate-800 font-bold">0 L</span></div>
+                <div><span class="block text-slate-400 font-medium text-[10px] uppercase tracking-wider">Net Effect Margin</span><span id="stat-milk-net" class="font-bold text-blue-600">0.00</span></div>
+              </div>
+
+              <div class="overflow-x-auto custom-scrollbar flex-1">
+                <table class="w-full text-left border-collapse">
+                  <thead>
+                    <tr class="bg-slate-50 text-slate-500 font-semibold text-xs border-b border-slate-100">
+                      <th class="py-2.5 px-3">Date</th>
+                      <th class="py-2.5 px-3">Type</th>
+                      <th class="py-2.5 px-3 text-right">Liters</th>
+                      <th class="py-2.5 px-3 text-right">Rate</th>
+                      <th class="py-2.5 px-3 text-right">Extended Value</th>
+                      <th class="py-2.5 px-3">Metadata Notes</th>
+                      <th class="py-2.5 px-3 text-center">Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody id="milk-table-body" class="text-xs divide-y divide-slate-100">
+                    <tr><td colspan="7" class="py-4 text-center text-slate-400">No synchronized data records logged.</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </section>
+
+      </main>
     </div>
-  </main>
-</div>
+  </div>
 
-<div id="toasts"></div>
+  <script>
+    'use strict';
 
-<script>
-// ⚠️ PASTE YOUR COPIED GOOGLE APPS SCRIPT WEB APP EXTENSION LINK VALUE DIRECTLY HERE
-const API_URL = "https://script.google.com/macros/s/AKfycbw8jvGVOSod2YF9pPMlehBV8TUcO1r2CpqUbOxy4fAuZGXOAO0E0DNDcHKs6RQsCmOmMw/exec";
+    // GLOBAL DEPLOYED CONTEXT MEMORY STATE
+    let activeUserContext = null;
+    let localCategoriesCache = { Income: [], Expense: [] };
+    const dateTodayISO = new Date().toISOString().substring(0, 10);
+    const dateThreeMonthsAgoISO = (() => { 
+      let d = new Date(); 
+      d.setMonth(d.getMonth() - 3); 
+      return d.toISOString().substring(0, 10); 
+    })();
 
-let currentUser = null;
-let userProfile = null;
-
-/**
- * Universal secure communication fetch handler framework matching Apps Script schema endpoints
- */
-async function callAPI(action, payload = {}) {
-  try {
-    // Intentionally omit application/json header encoding parameters to prevent standard CORS pre-flight OPTION blocks
-    const response = await fetch(API_URL, {
-      method: 'POST',
-      body: JSON.stringify({
-        action: action,
-        cnic: currentUser,
-        payload: payload
-      })
-    });
-    
-    const result = await response.json();
-    if (!result.success) {
-      throw new Error(result.error || "Server transaction processing pipeline exception.");
-    }
-    return result.data;
-  } catch (err) {
-    console.error("Critical API Pipeline Interruption Logic State:", err);
-    toast(err.message || "Connection timed out or invalid endpoint configuration parsing parameters.", "error");
-    throw err;
-  }
-}
-
-/**
- * Process Authentication Login Sequences via secure POST payload packages
- */
-async function attemptLogin() {
-  const cnic = document.getElementById('loginCnic').value.trim();
-  const pin = document.getElementById('loginPin').value.trim();
-  const btn = document.querySelector('.login-btn');
-  const errDiv = document.getElementById('loginError');
-
-  if (!cnic || !pin) return;
-  
-  btn.disabled = true;
-  btn.textContent = "Verifying Identity Matrices...";
-  errDiv.style.display = 'none';
-
-  try {
-    const response = await fetch(API_URL, {
-      method: 'POST',
-      body: JSON.stringify({
-        action: 'authenticate',
-        payload: { cnic: cnic, pin: pin }
-      })
-    });
-    
-    const data = await response.json();
-    
-    if (data.success && data.user) {
-      currentUser = data.user.cnic;
-      userProfile = data.user;
+    // WINDOW DESKTOP ENTRY POINT HOOK
+    window.addEventListener('DOMContentLoaded', () => {
+      document.getElementById('filter-start').value = dateThreeMonthsAgoISO;
+      document.getElementById('filter-end').value = dateTodayISO;
+      document.getElementById('milk-filter-start').value = dateThreeMonthsAgoISO;
+      document.getElementById('milk-filter-end').value = dateTodayISO;
       
-      document.getElementById('loginScreen').style.display = 'none';
-      document.getElementById('appShell').style.display = 'block';
-      document.getElementById('userNameLabel').textContent = userProfile.name;
-      
-      toast("Access Granted. Session context established.", "success");
-      initAppEngine();
-    } else {
-      errDiv.style.display = 'block';
-      toast("Authentication parameters mismatch assignment maps.", "error");
-    }
-  } catch (err) {
-    toast("Pipeline deployment unreachable. Verify Web App endpoint URL mapping configuration rules.", "error");
-  } finally {
-    btn.disabled = false;
-    btn.textContent = "Authenticate Terminal";
-  }
-}
-
-/**
- * Initialize application engine components upon successful entry authentication loops
- */
-async function initAppEngine() {
-  try {
-    const today = new Date();
-    const startDate = new Date(today.getFullYear(), today.getMonth(), 1).toISOString().split('T')[0];
-    const endDate = new Date(today.getFullYear(), today.getMonth() + 1, 0).toISOString().split('T')[0];
-    
-    // Asynchronously call metrics dashboard analytics profiles
-    const dashboardData = await callAPI('getTransactionsByPeriod', {
-      startDate: startDate,
-      endDate: endDate,
-      typeFilter: ''
+      attemptSessionTokenRecovery();
     });
+
+    /**
+     * Executes asynchronous service queries against the active Apps Script deployment wrapper.
+     */
+    function dispatchGASRequest(serverMethod, parameterArray, onCompletion, onFailure) {
+      document.getElementById('global-loader').classList.remove('hidden');
+      google.script.run
+        .withFailureHandler(err => {
+          document.getElementById('global-loader').classList.add('hidden');
+          console.error(`Execution Fault within method context [${serverMethod}]:`, err);
+          alert(`Database Error Notification: ${err.message || err}`);
+          if (onFailure) onFailure(err);
+        })
+        .withSuccessHandler(res => {
+          document.getElementById('global-loader').classList.add('hidden');
+          if (onCompletion) onCompletion(res);
+        })[serverMethod].apply(null, parameterArray);
+    }
+
+    /**
+     * Checks browser localStorage context to recover persistent operational sessions.
+     */
+    function attemptSessionTokenRecovery() {
+      const stored = localStorage.getItem('ledger_session_node');
+      if (stored) {
+        try {
+          activeUserContext = JSON.parse(stored);
+          bootstrapWorkspaceContext();
+        } catch(e) {
+          localStorage.removeItem('ledger_session_node');
+          revealSecureLoginGuard();
+        }
+      } else {
+        revealSecureLoginGuard();
+      }
+    }
+
+    function revealSecureLoginGuard() {
+      document.getElementById('view-workspace').classList.add('hidden');
+      document.getElementById('view-login').classList.remove('hidden');
+      document.getElementById('global-loader').classList.add('hidden');
+    }
+
+    function handleLoginExecution(e) {
+      e.preventDefault();
+      const cnic = document.getElementById('login-cnic').value.trim();
+      const pin = document.getElementById('login-pin').value.trim();
+      
+      if(!cnic || !pin) return;
+
+      dispatchGASRequest('authenticate', [cnic, pin], (user) => {
+        if (user) {
+          activeUserContext = user;
+          localStorage.setItem('ledger_session_node', JSON.stringify(user));
+          bootstrapWorkspaceContext();
+          document.getElementById('form-login').reset();
+        } else {
+          alert('Security Access Violation: Invalid identity context parameters matching provided verification nodes.');
+        }
+      });
+    }
+
+    function executeLogOutSequence() {
+      localStorage.removeItem('ledger_session_node');
+      activeUserContext = null;
+      revealSecureLoginGuard();
+    }
+
+    /**
+     * Re-initializes operational workspace environments following identity verification passes.
+     */
+    function bootstrapWorkspaceContext() {
+      document.getElementById('view-login').classList.add('hidden');
+      document.getElementById('view-workspace').classList.remove('hidden');
+      
+      document.getElementById('display-user-name').textContent = activeUserContext.name;
+      document.getElementById('display-user-cnic').textContent = activeUserContext.cnic;
+      
+      resetTxnFormState();
+      resetMilkFormState();
+      
+      refreshGlobalCategoriesCache(() => {
+        switchTabContext('dashboard');
+      });
+    }
+
+    /**
+     * Handles sub-panel switching logic and triggers underlying view data refresh passes.
+     */
+    function switchTabContext(targetPanelId) {
+      document.querySelectorAll('.tab-panel').forEach(el => el.classList.add('hidden'));
+      document.querySelectorAll('.nav-tab').forEach(el => {
+        el.className = "nav-tab px-3 py-1.5 rounded-md text-xs font-medium transition-all cursor-pointer flex items-center gap-1.5 text-slate-600 hover:text-slate-900";
+      });
+
+      document.getElementById(`tab-${targetPanelId}`).classList.remove('hidden');
+      const activeBtn = document.querySelector(`.nav-tab[data-target="${targetPanelId}"]`);
+      if (activeBtn) {
+        activeBtn.className = "nav-tab px-3 py-1.5 rounded-md text-xs font-medium transition-all cursor-pointer flex items-center gap-1.5 text-blue-700 bg-white shadow-xs";
+      }
+
+      if (targetPanelId === 'dashboard') loadDashboardAnalyticalMetrics();
+      if (targetPanelId === 'txns') loadTxnsDatasetTable();
+      if (targetPanelId === 'categories') renderCategoriesViewLayout();
+      if (targetPanelId === 'recurring') loadRecurringDatasetTable();
+      if (targetPanelId === 'milk') loadMilkDatasetTable();
+    }
+
+    // ──────────────────────────────────────────────────────────────
+    // ENGINE TAXONOMY LOGIC (CATEGORIES MANAGER)
+    // ──────────────────────────────────────────────────────────────
     
-    // Populate layout metric fields dynamically from server array calculation sets
-    document.getElementById('kpi-income').textContent = new Intl.NumberFormat('en-PK', { style: 'currency', currency: 'PKR' }).format(dashboardData.totalIncome);
-    document.getElementById('kpi-expenses').textContent = new Intl.NumberFormat('en-PK', { style: 'currency', currency: 'PKR' }).format(dashboardData.totalExpenses);
-    document.getElementById('kpi-balance').textContent = new Intl.NumberFormat('en-PK', { style: 'currency', currency: 'PKR' }).format(dashboardData.netBalance);
+    function refreshGlobalCategoriesCache(onSuccessCallback) {
+      dispatchGASRequest('getCategories', [activeUserContext.cnic], (res) => {
+        localCategoriesCache = res || { Income: [], Expense: [] };
+        populateFormCategorySelect();
+        
+        // Synchronize category selectors across form models
+        const recSel = document.getElementById('rec-category');
+        recSel.innerHTML = "";
+        (localCategoriesCache.Expense || []).forEach(c => {
+          recSel.innerHTML += `<option value="${c}">${c}</option>`;
+        });
+
+        if (onSuccessCallback) onSuccessCallback();
+      });
+    }
+
+    function populateFormCategorySelect() {
+      const type = document.getElementById('txn-type').value;
+      const selectElement = document.getElementById('txn-category');
+      selectElement.innerHTML = "";
+      const sourceList = localCategoriesCache[type] || [];
+      sourceList.forEach(c => {
+        selectElement.innerHTML += `<option value="${c}">${c}</option>`;
+      });
+    }
+
+    function renderCategoriesViewLayout() {
+      const incList = document.getElementById('list-cat-income');
+      const expList = document.getElementById('list-cat-expense');
+      
+      incList.innerHTML = localCategoriesCache.Income.length ? "" : '<li class="p-3 text-center text-slate-400">No custom income labels defined.</li>';
+      expList.innerHTML = localCategoriesCache.Expense.length ? "" : '<li class="p-3 text-center text-slate-400">No custom expense labels defined.</li>';
+
+      localCategoriesCache.Income.forEach(c => {
+        incList.appendChild(buildCategoryListItemNode('Income', c));
+      });
+      localCategoriesCache.Expense.forEach(c => {
+        expList.appendChild(buildCategoryListItemNode('Expense', c));
+      });
+    }
+
+    function buildCategoryListItemNode(type, name) {
+      const li = document.createElement('li');
+      li.className = "flex items-center justify-between p-3 bg-white hover:bg-slate-50 transition-all";
+      li.innerHTML = `
+        <span class="font-medium tracking-wide">${name}</span>
+        <div class="flex items-center space-x-1.5">
+          <button onclick="executeCategoryRenameSequence('${type}', '${name}')" class="p-1 hover:text-blue-600 transition-all text-slate-400 cursor-pointer" title="Rename classification label"><i class="fa-solid fa-pen-to-square"></i></button>
+          <button onclick="executeCategoryDeletionSequence('${type}', '${name}')" class="p-1 hover:text-rose-600 transition-all text-slate-400 cursor-pointer" title="Purge index matrix structural branch"><i class="fa-solid fa-trash-can"></i></button>
+        </div>
+      `;
+      return li;
+    }
+
+    function executeCategoryAddition(e) {
+      e.preventDefault();
+      const type = document.getElementById('cat-type').value;
+      const name = document.getElementById('cat-name').value.trim();
+      if (!name) return;
+
+      dispatchGASRequest('addCategory', [activeUserContext.cnic, type, name], () => {
+        document.getElementById('cat-name').value = "";
+        refreshGlobalCategoriesCache(() => renderCategoriesViewLayout());
+      });
+    }
+
+    function executeCategoryRenameSequence(type, oldName) {
+      const newName = prompt(`Modify structural configuration node validation parameter context for tracking item [${oldName}]:`, oldName);
+      if (!newName || newName.trim() === oldName) return;
+      
+      dispatchGASRequest('updateCategory', [activeUserContext.cnic, type, oldName, newName.trim()], () => {
+        refreshGlobalCategoriesCache(() => renderCategoriesViewLayout());
+      });
+    }
+
+    function executeCategoryDeletionSequence(type, name) {
+      if (!confirm(`Confirm irreversible termination pass of category branch structure: [${name}]?\nAll historical matching ledger items preserve transactional integrity parameters.`)) return;
+      dispatchGASRequest('deleteCategory', [activeUserContext.cnic, type, name], () => {
+        refreshGlobalCategoriesCache(() => renderCategoriesViewLayout());
+      });
+    }
+
+    // ──────────────────────────────────────────────────────────────
+    // ENGINE METRICS ANALYTICS LOGIC (DASHBOARD)
+    // ──────────────────────────────────────────────────────────────
     
-  } catch (e) {
-    console.error("Initialization loop error trace:", e);
-  }
-}
+    function loadDashboardAnalyticalMetrics() {
+      const start = document.getElementById('filter-start').value;
+      const end = document.getElementById('filter-end').value;
 
-function switchView(tabId) {
-  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-  document.querySelectorAll('.nav-pill').forEach(n => n.classList.remove('active'));
-  
-  document.getElementById(`page-${tabId}`).classList.add('active');
-  event.target.classList.add('active');
-}
+      dispatchGASRequest('getDashboardData', [activeUserContext.cnic, start, end], (data) => {
+        document.getElementById('kpi-prev').textContent = Number(data.prevMonthBalance || 0).toFixed(2);
+        document.getElementById('kpi-income').textContent = Number(data.totalIncome || 0).toFixed(2);
+        document.getElementById('kpi-expense').textContent = Number(data.totalExpenses || 0).toFixed(2);
+        document.getElementById('kpi-net').textContent = Number(data.netBalance || 0).toFixed(2);
 
-function processLogout() {
-  currentUser = null;
-  userProfile = null;
-  document.getElementById('appShell').style.display = 'none';
-  document.getElementById('loginScreen').style.display = 'flex';
-  document.getElementById('loginForm').reset();
-  toast("Session closed safely.", "info");
-}
+        // Render Monthly Summary Table Rows
+        const mtBody = document.getElementById('dash-table-monthly');
+        mtBody.innerHTML = data.monthlySummary.length ? "" : '<tr><td colspan="4" class="py-4 text-center text-slate-400">No operational period entries compiled.</td></tr>';
+        
+        data.monthlySummary.forEach(m => {
+          const tr = document.createElement('tr');
+          tr.className = "hover:bg-slate-50 transition-all font-medium text-slate-700";
+          tr.innerHTML = `
+            <td class="py-2.5 px-3 font-semibold text-slate-900">${m.month}</td>
+            <td class="py-2.5 px-3 text-right text-emerald-600">+${Number(m.totalIncome).toFixed(2)}</td>
+            <td class="py-2.5 px-3 text-right text-rose-600">-${Number(m.totalExpenses).toFixed(2)}</td>
+            <td class="py-2.5 px-3 text-right ${m.netBalance >= 0 ? 'text-blue-600' : 'text-rose-600'}">${Number(m.netBalance).toFixed(2)}</td>
+          `;
+          mtBody.appendChild(tr);
+        });
 
-function toast(msg, type = 'info') {
-  const container = document.getElementById('toasts');
-  const el = document.createElement('div');
-  el.className = `toast ${type === 'success' ? 'ok' : type === 'error' ? 'err' : ''}`;
-  el.textContent = msg;
-  container.appendChild(el);
-  setTimeout(() => el.remove(), 3500);
-}
-</script>
+        // Map breakdowns out visually
+        renderDashboardAllocationBlock('dash-income-cat', data.incomeByCategory, 'bg-emerald-500');
+        renderDashboardAllocationBlock('dash-expense-cat', data.expenseByCategory, 'bg-rose-500');
+      });
+    }
+
+    function renderDashboardAllocationBlock(elementId, dataset, barColorClass) {
+      const container = document.getElementById(elementId);
+      container.innerHTML = dataset.length ? "" : '<p class="text-xs text-slate-400 text-center py-4">No flow metrics matching active filters.</p>';
+      
+      const maxTotalVal = Math.max(...dataset.map(o => o.total), 1);
+      
+      dataset.forEach(item => {
+        const pct = Math.min((item.total / maxTotalVal) * 100, 100);
+        const row = document.createElement('div');
+        row.className = "space-y-1 text-xs font-medium";
+        row.innerHTML = `
+          <div class="flex items-center justify-between text-slate-700">
+            <span class="truncate pr-2 font-semibold text-slate-900">${item.category} <span class="text-[10px] text-slate-400 font-normal">(${item.count} items)</span></span>
+            <span class="font-bold">${Number(item.total).toFixed(2)}</span>
+          </div>
+          <div class="w-full bg-slate-100 h-1.5 rounded-full overflow-hidden">
+            <div class="${barColorClass} h-full transition-all" style="width: ${pct}%"></div>
+          </div>
+        `;
+        container.appendChild(row);
+      });
+    }
+
+    // ──────────────────────────────────────────────────────────────
+    // TRANSACTION ENGINE LOGIC
+    // ──────────────────────────────────────────────────────────────
+    
+    function loadTxnsDatasetTable() {
+      const start = document.getElementById('filter-start').value;
+      const end = document.getElementById('filter-end').value;
+      const type = document.getElementById('filter-type').value;
+
+      dispatchGASRequest('getTransactionsByPeriod', [activeUserContext.cnic, start, end, type], (data) => {
+        const body = document.getElementById('txn-table-body');
+        body.innerHTML = data.transactions.length ? "" : '<tr><td colspan="6" class="py-4 text-center text-slate-400">No relational record files returned within active window.</td></tr>';
+        
+        data.transactions.forEach(t => {
+          const tr = document.createElement('tr');
+          tr.className = "hover:bg-slate-50 transition-all text-slate-700 font-medium";
+          tr.innerHTML = `
+            <td class="py-2.5 px-3 font-semibold whitespace-nowrap text-slate-900">${t.date}</td>
+            <td class="py-2.5 px-3"><span class="px-2 py-0.5 rounded text-[10px] font-bold tracking-wide uppercase ${t.type === 'Income' ? 'bg-emerald-50 text-emerald-700' : 'bg-rose-50 text-rose-700'}">${t.type}</span></td>
+            <td class="py-2.5 px-3 truncate max-w-[120px]">${t.category}</td>
+            <td class="py-2.5 px-3 text-right font-bold ${t.type === 'Income' ? 'text-emerald-600' : 'text-rose-600'}">${Number(t.amount).toFixed(2)}</td>
+            <td class="py-2.5 px-3 truncate max-w-[180px]" title="${t.description || ''}">${t.description || '—'}</td>
+            <td class="py-2.5 px-3 text-center whitespace-nowrap">
+              <button onclick="stageTransactionForEdit('${t.id}', '${t.date}', '${t.type}', '${t.category}', ${t.amount}, '${escapeJsString(t.description)}')" class="p-1 hover:text-blue-600 text-slate-400 cursor-pointer transition-all mr-1" title="Edit row parameters"><i class="fa-solid fa-pen-to-square"></i></button>
+              <button onclick="executeTransactionDeletion('${t.id}')" class="p-1 hover:text-rose-600 text-slate-400 cursor-pointer transition-all" title="Purge atomic data element"><i class="fa-solid fa-trash-can"></i></button>
+            </td>
+          `;
+          body.appendChild(tr);
+        });
+      });
+    }
+
+    function resetTxnFormState() {
+      document.getElementById('form-txn').reset();
+      document.getElementById('txn-id').value = "";
+      document.getElementById('txn-date').value = dateTodayISO;
+      document.getElementById('txn-form-title').textContent = "Commit Financial Ledger Event";
+      populateFormCategorySelect();
+    }
+
+    function stageTransactionForEdit(id, date, type, category, amount, desc) {
+      document.getElementById('txn-form-title').textContent = "Modify Transaction Node Context";
+      document.getElementById('txn-id').value = id;
+      document.getElementById('txn-date').value = date;
+      document.getElementById('txn-type').value = type;
+      populateFormCategorySelect();
+      document.getElementById('txn-category').value = category;
+      document.getElementById('txn-amount').value = amount;
+      document.getElementById('txn-description').value = desc;
+      
+      document.getElementById('txn-date').focus();
+    }
+
+    function executeTxnCommitment(e) {
+      e.preventDefault();
+      const id = document.getElementById('txn-id').value;
+      const txnPayload = {
+        date: document.getElementById('txn-date').value,
+        type: document.getElementById('txn-type').value,
+        category: document.getElementById('txn-category').value,
+        amount: parseFloat(document.getElementById('txn-amount').value) || 0,
+        description: document.getElementById('txn-description').value.trim()
+      };
+
+      const endpointMethod = id ? 'updateTransaction' : 'saveTransaction';
+      if (id) txnPayload.id = id;
+
+      dispatchGASRequest(endpointMethod, [activeUserContext.cnic, txnPayload], () => {
+        resetTxnFormState();
+        loadTxnsDatasetTable();
+      });
+    }
+
+    function executeTransactionDeletion(id) {
+      if (!confirm("Confirm irreversible purging sequence execution on selected ledger record?")) return;
+      dispatchGASRequest('deleteTransaction', [activeUserContext.cnic, id], () => {
+        loadTxnsDatasetTable();
+      });
+    }
+
+    // ──────────────────────────────────────────────────────────────
+    // RECURRING BLUEPRINT PROCESSING ENGINE
+    // ──────────────────────────────────────────────────────────────
+    
+    function loadRecurringDatasetTable() {
+      dispatchGASRequest('getRecurringExpenses', [activeUserContext.cnic], (data) => {
+        const body = document.getElementById('recurring-table-body');
+        body.innerHTML = data.length ? "" : '<tr><td colspan="4" class="py-4 text-center text-slate-400">No structured recurrent items linked.</td></tr>';
+        
+        data.forEach(r => {
+          const tr = document.createElement('tr');
+          tr.className = "hover:bg-slate-50 transition-all text-slate-700 font-medium";
+          tr.innerHTML = `
+            <td class="py-2.5 px-3 font-semibold text-slate-900">${r.name}</td>
+            <td class="py-2.5 px-3"><span class="bg-slate-100 text-slate-700 px-2 py-0.5 rounded font-bold text-[10px] uppercase tracking-wide">${r.category}</span></td>
+            <td class="py-2.5 px-3 text-right text-rose-600 font-bold">${Number(r.amount).toFixed(2)}</td>
+            <td class="py-2.5 px-3 text-center">
+              <button onclick="executeRecurringDeletion('${r.id}')" class="p-1 hover:text-rose-600 text-slate-400 cursor-pointer transition-all" title="Terminate scheduling configuration node"><i class="fa-solid fa-trash-can"></i></button>
+            </td>
+          `;
+          body.appendChild(tr);
+        });
+      });
+    }
+
+    function executeRecurringAddition(e) {
+      e.preventDefault();
+      const payload = {
+        name: document.getElementById('rec-name').value.trim(),
+        category: document.getElementById('rec-category').value,
+        amount: parseFloat(document.getElementById('rec-amount').value) || 0
+      };
+      if(!payload.name || !payload.category) return;
+
+      dispatchGASRequest('addRecurringExpense', [activeUserContext.cnic, payload], () => {
+        document.getElementById('form-recurring').reset();
+        loadRecurringDatasetTable();
+      });
+    }
+
+    function executeRecurringDeletion(id) {
+      if(!confirm("Decommission scheduled infrastructure cost profile blueprint template?")) return;
+      dispatchGASRequest('deleteRecurringExpense', [activeUserContext.cnic, id], () => {
+        loadRecurringDatasetTable();
+      });
+    }
+
+    // ──────────────────────────────────────────────────────────────
+    // DAIRY ENGINE CONTROL RUNTIME (MILK TRUCKER)
+    // ──────────────────────────────────────────────────────────────
+    
+    function loadMilkDatasetTable() {
+      const start = document.getElementById('milk-filter-start').value;
+      const end = document.getElementById('milk-filter-end').value;
+
+      // Pipeline Request 1: Dynamic Structural Balance Calculations
+      dispatchGASRequest('getMilkDashboardData', [activeUserContext.cnic], (kpis) => {
+        document.getElementById('milk-kpi-current').textContent = Number(kpis.currentMonthBill || 0).toFixed(2);
+        document.getElementById('milk-kpi-prev').textContent = Number(kpis.previousMonthBill || 0).toFixed(2);
+      });
+
+      // Pipeline Request 2: Datatable Processing
+      dispatchGASRequest('getMilkRecords', [activeUserContext.cnic, start, end], (data) => {
+        document.getElementById('stat-milk-abs-days').textContent = data.totalAbsentDays || 0;
+        document.getElementById('stat-milk-abs-liters').textContent = `${Number(data.totalAbsentLiters || 0).toFixed(1)} L`;
+        document.getElementById('stat-milk-extra-liters').textContent = `${Number(data.totalExtraLiters || 0).toFixed(1)} L`;
+        
+        const netEl = document.getElementById('stat-milk-net');
+        netEl.textContent = Number(data.netEffect || 0).toFixed(2);
+        netEl.className = data.netEffect >= 0 ? "font-bold text-emerald-600" : "font-bold text-rose-600";
+
+        const body = document.getElementById('milk-table-body');
+        body.innerHTML = data.records.length ? "" : '<tr><td colspan="7" class="py-4 text-center text-slate-400">No atomic resource items located.</td></tr>';
+        
+        data.records.forEach(m => {
+          let badgeStyle = "bg-blue-50 text-blue-700";
+          if (m.recordType === 'extra') badgeStyle = "bg-emerald-50 text-emerald-700";
+          if (m.recordType === 'absent') badgeStyle = "bg-rose-50 text-rose-700";
+
+          const displayAmt = (m.recordType === 'absent') ? `-${Number(m.amount).toFixed(2)}` : `${Number(m.amount).toFixed(2)}`;
+          const amtColorClass = (m.recordType === 'absent') ? "text-rose-600" : "text-slate-800";
+
+          const tr = document.createElement('tr');
+          tr.className = "hover:bg-slate-50 transition-all text-slate-700 font-medium";
+          tr.innerHTML = `
+            <td class="py-2.5 px-3 font-semibold whitespace-nowrap text-slate-900">${m.date}</td>
+            <td class="py-2.5 px-3"><span class="px-2 py-0.5 rounded text-[10px] font-bold tracking-wide uppercase ${badgeStyle}">${m.recordType}</span></td>
+            <td class="py-2.5 px-3 text-right">${Number(m.liters).toFixed(1)}</td>
+            <td class="py-2.5 px-3 text-right text-slate-400">${Number(m.pricePerLiter).toFixed(2)}</td>
+            <td class="py-2.5 px-3 text-right font-bold ${amtColorClass}">${displayAmt}</td>
+            <td class="py-2.5 px-3 truncate max-w-[140px]" title="${m.notes || ''}">${m.notes || '—'}</td>
+            <td class="py-2.5 px-3 text-center whitespace-nowrap">
+              <button onclick="stageMilkRecordForEdit('${m.id}', '${m.date}', '${m.recordType}', ${m.liters}, ${m.pricePerLiter}, '${escapeJsString(m.notes)}')" class="p-1 hover:text-blue-600 text-slate-400 cursor-pointer transition-all mr-1" title="Modify item row values"><i class="fa-solid fa-pen-to-square"></i></button>
+              <button onclick="executeMilkDeletion('${m.id}')" class="p-1 hover:text-rose-600 text-slate-400 cursor-pointer transition-all" title="Purge row entry"><i class="fa-solid fa-trash-can"></i></button>
+            </td>
+          `;
+          body.appendChild(tr);
+        });
+      });
+    }
+
+    function resetMilkFormState() {
+      document.getElementById('form-milk').reset();
+      document.getElementById('milk-id').value = "";
+      document.getElementById('milk-date').value = dateTodayISO;
+      document.getElementById('milk-form-title').textContent = "Commit Dairy Ledger Event";
+      handleMilkFormTypeValidation();
+    }
+
+    function handleMilkFormTypeValidation() {
+      const type = document.getElementById('milk-type').value;
+      const litWrapper = document.getElementById('milk-liters-wrapper');
+      const prcWrapper = document.getElementById('milk-price-wrapper');
+      
+      const litInput = document.getElementById('milk-liters');
+      const prcInput = document.getElementById('milk-price');
+
+      // Autofill fields drop validations conditionally based on specification rules
+      if (type === 'absent') {
+        litInput.placeholder = "Auto-fills to baseline capacity standard";
+        prcInput.placeholder = "Auto-fills to standard value index";
+      } else if (type === 'extra') {
+        litInput.placeholder = "0.00";
+        prcInput.placeholder = "Auto-fills to standard value index";
+      } else {
+        litInput.placeholder = "0.00";
+        prcInput.placeholder = "0.00";
+      }
+    }
+
+    function stageMilkRecordForEdit(id, date, type, liters, price, notes) {
+      document.getElementById('milk-form-title').textContent = "Modify Balance Tracking Item";
+      document.getElementById('milk-id').value = id;
+      document.getElementById('milk-date').value = date;
+      document.getElementById('milk-type').value = type;
+      handleMilkFormTypeValidation();
+      document.getElementById('milk-liters').value = liters || "";
+      document.getElementById('milk-price').value = price || "";
+      document.getElementById('milk-notes').value = notes;
+      
+      document.getElementById('milk-date').focus();
+    }
+
+    function executeMilkRecordCommitment(e) {
+      e.preventDefault();
+      const id = document.getElementById('milk-id').value;
+      const payload = {
+        date: document.getElementById('milk-date').value,
+        recordType: document.getElementById('milk-type').value,
+        liters: document.getElementById('milk-liters').value ? parseFloat(document.getElementById('milk-liters').value) : "",
+        pricePerLiter: document.getElementById('milk-price').value ? parseFloat(document.getElementById('milk-price').value) : "",
+        notes: document.getElementById('milk-notes').value.trim()
+      };
+
+      const targetMethod = id ? 'updateMilkRecord' : 'saveMilkRecord';
+      if (id) payload.id = id;
+
+      dispatchGASRequest(targetMethod, [activeUserContext.cnic, payload], () => {
+        resetMilkFormState();
+        loadMilkDatasetTable();
+      });
+    }
+
+    function executeMilkDeletion(id) {
+      if(!confirm("Purge selected record entry row completely?")) return;
+      dispatchGASRequest('deleteMilkRecord', [activeUserContext.cnic, id], () => {
+        loadMilkDatasetTable();
+      });
+    }
+
+    // ──────────────────────────────────────────────────────────────
+    // ESCAPE UTILITIES
+    // ──────────────────────────────────────────────────────────────
+    function escapeJsString(str) {
+      if (!str) return '';
+      return str.replace(/'/g, "\\'").replace(/"/g, '\\"').replace(/\n/g, '\\n');
+    }
+  </script>
 </body>
 </html>
