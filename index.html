@@ -663,7 +663,7 @@ function saveConfig() {
 // All calls: POST { action, token?, payload? }
 // ══════════════════════════════════════════════
 async function api(action, payload, requiresAuth) {
-  requiresAuth = requiresAuth !== false; // default true
+  requiresAuth = requiresAuth !== false;
   const url = getApiUrl();
   if (!url) throw new Error('API URL not configured');
 
@@ -674,9 +674,10 @@ async function api(action, payload, requiresAuth) {
     body.token = token;
   }
 
+  // Use text/plain to avoid CORS preflight
   const resp = await fetch(url, {
     method:  'POST',
-    headers: { 'Content-Type': 'application/json' },
+    headers: { 'Content-Type': 'text/plain' },
     body:    JSON.stringify(body)
   });
 
@@ -689,7 +690,6 @@ async function api(action, payload, requiresAuth) {
   if (data && data.error) throw new Error(data.error);
   return data;
 }
-
 // ══════════════════════════════════════════════
 // COUNTRIES
 // ══════════════════════════════════════════════
