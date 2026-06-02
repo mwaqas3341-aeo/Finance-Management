@@ -48,79 +48,74 @@
 html { scroll-behavior: smooth; }
 body {
   background: var(--bg); font-family: var(--font); color: var(--ink);
-  min-height: 100dvh; overflow-x: hidden;
-  -webkit-font-smoothing: antialiased;
+  min-height: 100dvh; overflow-x: hidden; -webkit-font-smoothing: antialiased;
 }
-
 body::before {
   content: ''; position: fixed; inset: 0; z-index: 0;
   background:
-    radial-gradient(ellipse 60% 35% at 15% 0%, rgba(77,159,255,0.08) 0%, transparent 70%),
+    radial-gradient(ellipse 60% 35% at 15% 0%,  rgba(77,159,255,0.08) 0%, transparent 70%),
     radial-gradient(ellipse 50% 30% at 85% 100%, rgba(167,139,250,0.06) 0%, transparent 70%),
-    radial-gradient(ellipse 40% 40% at 50% 50%, rgba(0,214,143,0.03) 0%, transparent 70%);
+    radial-gradient(ellipse 40% 40% at 50% 50%,  rgba(0,214,143,0.03) 0%, transparent 70%);
   pointer-events: none;
 }
-
 ::-webkit-scrollbar { width: 3px; height: 3px; }
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb { background: var(--ink4); border-radius: 3px; }
 
+/* ═══ CONFIG BANNER ═══ */
+#configBanner {
+  position: fixed; inset: 0; z-index: 2000; background: var(--bg);
+  display: flex; align-items: center; justify-content: center; padding: 20px;
+}
+.config-card {
+  background: var(--bg2); border: 2px solid var(--amber);
+  border-radius: var(--r4); padding: 32px 28px; width: 100%; max-width: 520px;
+  animation: slideUp .3s ease;
+}
+.config-card h2 { font-family: var(--font2); font-size: 1.3rem; margin-bottom: 6px; color: var(--amber); }
+.config-card p  { color: var(--ink2); font-size: 0.82rem; margin-bottom: 20px; line-height: 1.6; }
+.config-card code {
+  display: block; background: var(--bg3); border: 1px solid var(--border2);
+  border-radius: var(--r); padding: 10px 14px; font-family: var(--mono);
+  font-size: 0.75rem; color: var(--emerald); margin-bottom: 20px;
+  word-break: break-all;
+}
+.config-card label { display: block; font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: var(--ink3); margin-bottom: 6px; }
+.config-card input { width: 100%; background: var(--bg3); border: 1px solid var(--border); color: var(--ink); padding: 11px 14px; border-radius: var(--r2); font-family: var(--mono); font-size: 0.82rem; margin-bottom: 14px; }
+.config-card input:focus { outline: none; border-color: var(--amber); }
+.config-save-btn { width: 100%; padding: 13px; background: var(--amber); color: #000; border: none; border-radius: var(--r2); font-family: var(--font); font-size: 0.9rem; font-weight: 700; cursor: pointer; transition: var(--trans); }
+.config-save-btn:hover { background: #ffc85e; }
+.config-note { font-size: 0.72rem; color: var(--ink3); text-align: center; margin-top: 12px; }
+
 /* ═══ LOGIN SCREEN ═══ */
 .login-overlay {
   position: fixed; inset: 0; z-index: 1000;
-  background: var(--bg); display: flex; align-items: center;
-  justify-content: center;
+  background: var(--bg); display: flex; align-items: center; justify-content: center;
   padding: 20px;
 }
 .login-card {
   background: var(--bg2); border: 1px solid var(--border2);
   border-radius: var(--r4); padding: 32px 28px;
-  width: 100%;
-  max-width: 400px;
-  animation: slideUp .3s ease;
+  width: 100%; max-width: 400px; animation: slideUp .3s ease;
 }
-.login-card h2 {
-  font-family: var(--font2); font-size: 1.5rem; margin-bottom: 4px;
-  text-align: center;
-}
-.login-card .subtitle {
-  text-align: center; color: var(--ink3); font-size: 0.82rem;
-  margin-bottom: 24px;
-}
-.login-card label {
-  display: block; font-size: 0.7rem;
-  font-weight: 700;
-  text-transform: uppercase; letter-spacing: 0.1em;
-  color: var(--ink3); margin-bottom: 6px;
-}
-.login-card input {
-  width: 100%; background: var(--bg3);
-  border: 1px solid var(--border);
-  color: var(--ink); padding: 12px 14px; border-radius: var(--r2);
-  font-family: var(--mono); font-size: 1rem; margin-bottom: 16px;
-  transition: border-color var(--trans);
-  letter-spacing: 0.05em;
-}
+.login-card h2 { font-family: var(--font2); font-size: 1.5rem; margin-bottom: 4px; text-align: center; }
+.login-card .subtitle { text-align: center; color: var(--ink3); font-size: 0.82rem; margin-bottom: 24px; }
+.login-card label { display: block; font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: var(--ink3); margin-bottom: 6px; }
+.login-card input { width: 100%; background: var(--bg3); border: 1px solid var(--border); color: var(--ink); padding: 12px 14px; border-radius: var(--r2); font-family: var(--mono); font-size: 1rem; margin-bottom: 16px; transition: border-color var(--trans); letter-spacing: 0.05em; }
 .login-card input:focus { outline: none; border-color: var(--azure); }
 .login-card input::placeholder { color: var(--ink4); font-family: var(--font); letter-spacing: normal; }
-.login-btn {
-  width: 100%; padding: 13px; background: var(--azure); color: #000;
-  border: none; border-radius: var(--r2); font-family: var(--font);
-  font-size: 0.9rem;
-  font-weight: 700; cursor: pointer;
-  transition: var(--trans); margin-top: 8px;
-}
+.login-btn { width: 100%; padding: 13px; background: var(--azure); color: #000; border: none; border-radius: var(--r2); font-family: var(--font); font-size: 0.9rem; font-weight: 700; cursor: pointer; transition: var(--trans); margin-top: 4px; }
 .login-btn:hover { background: #6db3ff; transform: translateY(-1px); }
-.login-error {
-  color: var(--rose);
-  font-size: 0.78rem; text-align: center;
-  margin-top: 12px; min-height: 20px;
-}
+.login-btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+.login-error { color: var(--rose); font-size: 0.78rem; text-align: center; margin-top: 12px; min-height: 20px; }
+.login-tabs { display: flex; gap: 4px; margin-bottom: 20px; }
+.ltab { flex: 1; padding: 8px; border-radius: var(--r2); font-family: var(--font); font-size: 0.78rem; font-weight: 700; cursor: pointer; border: 1.5px solid var(--border); background: var(--bg3); color: var(--ink3); transition: var(--trans); text-align: center; }
+.ltab.active { background: var(--azure-d); border-color: var(--azure); color: var(--azure); }
+.reg-only { display: none; }
 
 /* ═══ TOPNAV ═══ */
 .topnav {
-  position: sticky; top: 0;
-  z-index: 300; height: var(--nav-h);
+  position: sticky; top: 0; z-index: 300; height: var(--nav-h);
   background: rgba(8,11,16,0.88); backdrop-filter: blur(20px) saturate(180%);
   -webkit-backdrop-filter: blur(20px) saturate(180%);
   border-bottom: 1px solid var(--border); display: flex; align-items: center;
@@ -133,16 +128,10 @@ body::before {
 .nav-pill { background: transparent; border: none; color: var(--ink3); padding: 7px 14px; font-family: var(--font); font-size: 0.8rem; font-weight: 600; cursor: pointer; border-radius: var(--r2); display: flex; align-items: center; gap: 5px; transition: var(--trans); white-space: nowrap; }
 .nav-pill:hover { color: var(--ink2); background: rgba(255,255,255,0.05); }
 .nav-pill.active { color: var(--azure); background: var(--azure-d); }
-.nav-pill .pi { font-size: 0.9rem; }
 .nav-end { margin-left: auto; display: flex; align-items: center; gap: 8px; }
 .user-chip { display: flex; align-items: center; gap: 6px; background: var(--bg3); border: 1px solid var(--border); border-radius: 20px; padding: 4px 10px 4px 4px; font-size: 0.72rem; color: var(--ink2); font-family: var(--mono); }
 .user-av { width: 22px; height: 22px; border-radius: 50%; background: linear-gradient(135deg, var(--azure), var(--milk)); font-size: 0.65rem; display: flex; align-items: center; justify-content: center; color: #fff; font-weight: 700; }
-.logout-btn {
-  background: var(--rose-d); border: 1px solid var(--rose); color: var(--rose);
-  padding: 5px 10px; border-radius: var(--r); font-size: 0.65rem;
-  font-weight: 700; cursor: pointer; font-family: var(--font);
-  transition: var(--trans);
-}
+.logout-btn { background: var(--rose-d); border: 1px solid var(--rose); color: var(--rose); padding: 5px 10px; border-radius: var(--r); font-size: 0.65rem; font-weight: 700; cursor: pointer; font-family: var(--font); transition: var(--trans); }
 .logout-btn:hover { background: rgba(255,77,109,0.2); }
 
 /* ═══ BOTTOM NAV ═══ */
@@ -159,6 +148,7 @@ body::before {
 .page { display: none; animation: fadeSlide .22s ease; }
 .page.active { display: block; }
 @keyframes fadeSlide { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes slideUp   { from { transform: translateY(16px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
 
 /* ═══ FILTER BAR ═══ */
 .fbar { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; background: var(--bg2); border: 1px solid var(--border); border-radius: var(--r3); padding: 10px 14px; margin-bottom: 14px; }
@@ -176,7 +166,7 @@ body::before {
 
 .kpi { background: var(--bg2); border: 1px solid var(--border); border-radius: var(--r3); padding: 14px 16px; position: relative; overflow: hidden; transition: border-color var(--trans), transform var(--trans); }
 .kpi:hover { transform: translateY(-1px); }
-.kpi-accent { position: absolute; top: 0; left: 0; right: 0; height: 2px; border-radius: 0; }
+.kpi-accent { position: absolute; top: 0; left: 0; right: 0; height: 2px; }
 .kpi-label { font-size: 0.62rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink3); margin-bottom: 8px; }
 .kpi-val { font-family: var(--mono); font-size: 1.3rem; font-weight: 500; color: var(--ink); line-height: 1.1; word-break: break-all; }
 .kpi-sub { font-size: 0.68rem; color: var(--ink3); margin-top: 4px; }
@@ -213,43 +203,43 @@ textarea.fi { min-height: 56px; resize: vertical; }
 .type-btn { flex: 1; padding: 9px 8px; border-radius: var(--r2); font-family: var(--font); font-size: 0.8rem; font-weight: 700; cursor: pointer; border: 1.5px solid var(--border); background: var(--bg3); color: var(--ink3); transition: var(--trans); }
 .type-btn.t-income  { background: var(--emerald-d); border-color: var(--emerald); color: var(--emerald); }
 .type-btn.t-expense { background: var(--rose-d);    border-color: var(--rose);    color: var(--rose); }
-
-/* Milk type buttons */
 .milk-type-btn { flex: 1; padding: 9px 8px; border-radius: var(--r2); font-family: var(--font); font-size: 0.8rem; font-weight: 700; cursor: pointer; border: 1.5px solid var(--border); background: var(--bg3); color: var(--ink3); transition: var(--trans); text-align: center; }
-.milk-type-btn.m-absent { background: var(--rose-d); border-color: var(--rose); color: var(--rose); }
-.milk-type-btn.m-extra  { background: var(--milk-d); border-color: var(--milk); color: var(--milk); }
+.milk-type-btn.m-absent  { background: var(--rose-d);  border-color: var(--rose);  color: var(--rose); }
+.milk-type-btn.m-extra   { background: var(--milk-d);  border-color: var(--milk);  color: var(--milk); }
+.milk-type-btn.m-std     { background: var(--milk2-d); border-color: var(--milk2); color: var(--milk2); }
 
 /* ═══ BUTTONS ═══ */
 .btn { display: inline-flex; align-items: center; justify-content: center; gap: 6px; padding: 9px 16px; border-radius: var(--r2); font-family: var(--font); font-size: 0.8rem; font-weight: 700; cursor: pointer; border: none; transition: var(--trans); white-space: nowrap; }
 .btn-primary { background: var(--azure); color: #000; }
 .btn-primary:hover { background: #6db3ff; transform: translateY(-1px); }
 .btn-primary:active { transform: translateY(0); }
-.btn-ghost { background: var(--bg3); border: 1px solid var(--border); color: var(--ink2); }
-.btn-ghost:hover { border-color: var(--azure); color: var(--azure); }
+.btn-ghost  { background: var(--bg3); border: 1px solid var(--border); color: var(--ink2); }
+.btn-ghost:hover  { border-color: var(--azure); color: var(--azure); }
 .btn-danger { background: var(--rose-d); border: 1px solid var(--rose); color: var(--rose); }
 .btn-danger:hover { background: rgba(255,77,109,0.2); }
-.btn-milk { background: var(--milk-d); border: 1px solid var(--milk); color: var(--milk); }
-.btn-milk:hover { background: rgba(167,139,250,0.2); }
+.btn-milk   { background: var(--milk-d); border: 1px solid var(--milk); color: var(--milk); }
+.btn-milk:hover   { background: rgba(167,139,250,0.2); }
 .btn-sm  { padding: 7px 13px; font-size: 0.76rem; }
 .btn-xs  { padding: 4px 9px;  font-size: 0.7rem; }
 .btn-fw  { width: 100%; }
+.btn:disabled { opacity: 0.5; cursor: not-allowed; }
 
 /* ═══ BADGE ═══ */
 .badge { display: inline-block; padding: 2px 8px; border-radius: 20px; font-size: 0.62rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; }
-.b-income  { background: var(--emerald-d); color: var(--emerald); }
-.b-expense { background: var(--rose-d); color: var(--rose); }
-.b-absent  { background: var(--rose-d); color: var(--rose); }
-.b-extra   { background: var(--milk-d); color: var(--milk); }
-.b-standard { background: var(--milk2-d); color: var(--milk2); }
+.b-income   { background: var(--emerald-d); color: var(--emerald); }
+.b-expense  { background: var(--rose-d);    color: var(--rose); }
+.b-absent   { background: var(--rose-d);    color: var(--rose); }
+.b-extra    { background: var(--milk-d);    color: var(--milk); }
+.b-standard { background: var(--milk2-d);   color: var(--milk2); }
 
 /* ═══ CAT ROWS ═══ */
 .cat-row { display: flex; align-items: center; gap: 10px; padding: 8px 0; border-bottom: 1px solid var(--border); }
 .cat-row:last-child { border-bottom: none; }
-.cat-name { flex: 1; font-size: 0.8rem; color: var(--ink2); }
+.cat-name  { flex: 1; font-size: 0.8rem; color: var(--ink2); }
 .cat-count { font-size: 0.68rem; color: var(--ink3); min-width: 24px; text-align: right; }
-.cat-amt { font-family: var(--mono); font-size: 0.82rem; font-weight: 500; min-width: 85px; text-align: right; }
-.bar-wrap { flex: 0.7; height: 3px; background: var(--bg4); border-radius: 3px; }
-.bar { height: 100%; border-radius: 3px; transition: width .5s ease; }
+.cat-amt   { font-family: var(--mono); font-size: 0.82rem; font-weight: 500; min-width: 85px; text-align: right; }
+.bar-wrap  { flex: 0.7; height: 3px; background: var(--bg4); border-radius: 3px; }
+.bar       { height: 100%; border-radius: 3px; transition: width .5s ease; }
 
 /* ═══ TABLE ═══ */
 .tbl-wrap { overflow-x: auto; border-radius: var(--r3); }
@@ -259,7 +249,7 @@ tbody td { padding: 10px 13px; border-bottom: 1px solid var(--border); color: va
 tbody tr:last-child td { border-bottom: none; }
 tbody tr { transition: background var(--trans); }
 tbody tr:hover { background: rgba(255,255,255,0.025); }
-.mono { font-family: var(--mono); }
+.mono  { font-family: var(--mono); }
 .empty { text-align: center; padding: 28px 16px; color: var(--ink3); font-size: 0.82rem; }
 
 /* ═══ SETTINGS ═══ */
@@ -277,15 +267,14 @@ tbody tr:hover { background: rgba(255,255,255,0.025); }
 .overlay { position: fixed; inset: 0; z-index: 800; background: rgba(0,0,0,0.72); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); display: flex; align-items: center; justify-content: center; padding: 16px; animation: fadeIn .15s ease; }
 @keyframes fadeIn { from { opacity:0; } to { opacity:1; } }
 .modal { background: var(--bg2); border: 1px solid var(--border2); border-radius: var(--r4); padding: 22px; width: 100%; max-width: 460px; animation: slideUp .2s ease; }
-@keyframes slideUp { from { transform:translateY(16px); opacity:0; } to { transform:translateY(0); opacity:1; } }
 .modal h3 { font-size: 0.95rem; margin-bottom: 14px; font-weight: 700; }
 .modal-actions { display: flex; gap: 8px; justify-content: flex-end; margin-top: 14px; }
 
 /* ═══ TOAST ═══ */
 .toasts { position: fixed; top: calc(var(--nav-h) + 8px); right: 12px; z-index: 9999; display: flex; flex-direction: column; gap: 6px; }
 .toast { padding: 8px 14px; border-radius: var(--r2); font-weight: 700; font-size: 0.74rem; color: #000; background: var(--azure); animation: toastIn .18s ease; max-width: 280px; }
-.toast.ok  { background: var(--emerald); }
-.toast.err { background: var(--rose); color: #fff; }
+.toast.ok   { background: var(--emerald); }
+.toast.err  { background: var(--rose);    color: #fff; }
 .toast.warn { background: var(--amber); }
 @keyframes toastIn { from { opacity:0; transform:translateX(30px); } to { opacity:1; transform:translateX(0); } }
 
@@ -302,7 +291,9 @@ tbody tr:hover { background: rgba(255,255,255,0.025); }
 .rec-dash-row { display: flex; align-items: center; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid var(--border); }
 .rec-dash-row:last-child { border-bottom: none; }
 .mn-pos { color: var(--emerald); font-family: var(--mono); }
-.mn-neg { color: var(--rose); font-family: var(--mono); }
+.mn-neg { color: var(--rose);    font-family: var(--mono); }
+.spinner { display: inline-block; width: 14px; height: 14px; border: 2px solid rgba(255,255,255,0.2); border-top-color: currentColor; border-radius: 50%; animation: spin .7s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
 
 @media print {
   .topnav, .botnav, .toasts { display: none !important; }
@@ -312,54 +303,79 @@ tbody tr:hover { background: rgba(255,255,255,0.025); }
 </head>
 <body>
 
-<!-- ══════════ LOGIN SCREEN ══════════ -->
-<div class="login-overlay" id="loginScreen">
-  <div class="login-card">
-    <h2>📒 Ledger<span style="color:var(--azure)">.</span></h2>
-    <p class="subtitle">Sign in with your credentials</p>
-    
-    <label for="loginCNIC">CNIC Number (13 digits)</label>
-    <input type="text" id="loginCNIC" placeholder="00000-0000000-0" maxlength="15" inputmode="numeric" pattern="[0-9\-]+" autocomplete="off">
-    
-    <label for="loginPIN">PIN (4 digits)</label>
-    <input type="password" id="loginPIN" placeholder="••••" maxlength="4" inputmode="numeric" pattern="[0-9]{4}" autocomplete="off">
-    
-    <button class="login-btn" id="loginBtn" onclick="handleLogin()">🔐 Sign In</button>
-    <div class="login-error" id="loginError"></div>
+<!-- ══════════ CONFIG BANNER (shown if API URL not set) ══════════ -->
+<div id="configBanner" style="display:none">
+  <div class="config-card">
+    <h2>⚙️ Setup Required</h2>
+    <p>Paste your Google Apps Script Web App URL below. You only need to do this once — it will be saved in your browser.</p>
+    <code id="configExample">https://script.google.com/macros/s/AKfycb.../exec</code>
+    <label for="configUrlInput">Google Apps Script Web App URL</label>
+    <input type="url" id="configUrlInput" placeholder="https://script.google.com/macros/s/AKfycbw8jvGVOSod2YF9pPMlehBV8TUcO1r2CpqUbOxy4fAuZGXOAO0E0DNDcHKs6RQsCmOmMw/exec">
+    <button class="config-save-btn" onclick="saveConfig()">Save & Continue →</button>
+    <p class="config-note">Need help? See the README.md included in this project.</p>
   </div>
 </div>
 
-<!-- ══════════ MAIN APP (Hidden until login) ══════════ -->
+<!-- ══════════ LOGIN SCREEN ══════════ -->
+<div class="login-overlay" id="loginScreen" style="display:none">
+  <div class="login-card">
+    <h2>📒 Ledger<span style="color:var(--azure)">.</span></h2>
+    <p class="subtitle">Personal Finance Tracker</p>
+
+    <div class="login-tabs">
+      <div class="ltab active" onclick="switchLoginTab('login')"  id="tabLogin">Sign In</div>
+      <div class="ltab"       onclick="switchLoginTab('register')" id="tabReg">Register</div>
+    </div>
+
+    <!-- Sign-in fields -->
+    <label for="loginCNIC">CNIC Number (13 digits)</label>
+    <input type="text" id="loginCNIC" placeholder="00000-0000000-0" maxlength="15" inputmode="numeric" autocomplete="off">
+
+    <!-- Register-only field -->
+    <div class="reg-only" id="regNameRow">
+      <label for="loginName">Full Name</label>
+      <input type="text" id="loginName" placeholder="Your Name" autocomplete="off">
+    </div>
+
+    <label for="loginPIN">PIN (4 digits)</label>
+    <input type="password" id="loginPIN" placeholder="••••" maxlength="4" inputmode="numeric" autocomplete="off">
+
+    <button class="login-btn" id="loginBtn" onclick="handleLogin()">🔐 Sign In</button>
+    <div class="login-error" id="loginError"></div>
+    <div style="text-align:center;margin-top:14px">
+      <button class="btn btn-ghost btn-sm" onclick="openConfig()" style="font-size:0.68rem;color:var(--ink3)">⚙️ Change API URL</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════ MAIN APP ══════════ -->
 <div id="appContent" style="display:none">
 
-<!-- ══════════ TOP NAV ══════════ -->
 <nav class="topnav">
   <div class="brand">
     <div class="brand-icon">📒</div>
     Ledger<span class="brand-dot">.</span>
   </div>
   <div class="nav-pills">
-    <button class="nav-pill active" data-tab="dashboard"><span class="pi">📊</span> Dashboard</button>
-    <button class="nav-pill" data-tab="transactions"><span class="pi">📋</span> Transactions</button>
-    <button class="nav-pill" data-tab="settings"><span class="pi">⚙️</span> Settings</button>
+    <button class="nav-pill active" data-tab="dashboard">📊 Dashboard</button>
+    <button class="nav-pill" data-tab="transactions">📋 Transactions</button>
+    <button class="nav-pill" data-tab="settings">⚙️ Settings</button>
   </div>
   <div class="nav-end">
     <div class="user-chip">
       <div class="user-av" id="userAv">?</div>
-      <span id="userNameDisplay">Loading…</span>
+      <span id="userNameDisplay">…</span>
     </div>
     <button class="logout-btn" onclick="handleLogout()">🚪 Logout</button>
   </div>
 </nav>
 
-<!-- ══════════ BOTTOM NAV ══════════ -->
 <nav class="botnav">
   <button class="bot-btn active" data-tab="dashboard"><span class="bi">📊</span>Dash</button>
   <button class="bot-btn" data-tab="transactions"><span class="bi">📋</span>Txns</button>
   <button class="bot-btn" data-tab="settings"><span class="bi">⚙️</span>More</button>
 </nav>
 
-<!-- ══════════ MAIN ══════════ -->
 <div class="wrap">
 
   <!-- ▌ DASHBOARD ▐ -->
@@ -374,60 +390,30 @@ tbody tr:hover { background: rgba(255,255,255,0.025); }
       <button class="btn btn-ghost btn-sm" onclick="setLastMonth()">Last Month</button>
     </div>
 
-   <div class="kpi-grid">
-      <div class="kpi">
-        <div class="kpi-accent" style="background:var(--milk)"></div>
-        <div class="kpi-label">Prev Balance</div>
-        <div class="kpi-val" id="kPrev">—</div>
-      </div>
-      <div class="kpi">
-        <div class="kpi-accent" style="background:var(--azure)"></div>
-        <div class="kpi-label">Period Income</div>
-        <div class="kpi-val text-azure" id="kIncome">—</div>
-      </div>
-      <div class="kpi">
-        <div class="kpi-accent" style="background:var(--emerald)"></div>
-        <div class="kpi-label">Total Income</div>
-        <div class="kpi-val text-emerald" id="kTotal">—</div>
-      </div>
-      <div class="kpi">
-        <div class="kpi-accent" style="background:var(--rose)"></div>
-        <div class="kpi-label">Period Expenses</div>
-        <div class="kpi-val text-rose" id="kExpenses">—</div>
-      </div>
-      <div class="kpi">
-        <div class="kpi-accent" style="background:var(--amber)"></div>
-        <div class="kpi-label">Remaining</div>
-        <div class="kpi-val text-amber" id="kRemaining">—</div>
-      </div>
+    <div class="kpi-grid">
+      <div class="kpi"><div class="kpi-accent" style="background:var(--milk)"></div><div class="kpi-label">Prev Balance</div><div class="kpi-val" id="kPrev">—</div></div>
+      <div class="kpi"><div class="kpi-accent" style="background:var(--azure)"></div><div class="kpi-label">Period Income</div><div class="kpi-val text-azure" id="kIncome">—</div></div>
+      <div class="kpi"><div class="kpi-accent" style="background:var(--emerald)"></div><div class="kpi-label">Total Income</div><div class="kpi-val text-emerald" id="kTotal">—</div></div>
+      <div class="kpi"><div class="kpi-accent" style="background:var(--rose)"></div><div class="kpi-label">Period Expenses</div><div class="kpi-val text-rose" id="kExpenses">—</div></div>
+      <div class="kpi"><div class="kpi-accent" style="background:var(--amber)"></div><div class="kpi-label">Remaining</div><div class="kpi-val text-amber" id="kRemaining">—</div></div>
     </div>
 
     <div class="dash-grid">
-      
-      <!-- Left Column: Income by cat -->
       <div class="card open" id="cIncomeCat">
-        <div class="card-head" onclick="toggleCard('cIncomeCat')">
-          <div class="card-head-left"><span class="card-icon">💰</span>Income by Category</div>
-          <span class="chev">▾</span>
-        </div>
+        <div class="card-head" onclick="toggleCard('cIncomeCat')"><div class="card-head-left"><span class="card-icon">💰</span>Income by Category</div><span class="chev">▾</span></div>
         <div class="card-body" id="incomeCatBody"><div class="empty">No data</div></div>
       </div>
 
-      <!-- Middle Column Wrapper -->
-      <div style="display:flex; flex-direction:column; gap:12px">
-        
+      <div style="display:flex;flex-direction:column;gap:12px">
         <!-- Add Transaction -->
         <div class="card open" id="cEntry">
-          <div class="card-head" onclick="toggleCard('cEntry')">
-            <div class="card-head-left"><span class="card-icon">📝</span>Add Transaction</div>
-            <span class="chev">▾</span>
-          </div>
+          <div class="card-head" onclick="toggleCard('cEntry')"><div class="card-head-left"><span class="card-icon">📝</span>Add Transaction</div><span class="chev">▾</span></div>
           <div class="card-body">
             <div class="form-stack">
               <input type="date" id="txnDate" class="fi">
               <div class="type-row">
-                <button class="type-btn t-income" id="btnIncome" onclick="setTxnType('Income')">💵 Income</button>
-                <button class="type-btn" id="btnExpense" onclick="setTxnType('Expense')">💸 Expense</button>
+                <button class="type-btn t-income"  id="btnIncome"  onclick="setTxnType('Income')">💵 Income</button>
+                <button class="type-btn"            id="btnExpense" onclick="setTxnType('Expense')">💸 Expense</button>
               </div>
               <input type="hidden" id="txnType" value="Income">
               <select id="txnCat" class="fi"><option value="">Category…</option></select>
@@ -438,64 +424,45 @@ tbody tr:hover { background: rgba(255,255,255,0.025); }
           </div>
         </div>
 
-        <!-- Milk Quick Menu -->
+        <!-- Milk Quick Entry -->
         <div class="card open" id="cMilkQuick">
-          <div class="card-head" onclick="toggleCard('cMilkQuick')">
-            <div class="card-head-left"><span class="card-icon">🥛</span>Milk Quick Entry</div>
-            <span class="chev">▾</span>
-          </div>
+          <div class="card-head" onclick="toggleCard('cMilkQuick')"><div class="card-head-left"><span class="card-icon">🥛</span>Milk Quick Entry</div><span class="chev">▾</span></div>
           <div class="card-body">
             <div class="form-stack">
               <div class="type-row" style="margin-bottom:4px">
-                <button class="milk-type-btn m-extra" id="btnStd" onclick="setMilkType('standard')" style="font-size:0.7rem">⚙️ Standard</button>
-                <button class="milk-type-btn" id="btnExtra" onclick="setMilkType('extra')" style="font-size:0.7rem">➕ Extra</button>
-                <button class="milk-type-btn" id="btnAbs" onclick="setMilkType('absent')" style="font-size:0.7rem">❌ Absent</button>
+                <button class="milk-type-btn m-std"   id="btnStd"   onclick="setMilkType('standard')" style="font-size:0.7rem">⚙️ Standard</button>
+                <button class="milk-type-btn"          id="btnExtra" onclick="setMilkType('extra')"    style="font-size:0.7rem">➕ Extra</button>
+                <button class="milk-type-btn"          id="btnAbs"   onclick="setMilkType('absent')"   style="font-size:0.7rem">❌ Absent</button>
               </div>
-
               <input type="date" id="milkDate" class="fi">
-
-              <!-- Standard View -->
               <div class="form-row" id="rowStd">
                 <input type="number" id="milkStdLiters" class="fi" placeholder="Daily L" step="0.1">
-                <input type="number" id="milkStdPrice" class="fi" placeholder="Rate/L" step="0.01">
+                <input type="number" id="milkStdPrice"  class="fi" placeholder="Rate/L"  step="0.01">
               </div>
-
-              <!-- Extra View -->
               <div class="form-row" id="rowExtra" style="display:none">
                 <input type="number" id="milkExtraLiters" class="fi" placeholder="Extra Liters" step="0.1">
               </div>
-
-              <!-- Live Estimate Display -->
-              <div style="display:flex; gap:8px; margin-top:8px; margin-bottom:8px;">
-                
-                <!-- Previous Month -->
-                <div style="flex:1; background:var(--bg3); padding:10px 8px; border-radius:var(--r2); border:1px solid var(--border); text-align:center;">
-                  <div style="font-size:0.6rem; color:var(--ink3); text-transform:uppercase; font-weight:700; letter-spacing:0.05em">Prev Month</div>
-                  <div style="font-size:0.55rem; color:var(--ink4); margin-bottom:4px;">(To pay now)</div>
-                  <div class="mono" id="milkPrevEst" style="font-size:1.05rem; color:var(--ink); font-weight:700">—</div>
+              <div style="display:flex;gap:8px;margin-top:8px;margin-bottom:8px">
+                <div style="flex:1;background:var(--bg3);padding:10px 8px;border-radius:var(--r2);border:1px solid var(--border);text-align:center">
+                  <div style="font-size:0.6rem;color:var(--ink3);text-transform:uppercase;font-weight:700;letter-spacing:0.05em">Prev Month</div>
+                  <div style="font-size:0.55rem;color:var(--ink4);margin-bottom:4px">(To pay now)</div>
+                  <div class="mono" id="milkPrevEst" style="font-size:1.05rem;color:var(--ink);font-weight:700">—</div>
                 </div>
-
-                <!-- Current Month -->
-                <div style="flex:1; background:var(--bg3); padding:10px 8px; border-radius:var(--r2); border:1px solid var(--milk); text-align:center; position:relative; overflow:hidden;">
-                  <div style="position:absolute; top:0; left:0; right:0; height:2px; background:var(--milk);"></div>
-                  <div style="font-size:0.6rem; color:var(--ink3); text-transform:uppercase; font-weight:700; letter-spacing:0.05em">Current Month</div>
-                  <div style="font-size:0.55rem; color:var(--ink4); margin-bottom:4px;">(Next month's bill)</div>
-                  <div class="mono" id="milkEst" style="font-size:1.05rem; color:var(--milk); font-weight:700">—</div>
+                <div style="flex:1;background:var(--bg3);padding:10px 8px;border-radius:var(--r2);border:1px solid var(--milk);text-align:center;position:relative;overflow:hidden">
+                  <div style="position:absolute;top:0;left:0;right:0;height:2px;background:var(--milk)"></div>
+                  <div style="font-size:0.6rem;color:var(--ink3);text-transform:uppercase;font-weight:700;letter-spacing:0.05em">Current Month</div>
+                  <div style="font-size:0.55rem;color:var(--ink4);margin-bottom:4px">(Next month's bill)</div>
+                  <div class="mono" id="milkEst" style="font-size:1.05rem;color:var(--milk);font-weight:700">—</div>
                 </div>
-
               </div>
-
               <button class="btn btn-milk btn-fw" onclick="saveMilk()">💾 Save Milk Record</button>
             </div>
           </div>
         </div>
 
-        <!-- Milk records table -->
+        <!-- Milk Records Table -->
         <div class="card closed" id="cMilkTable">
-          <div class="card-head" onclick="toggleCard('cMilkTable')">
-            <div class="card-head-left"><span class="card-icon">📋</span>Milk Records</div>
-            <span class="chev">▾</span>
-          </div>
+          <div class="card-head" onclick="toggleCard('cMilkTable')"><div class="card-head-left"><span class="card-icon">📋</span>Milk Records</div><span class="chev">▾</span></div>
           <div class="card-body" style="padding:0">
             <div class="tbl-wrap">
               <table>
@@ -507,31 +474,19 @@ tbody tr:hover { background: rgba(255,255,255,0.025); }
         </div>
       </div>
 
-      <!-- Right Column: Expense by cat -->
       <div class="card open" id="cExpenseCat">
-        <div class="card-head" onclick="toggleCard('cExpenseCat')">
-          <div class="card-head-left"><span class="card-icon">💸</span>Expenses by Category</div>
-          <span class="chev">▾</span>
-        </div>
+        <div class="card-head" onclick="toggleCard('cExpenseCat')"><div class="card-head-left"><span class="card-icon">💸</span>Expenses by Category</div><span class="chev">▾</span></div>
         <div class="card-body" id="expenseCatBody"><div class="empty">No data</div></div>
       </div>
     </div>
 
-    <!-- Recurring -->
     <div class="card open" id="cRecurring">
-      <div class="card-head" onclick="toggleCard('cRecurring')">
-        <div class="card-head-left"><span class="card-icon">🔄</span>Recurring Monthly Expenses</div>
-        <span class="chev">▾</span>
-      </div>
+      <div class="card-head" onclick="toggleCard('cRecurring')"><div class="card-head-left"><span class="card-icon">🔄</span>Recurring Monthly Expenses</div><span class="chev">▾</span></div>
       <div class="card-body" id="recurringDashBody"><div class="empty">None set</div></div>
     </div>
 
-    <!-- Monthly summary -->
     <div class="card open" id="cMonthly">
-      <div class="card-head" onclick="toggleCard('cMonthly')">
-        <div class="card-head-left"><span class="card-icon">📊</span>Month-wise Summary</div>
-        <span class="chev">▾</span>
-      </div>
+      <div class="card-head" onclick="toggleCard('cMonthly')"><div class="card-head-left"><span class="card-icon">📊</span>Month-wise Summary</div><span class="chev">▾</span></div>
       <div class="card-body">
         <div class="tbl-wrap">
           <table>
@@ -560,13 +515,11 @@ tbody tr:hover { background: rgba(255,255,255,0.025); }
       <button class="btn btn-ghost btn-sm" onclick="exportCSV()">📥 CSV</button>
       <button class="btn btn-ghost btn-sm" onclick="window.print()">🖨️</button>
     </div>
-
     <div class="kpi-grid" style="grid-template-columns:repeat(3,1fr)">
       <div class="kpi"><div class="kpi-accent" style="background:var(--emerald)"></div><div class="kpi-label">Income</div><div class="kpi-val text-emerald" id="tKpiIncome">—</div></div>
       <div class="kpi"><div class="kpi-accent" style="background:var(--rose)"></div><div class="kpi-label">Expenses</div><div class="kpi-val text-rose" id="tKpiExpenses">—</div></div>
       <div class="kpi"><div class="kpi-accent" style="background:var(--azure)"></div><div class="kpi-label">Net</div><div class="kpi-val text-azure" id="tKpiNet">—</div></div>
     </div>
-
     <div class="card">
       <div class="tbl-wrap">
         <table>
@@ -584,7 +537,6 @@ tbody tr:hover { background: rgba(255,255,255,0.025); }
       <p style="font-size:0.82rem;color:var(--ink2);margin-bottom:12px">Current: <strong id="curCountry" style="color:var(--ink)"></strong></p>
       <button class="btn btn-ghost btn-sm" onclick="openCountryModal()">Change Country / Currency</button>
     </div>
-
     <div class="scard">
       <h3>💰 Income Categories</h3>
       <div class="srow">
@@ -593,7 +545,6 @@ tbody tr:hover { background: rgba(255,255,255,0.025); }
       </div>
       <div id="incomeCatList"></div>
     </div>
-
     <div class="scard">
       <h3>💸 Expense Categories</h3>
       <div class="srow">
@@ -602,7 +553,6 @@ tbody tr:hover { background: rgba(255,255,255,0.025); }
       </div>
       <div id="expenseCatList"></div>
     </div>
-
     <div class="scard">
       <h3>🔄 Recurring Monthly Expenses</h3>
       <div class="srow">
@@ -613,14 +563,16 @@ tbody tr:hover { background: rgba(255,255,255,0.025); }
       </div>
       <div id="recurringSettList"></div>
     </div>
+    <div class="scard">
+      <h3>⚙️ API Configuration</h3>
+      <p style="font-size:0.78rem;color:var(--ink3);margin-bottom:10px">Current URL: <span id="currentApiUrl" style="font-family:var(--mono);font-size:0.7rem;color:var(--emerald)"></span></p>
+      <button class="btn btn-ghost btn-sm" onclick="openConfig()">Change API URL</button>
+    </div>
   </div>
 </div>
-
-</div><!-- End appContent -->
+</div><!-- end appContent -->
 
 <!-- ══════════ MODALS ══════════ -->
-
-<!-- Edit Transaction -->
 <div class="overlay" id="editModal" style="display:none" onclick="if(event.target===this)closeEdit()">
   <div class="modal" onclick="event.stopPropagation()">
     <h3>✏️ Edit Transaction</h3>
@@ -639,17 +591,20 @@ tbody tr:hover { background: rgba(255,255,255,0.025); }
   </div>
 </div>
 
-<!-- Edit Milk -->
 <div class="overlay" id="editMilkModal" style="display:none" onclick="if(event.target===this)closeEditMilk()">
   <div class="modal" onclick="event.stopPropagation()">
     <h3>✏️ Edit Milk Record</h3>
     <div class="form-stack">
       <input type="hidden" id="eMilkId">
       <input type="date" id="eMilkDateModal" class="fi">
-      <select id="eMilkType" class="fi"><option value="absent">❌ Absent</option><option value="extra">➕ Extra</option><option value="standard">⚙️ Standard</option></select>
+      <select id="eMilkType" class="fi">
+        <option value="absent">❌ Absent</option>
+        <option value="extra">➕ Extra</option>
+        <option value="standard">⚙️ Standard</option>
+      </select>
       <div class="form-row">
         <input type="number" id="eMilkLiters" class="fi" placeholder="Liters" step="0.1">
-        <input type="number" id="eMilkPrice" class="fi" placeholder="Price/L" step="0.01">
+        <input type="number" id="eMilkPrice"  class="fi" placeholder="Price/L" step="0.01">
       </div>
     </div>
     <div class="modal-actions">
@@ -659,7 +614,6 @@ tbody tr:hover { background: rgba(255,255,255,0.025); }
   </div>
 </div>
 
-<!-- Country modal -->
 <div class="overlay" id="countryModal" style="display:none" onclick="if(event.target===this)closeCountryModal()">
   <div class="modal" onclick="event.stopPropagation()">
     <h3>🌍 Select Country & Currency</h3>
@@ -671,21 +625,77 @@ tbody tr:hover { background: rgba(255,255,255,0.025); }
   </div>
 </div>
 
-<!-- Toast container -->
 <div class="toasts" id="toasts"></div>
 
 <script>
 'use strict';
 
-// ════════════════════════════════════════════════════════════
-// ⚠️ REPLACE THIS URL WITH YOUR GOOGLE APPS SCRIPT WEB APP URL
-// ════════════════════════════════════════════════════════════
-const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbw8jvGVOSod2YF9pPMlehBV8TUcO1r2CpqUbOxy4fAuZGXOAO0E0DNDcHKs6RQsCmOmMw/exec";
+// ══════════════════════════════════════════════
+// CONFIG — API URL stored in localStorage
+// ══════════════════════════════════════════════
+const LS_API_KEY   = 'ledger_api_url';
+const LS_TOKEN_KEY = 'ledger_token';
+const LS_USER_KEY  = 'ledger_user';
 
-// ── COUNTRIES ──
+function getApiUrl() { return localStorage.getItem(LS_API_KEY) || ''; }
+function saveApiUrl(url) { localStorage.setItem(LS_API_KEY, url.trim()); }
+
+function openConfig() {
+  document.getElementById('configUrlInput').value = getApiUrl();
+  document.getElementById('configBanner').style.display = 'flex';
+  document.getElementById('loginScreen').style.display  = 'none';
+  document.getElementById('appContent').style.display   = 'none';
+}
+
+function saveConfig() {
+  const url = document.getElementById('configUrlInput').value.trim();
+  if (!url || !url.startsWith('https://')) {
+    alert('Please enter a valid HTTPS URL.'); return;
+  }
+  saveApiUrl(url);
+  document.getElementById('configBanner').style.display = 'none';
+  document.getElementById('currentApiUrl').textContent  = url;
+  showLogin();
+}
+
+// ══════════════════════════════════════════════
+// API — REST bridge (replaces google.script.run)
+// All calls: POST { action, token?, payload? }
+// ══════════════════════════════════════════════
+async function api(action, payload, requiresAuth) {
+  requiresAuth = requiresAuth !== false; // default true
+  const url = getApiUrl();
+  if (!url) throw new Error('API URL not configured');
+
+  const body = { action, payload: payload || {} };
+  if (requiresAuth) {
+    const token = localStorage.getItem(LS_TOKEN_KEY);
+    if (!token) throw new Error('Not authenticated');
+    body.token = token;
+  }
+
+  const resp = await fetch(url, {
+    method:  'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body:    JSON.stringify(body)
+  });
+
+  if (!resp.ok) {
+    const text = await resp.text();
+    throw new Error(`HTTP ${resp.status}: ${text}`);
+  }
+
+  const data = await resp.json();
+  if (data && data.error) throw new Error(data.error);
+  return data;
+}
+
+// ══════════════════════════════════════════════
+// COUNTRIES
+// ══════════════════════════════════════════════
 const COUNTRIES = {
-  IN:{ locale:'en-IN', currency:'INR', flag:'🇮🇳', name:'India' },
   PK:{ locale:'ur-PK', currency:'PKR', flag:'🇵🇰', name:'Pakistan' },
+  IN:{ locale:'en-IN', currency:'INR', flag:'🇮🇳', name:'India' },
   US:{ locale:'en-US', currency:'USD', flag:'🇺🇸', name:'USA' },
   GB:{ locale:'en-GB', currency:'GBP', flag:'🇬🇧', name:'UK' },
   EU:{ locale:'de-DE', currency:'EUR', flag:'🇪🇺', name:'Eurozone' },
@@ -695,120 +705,135 @@ const COUNTRIES = {
   AE:{ locale:'ar-AE', currency:'AED', flag:'🇦🇪', name:'UAE' },
   SA:{ locale:'ar-SA', currency:'SAR', flag:'🇸🇦', name:'Saudi Arabia' },
 };
-// ── STATE ──
-let settings   = { country:'IN', locale:'en-IN', currency:'INR' };
-let allCats    = { Income:[], Expense:[] };
-let recurData  = [];
+
+// ══════════════════════════════════════════════
+// STATE
+// ══════════════════════════════════════════════
+let settings    = { country:'PK', locale:'ur-PK', currency:'PKR' };
+let allCats     = { Income:[], Expense:[] };
+let recurData   = [];
 let curMilkType = 'standard';
-let authToken = localStorage.getItem('ledger_auth') || null;
+let loginMode   = 'login'; // or 'register'
 
-// ── CUSTOM API BRIDGE (Replaces google.script.run for GitHub) ──
-// Replace your old gs() function with this one
-async function gs(fn, ...args) {
-  const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbw8jvGVOSod2YF9pPMlehBV8TUcO1r2CpqUbOxy4fAuZGXOAO0E0DNDcHKs6RQsCmOmMw/exec"; 
-  
-  const response = await fetch(WEB_APP_URL, {
-    method: 'POST',
-    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-    body: JSON.stringify({ action: fn, args: args })
-  });
-  
-  const result = await response.json();
-  if (result.success) return result.data;
-  throw new Error(result.error);
-}
-
-// ── FORMAT ──
+// ══════════════════════════════════════════════
+// FORMAT
+// ══════════════════════════════════════════════
 function fmt(v) {
-  const n = Number(v); if(isNaN(n)) return '0.00';
-  try { return new Intl.NumberFormat(settings.locale,{style:'currency',currency:settings.currency,minimumFractionDigits:2}).format(n); }
+  const n = Number(v); if (isNaN(n)) return '0.00';
+  try { return new Intl.NumberFormat(settings.locale, { style:'currency', currency:settings.currency, minimumFractionDigits:2 }).format(n); }
   catch(e) { return n.toFixed(2); }
 }
-function fmtL(v) { return (+v||0).toFixed(1)+' L'; }
+function fmtL(v) { return (+v || 0).toFixed(1) + ' L'; }
 
-// ── TOAST ──
+// ══════════════════════════════════════════════
+// TOAST
+// ══════════════════════════════════════════════
 function toast(msg, type='info') {
   const c = document.getElementById('toasts');
   const t = document.createElement('div');
   t.className = 'toast ' + (type==='success'?'ok': type==='error'?'err': type==='warn'?'warn':'');
   t.textContent = msg; c.appendChild(t);
-  setTimeout(()=>{ t.style.opacity='0'; t.style.transition='opacity .3s'; setTimeout(()=>t.remove(),300); }, 2400);
+  setTimeout(() => { t.style.opacity='0'; t.style.transition='opacity .3s'; setTimeout(()=>t.remove(), 300); }, 2400);
 }
 
-// ── LOGIN HANDLERS ──
-function formatCNICInput(input) {
-  let digits = input.replace(/\D/g, '');
-  digits = digits.substring(0, 13);
-  if (digits.length > 5) digits = digits.substring(0,5) + '-' + digits.substring(5);
-  if (digits.length > 13) digits = digits.substring(0,13) + '-' + digits.substring(13);
-  return digits;
+// ══════════════════════════════════════════════
+// LOGIN / REGISTER
+// ══════════════════════════════════════════════
+function switchLoginTab(mode) {
+  loginMode = mode;
+  document.getElementById('tabLogin').classList.toggle('active', mode==='login');
+  document.getElementById('tabReg').classList.toggle('active',   mode==='register');
+  document.getElementById('regNameRow').style.display = mode==='register' ? 'block' : 'none';
+  document.getElementById('loginBtn').textContent = mode==='register' ? '📝 Create Account' : '🔐 Sign In';
+  document.getElementById('loginError').textContent = '';
 }
 
-function getRawCNIC(input) {
-  return input.replace(/\D/g, '');
+function formatCNICInput(val) {
+  let d = val.replace(/\D/g,'').substring(0,13);
+  if (d.length >  5) d = d.substring(0,5) + '-' + d.substring(5);
+  if (d.length > 13) d = d.substring(0,13) + '-' + d.substring(13);
+  return d;
 }
+function rawCNIC(val) { return val.replace(/\D/g,''); }
 
 async function handleLogin() {
-  const cnicInput = document.getElementById('loginCNIC').value;
-  const pin = document.getElementById('loginPIN').value;
-  const errorEl = document.getElementById('loginError');
-  const rawCNIC = getRawCNIC(cnicInput);
-  
-  if (rawCNIC.length !== 13) return errorEl.textContent = 'Please enter a valid 13-digit CNIC number.';
-  if (pin.length !== 4 || !/^\d{4}$/.test(pin)) return errorEl.textContent = 'Please enter a valid 4-digit PIN.';
-  
-  const btn = document.getElementById('loginBtn');
-  btn.textContent = 'Signing in…'; btn.disabled = true; errorEl.textContent = '';
-  
+  const cnicVal = document.getElementById('loginCNIC').value;
+  const pin     = document.getElementById('loginPIN').value;
+  const errEl   = document.getElementById('loginError');
+  const btn     = document.getElementById('loginBtn');
+  const cnic    = rawCNIC(cnicVal);
+
+  errEl.textContent = '';
+  if (cnic.length !== 13) { errEl.textContent = 'Enter a valid 13-digit CNIC.'; return; }
+  if (!/^\d{4}$/.test(pin)) { errEl.textContent = 'PIN must be exactly 4 digits.'; return; }
+
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spinner"></span> Please wait…';
+
   try {
-    const result = await gs('login', rawCNIC, pin);
-    if (result.success) {
-      // Save secure token for headless session
-      authToken = result.token;
-      localStorage.setItem('ledger_auth', authToken);
-      
-      document.getElementById('loginScreen').style.display = 'none';
-      document.getElementById('appContent').style.display = 'block';
-      
-      const userName = result.user.name || 'User';
-      document.getElementById('userNameDisplay').textContent = userName;
-      document.getElementById('userAv').textContent = userName[0].toUpperCase();
-      
-      await initApp();
-    } else {
-      errorEl.textContent = result.message || 'Invalid credentials.';
-      btn.textContent = '🔐 Sign In'; btn.disabled = false;
+    if (loginMode === 'register') {
+      const name = document.getElementById('loginName').value.trim();
+      if (!name) { errEl.textContent = 'Enter your full name.'; btn.disabled=false; btn.textContent='📝 Create Account'; return; }
+      const res = await api('register', { cnic, name, pin }, false);
+      toast(res.message || 'Registered! Please sign in.', 'success');
+      switchLoginTab('login');
+      btn.disabled = false; btn.textContent='🔐 Sign In'; return;
     }
-  } catch (e) {
-    errorEl.textContent = 'Connection error. Check your URL configuration.';
-    btn.textContent = '🔐 Sign In'; btn.disabled = false;
+
+    const res = await api('login', { cnic, pin }, false);
+    if (res.success && res.token) {
+      localStorage.setItem(LS_TOKEN_KEY, res.token);
+      localStorage.setItem(LS_USER_KEY, JSON.stringify(res.user));
+      onLoginSuccess(res.user);
+    } else {
+      errEl.textContent = res.error || 'Invalid credentials.';
+    }
+  } catch(e) {
+    errEl.textContent = e.message || 'Connection error.';
+  } finally {
+    btn.disabled = false;
+    btn.textContent = loginMode==='register' ? '📝 Create Account' : '🔐 Sign In';
   }
 }
 
+function onLoginSuccess(user) {
+  document.getElementById('loginScreen').style.display  = 'none';
+  document.getElementById('appContent').style.display   = 'block';
+  const name = user.name || 'User';
+  document.getElementById('userNameDisplay').textContent = name;
+  document.getElementById('userAv').textContent         = name[0].toUpperCase();
+  initApp();
+}
+
 async function handleLogout() {
-  try { await gs('logout'); } catch (e) {}
-  authToken = null;
-  localStorage.removeItem('ledger_auth');
-  
-  document.getElementById('appContent').style.display = 'none';
+  try { await api('logout'); } catch(e) {}
+  localStorage.removeItem(LS_TOKEN_KEY);
+  localStorage.removeItem(LS_USER_KEY);
+  document.getElementById('appContent').style.display  = 'none';
   document.getElementById('loginScreen').style.display = 'flex';
   document.getElementById('loginCNIC').value = '';
-  document.getElementById('loginPIN').value = '';
+  document.getElementById('loginPIN').value  = '';
   document.getElementById('loginError').textContent = '';
-  document.getElementById('loginBtn').textContent = '🔐 Sign In';
-  document.getElementById('loginBtn').disabled = false;
+  switchLoginTab('login');
 }
 
-// ── APPLY COUNTRY ──
+function showLogin() {
+  document.getElementById('loginScreen').style.display  = 'flex';
+  document.getElementById('appContent').style.display   = 'none';
+  document.getElementById('configBanner').style.display = 'none';
+}
+
+// ══════════════════════════════════════════════
+// COUNTRY
+// ══════════════════════════════════════════════
 function applyCountry(code) {
-  const c = COUNTRIES[code] || COUNTRIES.IN;
+  const c = COUNTRIES[code] || COUNTRIES.PK;
   settings = { country:code, locale:c.locale, currency:c.currency };
   const el = document.getElementById('curCountry');
-  if(el) el.textContent = c.flag+' '+c.name+' ('+c.currency+')';
+  if (el) el.textContent = c.flag + ' ' + c.name + ' (' + c.currency + ')';
 }
-
 function fillCountryDrop(id) {
-  const el = document.getElementById(id); if(!el) return;
+  const el = document.getElementById(id); if (!el) return;
   el.innerHTML = '<option value="">— Select —</option>';
   Object.keys(COUNTRIES).forEach(code => {
     const c = COUNTRIES[code];
@@ -816,94 +841,96 @@ function fillCountryDrop(id) {
   });
   el.value = settings.country;
 }
-
 function openCountryModal() { fillCountryDrop('countrySelect'); document.getElementById('countryModal').style.display='flex'; }
 function closeCountryModal() { document.getElementById('countryModal').style.display='none'; }
 async function saveCountry() {
   const code = document.getElementById('countrySelect').value;
-  if(!code) return toast('Select a country.','error');
+  if (!code) { toast('Select a country.','error'); return; }
   try {
-    await gs('saveUserSettings',{country:code});
+    await api('saveUserSettings', { country:code });
     applyCountry(code); closeCountryModal();
     refreshDashboard(); loadTxns();
     toast('Currency updated','success');
   } catch(e) { toast('Save failed','error'); }
 }
 
-// ── TOGGLE CARD ──
-function toggleCard(id) {
-  const card = document.getElementById(id);
-  const isOpen = card.classList.contains('open');
-  card.classList.toggle('open', !isOpen);
-  card.classList.toggle('closed', isOpen);
-}
-
-// ── NAVIGATION ──
+// ══════════════════════════════════════════════
+// NAVIGATION
+// ══════════════════════════════════════════════
 function setupNav() {
   document.querySelectorAll('[data-tab]').forEach(btn => {
     btn.addEventListener('click', () => {
       const tab = btn.dataset.tab;
       document.querySelectorAll('[data-tab]').forEach(b => b.classList.toggle('active', b.dataset.tab===tab));
       document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-      document.getElementById('page-'+tab).classList.add('active');
-      if(tab==='transactions') loadTxns();
-      if(tab==='settings') { loadCatsForSettings(); renderRecurringSett(); }
-      if(tab==='dashboard') refreshDashboard();
+      document.getElementById('page-' + tab).classList.add('active');
+      if (tab==='transactions') loadTxns();
+      if (tab==='settings')    { loadCatsForSettings(); renderRecurringSett(); }
+      if (tab==='dashboard')   refreshDashboard();
     });
   });
 }
 
-// ── DATE HELPERS ──
+function toggleCard(id) {
+  const card = document.getElementById(id);
+  const open = card.classList.contains('open');
+  card.classList.toggle('open',   !open);
+  card.classList.toggle('closed', open);
+}
+
+// ══════════════════════════════════════════════
+// DATE HELPERS
+// ══════════════════════════════════════════════
 function today() { return new Date().toISOString().split('T')[0]; }
 function monthRange(d) {
   const y=d.getFullYear(), m=String(d.getMonth()+1).padStart(2,'0');
-  const last = new Date(y, d.getMonth()+1, 0).getDate();
-  return [`${y}-${m}-01`, `${y}-${m}-${last}`];
+  const last=new Date(y,d.getMonth()+1,0).getDate();
+  return [`${y}-${m}-01`, `${y}-${m}-${String(last).padStart(2,'0')}`];
 }
 function setThisMonth(ctx) {
-  const [s,e] = monthRange(new Date());
-  if(ctx==='dash') { document.getElementById('dashStart').value=s; document.getElementById('dashEnd').value=e; refreshDashboard(); }
-  if(ctx==='txn')  { document.getElementById('txnStart').value=s; document.getElementById('txnEnd').value=e; loadTxns(); }
+  const [s,e]=monthRange(new Date());
+  if (ctx==='dash') { document.getElementById('dashStart').value=s; document.getElementById('dashEnd').value=e; refreshDashboard(); }
+  if (ctx==='txn')  { document.getElementById('txnStart').value=s;  document.getElementById('txnEnd').value=e;  loadTxns(); }
 }
 function setLastMonth() {
-  const d=new Date();
-  d.setMonth(d.getMonth()-1);
-  const [s,e] = monthRange(d);
+  const d=new Date(); d.setMonth(d.getMonth()-1);
+  const [s,e]=monthRange(d);
   document.getElementById('dashStart').value=s; document.getElementById('dashEnd').value=e; refreshDashboard();
 }
 
-// ── DASHBOARD ──
+// ══════════════════════════════════════════════
+// DASHBOARD
+// ══════════════════════════════════════════════
 async function refreshDashboard() {
   const s=document.getElementById('dashStart').value, e=document.getElementById('dashEnd').value;
-  if(!s||!e) return;
+  if (!s||!e) return;
   try {
-    const d = await gs('getDashboardData',s,e);
+    const d = await api('getDashboardData', { startDate:s, endDate:e });
     const prev=d.prevMonthBalance||0, inc=d.totalIncome||0, exp=d.totalExpenses||0;
     const total=prev+inc, rem=total-exp;
-    document.getElementById('kPrev').textContent       = fmt(prev);
-    document.getElementById('kIncome').textContent     = fmt(inc);
-    document.getElementById('kTotal').textContent      = fmt(total);
-    document.getElementById('kExpenses').textContent   = fmt(exp);
-    document.getElementById('kRemaining').textContent  = fmt(rem);
-    document.getElementById('kRemaining').className    = 'kpi-val '+(rem>=0?'text-emerald':'text-rose');
-    renderCatRows(d.incomeByCategory, 'incomeCatBody', 'emerald');
+    document.getElementById('kPrev').textContent      = fmt(prev);
+    document.getElementById('kIncome').textContent    = fmt(inc);
+    document.getElementById('kTotal').textContent     = fmt(total);
+    document.getElementById('kExpenses').textContent  = fmt(exp);
+    document.getElementById('kRemaining').textContent = fmt(rem);
+    document.getElementById('kRemaining').className   = 'kpi-val ' + (rem>=0?'text-emerald':'text-rose');
+    renderCatRows(d.incomeByCategory,  'incomeCatBody',  'emerald');
     renderCatRows(d.expenseByCategory, 'expenseCatBody', 'rose');
     renderMonthly(d.monthlySummary);
-    
     updateMilkDashboard();
     loadMilk();
-  } catch(e2) { toast('Dashboard error','error'); console.error(e2); }
+  } catch(e2) { toast('Dashboard error: ' + e2.message,'error'); console.error(e2); }
 }
 
 function renderCatRows(arr, id, color) {
   const el = document.getElementById(id);
-  if(!arr||!arr.length) { el.innerHTML='<div class="empty">No data</div>'; return; }
+  if (!arr||!arr.length) { el.innerHTML='<div class="empty">No data</div>'; return; }
   const total = arr.reduce((s,i)=>s+i.total,0)||1;
   arr.sort((a,b)=>b.total-a.total);
   el.innerHTML = arr.map(c => {
     const pct = Math.round((c.total/total)*100);
     return `<div class="cat-row">
-      <span class="cat-name">${c.category}</span>
+      <span class="cat-name">${escHtml(c.category)}</span>
       <span class="cat-count text-muted">${c.count}x</span>
       <div class="bar-wrap"><div class="bar" style="width:${pct}%;background:var(--${color})"></div></div>
       <span class="cat-amt text-${color}">${fmt(c.total)}</span>
@@ -913,8 +940,8 @@ function renderCatRows(arr, id, color) {
 
 function renderMonthly(arr) {
   const tb = document.getElementById('monthlyBody');
-  if(!arr||!arr.length) { tb.innerHTML='<tr><td colspan="4" class="empty">No data</td></tr>'; return; }
-  tb.innerHTML = arr.reverse().map(s =>
+  if (!arr||!arr.length) { tb.innerHTML='<tr><td colspan="4" class="empty">No data</td></tr>'; return; }
+  tb.innerHTML = [...arr].reverse().map(s =>
     `<tr>
       <td class="mono">${s.month}</td>
       <td class="mono text-emerald">${fmt(s.totalIncome)}</td>
@@ -924,134 +951,141 @@ function renderMonthly(arr) {
   ).join('');
 }
 
-// ── TRANSACTION TYPE ──
+// ══════════════════════════════════════════════
+// TRANSACTIONS
+// ══════════════════════════════════════════════
 function setTxnType(type) {
   document.getElementById('txnType').value = type;
-  document.getElementById('btnIncome').className  = 'type-btn'+(type==='Income'?' t-income':'');
-  document.getElementById('btnExpense').className = 'type-btn'+(type==='Expense'?' t-expense':'');
+  document.getElementById('btnIncome').className  = 'type-btn' + (type==='Income'?' t-income':'');
+  document.getElementById('btnExpense').className = 'type-btn' + (type==='Expense'?' t-expense':'');
   fillTxnCatDrop();
 }
 function fillTxnCatDrop() {
-  const type = document.getElementById('txnType').value;
-  const sel  = document.getElementById('txnCat');
-  sel.innerHTML = '<option value="">Category…</option>';
-  (allCats[type]||[]).forEach(c => sel.innerHTML += `<option>${c}</option>`);
+  const type=document.getElementById('txnType').value, sel=document.getElementById('txnCat');
+  sel.innerHTML='<option value="">Category…</option>';
+  (allCats[type]||[]).forEach(c=>sel.innerHTML+=`<option>${escHtml(c)}</option>`);
 }
 function fillRecCatDrop() {
-  const sel = document.getElementById('newRecCat'); if(!sel) return;
-  sel.innerHTML = '<option value="">Category</option>';
-  (allCats.Expense||[]).forEach(c => sel.innerHTML += `<option>${c}</option>`);
+  const sel=document.getElementById('newRecCat'); if (!sel) return;
+  sel.innerHTML='<option value="">Category</option>';
+  (allCats.Expense||[]).forEach(c=>sel.innerHTML+=`<option>${escHtml(c)}</option>`);
 }
 
-// ── SAVE TXN ──
 async function saveTxn() {
   const txn = {
-    date: document.getElementById('txnDate').value,
-    type: document.getElementById('txnType').value,
-    category: document.getElementById('txnCat').value,
-    amount: parseFloat(document.getElementById('txnAmt').value),
+    date:        document.getElementById('txnDate').value,
+    type:        document.getElementById('txnType').value,
+    category:    document.getElementById('txnCat').value,
+    amount:      parseFloat(document.getElementById('txnAmt').value),
     description: document.getElementById('txnDesc').value
   };
-  if(!txn.date||!txn.category||isNaN(txn.amount)||txn.amount<=0) return toast('Fill all required fields','error');
+  if (!txn.date||!txn.category||isNaN(txn.amount)||txn.amount<=0) { toast('Fill all required fields','error'); return; }
   try {
-    await gs('saveTransaction', txn);
+    await api('saveTransaction', txn);
     toast('Saved!','success');
     document.getElementById('txnAmt').value=''; document.getElementById('txnDesc').value='';
     document.getElementById('txnDate').value=today(); setTxnType('Income');
     refreshDashboard();
-  } catch(e) { toast('Save failed','error'); }
+  } catch(e) { toast('Save failed: ' + e.message,'error'); }
 }
 
-// ── LOAD TRANSACTIONS ──
 async function loadTxns() {
   const s=document.getElementById('txnStart').value, e=document.getElementById('txnEnd').value;
   const filter=document.getElementById('txnTypeFlt').value;
-  if(!s||!e) return;
+  if (!s||!e) return;
   try {
-    const res = await gs('getTransactionsByPeriod',s,e,filter);
+    const res=await api('getTransactions',{startDate:s,endDate:e,typeFilter:filter});
     document.getElementById('tKpiIncome').textContent   = fmt(res.totalIncome);
     document.getElementById('tKpiExpenses').textContent = fmt(res.totalExpenses);
     document.getElementById('tKpiNet').textContent      = fmt(res.netBalance);
-    document.getElementById('tKpiNet').className = 'kpi-val '+(res.netBalance>=0?'text-emerald':'text-rose');
+    document.getElementById('tKpiNet').className        = 'kpi-val ' + (res.netBalance>=0?'text-emerald':'text-rose');
     renderTxnTable(res.transactions);
-  } catch(e2) { toast('Error loading transactions','error'); }
+  } catch(e2) { toast('Error loading transactions: ' + e2.message,'error'); }
 }
 
 function renderTxnTable(txns) {
-  const tb = document.getElementById('txnTableBody');
-  if(!txns.length) { tb.innerHTML='<tr><td colspan="6" class="empty">No transactions found</td></tr>'; return; }
-  tb.innerHTML = txns.map(t => {
-    const isInc = t.type==='Income';
+  const tb=document.getElementById('txnTableBody');
+  if (!txns||!txns.length) { tb.innerHTML='<tr><td colspan="6" class="empty">No transactions found</td></tr>'; return; }
+  tb.innerHTML=txns.map(t=>{
+    const isInc=t.type==='Income';
+    const safeId=t.id.replace(/\\/g,'\\\\').replace(/'/g,"\\'");
     return `<tr>
       <td class="mono">${t.date}</td>
       <td><span class="badge ${isInc?'b-income':'b-expense'}">${t.type}</span></td>
-      <td>${t.category}</td>
+      <td>${escHtml(t.category)}</td>
       <td class="mono ${isInc?'text-emerald':'text-rose'}">${isInc?'+':'−'}${fmt(t.amount)}</td>
-      <td style="font-size:0.75rem;color:var(--ink3)">${t.description||'—'}</td>
+      <td style="font-size:0.75rem;color:var(--ink3)">${escHtml(t.description||'—')}</td>
       <td style="white-space:nowrap">
         <button class="btn btn-ghost btn-xs" onclick='openEdit(${JSON.stringify(t)})'>✏️</button>
-        <button class="btn btn-danger btn-xs" onclick="delTxn('${t.id.replace(/'/g,"\\'")}')">🗑</button>
+        <button class="btn btn-danger btn-xs" onclick="delTxn('${safeId}')">🗑</button>
       </td>
     </tr>`;
   }).join('');
 }
 
 function openEdit(t) {
-  document.getElementById('eTxnId').value=t.id;
-  document.getElementById('eTxnDate').value=t.date;
-  document.getElementById('eTxnType').value=t.type;
-  document.getElementById('eTxnAmt').value=t.amount;
-  document.getElementById('eTxnDesc').value=t.description||'';
+  document.getElementById('eTxnId').value   = t.id;
+  document.getElementById('eTxnDate').value = t.date;
+  document.getElementById('eTxnType').value = t.type;
+  document.getElementById('eTxnAmt').value  = t.amount;
+  document.getElementById('eTxnDesc').value = t.description||'';
   populateEditCats();
-  setTimeout(()=>{ document.getElementById('eTxnCat').value=t.category; },60);
+  setTimeout(()=>{ document.getElementById('eTxnCat').value=t.category; }, 60);
   document.getElementById('editModal').style.display='flex';
 }
 function closeEdit() { document.getElementById('editModal').style.display='none'; }
 function populateEditCats() {
-  const type=document.getElementById('eTxnType').value;
-  const sel=document.getElementById('eTxnCat');
+  const type=document.getElementById('eTxnType').value, sel=document.getElementById('eTxnCat');
   sel.innerHTML='<option value="">Select…</option>';
-  (allCats[type]||[]).forEach(c=>sel.innerHTML+=`<option>${c}</option>`);
+  (allCats[type]||[]).forEach(c=>sel.innerHTML+=`<option>${escHtml(c)}</option>`);
 }
 async function submitUpdate() {
-  const txn={ id:document.getElementById('eTxnId').value, date:document.getElementById('eTxnDate').value, type:document.getElementById('eTxnType').value, category:document.getElementById('eTxnCat').value, amount:parseFloat(document.getElementById('eTxnAmt').value), description:document.getElementById('eTxnDesc').value };
-  try { await gs('updateTransaction',txn); toast('Updated!','success'); closeEdit();
-  loadTxns(); refreshDashboard(); } catch(e) { toast('Update failed','error'); }
+  const txn={
+    id:document.getElementById('eTxnId').value, date:document.getElementById('eTxnDate').value,
+    type:document.getElementById('eTxnType').value, category:document.getElementById('eTxnCat').value,
+    amount:parseFloat(document.getElementById('eTxnAmt').value), description:document.getElementById('eTxnDesc').value
+  };
+  try { await api('updateTransaction',txn); toast('Updated!','success'); closeEdit(); loadTxns(); refreshDashboard(); }
+  catch(e) { toast('Update failed: ' + e.message,'error'); }
 }
 async function delTxn(id) {
-  if(!confirm('Delete this transaction?')) return;
-  try { await gs('deleteTransaction',id);
-  toast('Deleted','warn'); loadTxns(); refreshDashboard(); } catch(e) { toast('Delete failed','error'); }
+  if (!confirm('Delete this transaction?')) return;
+  try { await api('deleteTransaction',{id}); toast('Deleted','warn'); loadTxns(); refreshDashboard(); }
+  catch(e) { toast('Delete failed: ' + e.message,'error'); }
 }
 
 async function exportCSV() {
   const s=document.getElementById('txnStart').value, e=document.getElementById('txnEnd').value;
   const filter=document.getElementById('txnTypeFlt').value;
-  if(!s||!e) return toast('Choose a period first','error');
+  if (!s||!e) { toast('Choose a period first','error'); return; }
   try {
-    const res = await gs('getTransactionsByPeriod',s,e,filter);
+    const res=await api('getTransactions',{startDate:s,endDate:e,typeFilter:filter});
     let csv='Date,Type,Category,Amount,Description\n';
-    res.transactions.forEach(t=>{ csv+=`${t.date},${t.type},"${t.category}",${t.amount},"${t.description||''}"\n`; });
+    res.transactions.forEach(t=>{csv+=`${t.date},${t.type},"${t.category}",${t.amount},"${t.description||''}"\n`;});
     const a=document.createElement('a'); a.href='data:text/csv;charset=utf-8,'+encodeURIComponent(csv);
     a.download=`transactions_${s}_${e}.csv`; a.click();
     toast('CSV exported!','success');
   } catch(e) { toast('Export failed','error'); }
 }
 
-// ── CATEGORIES ──
+// ══════════════════════════════════════════════
+// CATEGORIES
+// ══════════════════════════════════════════════
 async function loadCatsForSettings() {
-  const cats = await gs('getCategories');
-  allCats = cats||{Income:[],Expense:[]};
-  renderSettingsCats(); fillTxnCatDrop(); fillRecCatDrop();
+  try {
+    const res=await api('getCategories');
+    allCats=res.categories||{Income:[],Expense:[]};
+    renderSettingsCats(); fillTxnCatDrop(); fillRecCatDrop();
+  } catch(e) { toast('Error loading categories','error'); }
 }
 function renderSettingsCats() {
   document.getElementById('incomeCatList').innerHTML  = (allCats.Income||[]).map(c=>catChipHTML('Income',c)).join('')||'<div class="empty">No categories</div>';
   document.getElementById('expenseCatList').innerHTML = (allCats.Expense||[]).map(c=>catChipHTML('Expense',c)).join('')||'<div class="empty">No categories</div>';
 }
 function catChipHTML(type,c) {
-  const s=c.replace(/'/g,"\\'").replace(/"/g,'&quot;');
+  const s=c.replace(/\\/g,'\\\\').replace(/'/g,"\\'");
   return `<div class="cat-chip">
-    <div class="cat-chip-left"><span class="badge ${type==='Income'?'b-income':'b-expense'}">${type}</span><span style="font-size:0.82rem">${c}</span></div>
+    <div class="cat-chip-left"><span class="badge ${type==='Income'?'b-income':'b-expense'}">${type}</span><span style="font-size:0.82rem">${escHtml(c)}</span></div>
     <div class="cat-chip-actions">
       <button class="btn btn-ghost btn-xs" onclick="editCat('${type}','${s}')">✏️</button>
       <button class="btn btn-danger btn-xs" onclick="deleteCat('${type}','${s}')">🗑</button>
@@ -1060,141 +1094,146 @@ function catChipHTML(type,c) {
 }
 async function addCat(type) {
   const inp=document.getElementById(type==='Income'?'newIncomeCat':'newExpenseCat');
-  const name=inp.value.trim(); if(!name) return;
-  await gs('addCategory',type,name); inp.value=''; loadCatsForSettings(); toast('Added!','success');
+  const name=inp.value.trim(); if (!name) return;
+  try { await api('addCategory',{type,name}); inp.value=''; loadCatsForSettings(); toast('Added!','success'); }
+  catch(e) { toast('Failed: '+e.message,'error'); }
 }
 async function editCat(type,old) {
-  const n=prompt('Rename:',old); if(!n||n===old) return;
-  await gs('updateCategory',type,old,n); loadCatsForSettings(); refreshDashboard(); toast('Renamed','success');
+  const n=prompt('Rename:',old); if (!n||n===old) return;
+  try { await api('updateCategory',{type,oldName:old,newName:n}); loadCatsForSettings(); refreshDashboard(); toast('Renamed','success'); }
+  catch(e) { toast('Failed: '+e.message,'error'); }
 }
 async function deleteCat(type,name) {
-  if(!confirm(`Delete "${name}"?`)) return;
-  await gs('deleteCategory',type,name); loadCatsForSettings(); refreshDashboard(); toast('Deleted','warn');
+  if (!confirm(`Delete "${name}"?`)) return;
+  try { await api('deleteCategory',{type,name}); loadCatsForSettings(); refreshDashboard(); toast('Deleted','warn'); }
+  catch(e) { toast('Failed: '+e.message,'error'); }
 }
 
-// ── RECURRING ──
+// ══════════════════════════════════════════════
+// RECURRING
+// ══════════════════════════════════════════════
 async function loadRecurring() {
-  recurData = (await gs('getRecurringExpenses'))||[];
-  renderRecurringDash(); renderRecurringSett();
+  try {
+    const res=await api('getRecurringExpenses');
+    recurData=res.expenses||[];
+    renderRecurringDash(); renderRecurringSett();
+  } catch(e) { console.error('Recurring load error',e); }
 }
 async function addRecurring() {
   const name=document.getElementById('newRecName').value.trim();
   const amount=parseFloat(document.getElementById('newRecAmt').value);
   const category=document.getElementById('newRecCat').value;
-  if(!name||isNaN(amount)||amount<=0) return toast('Invalid input','error');
-  await gs('addRecurringExpense',{name,amount,category});
-  document.getElementById('newRecName').value=''; document.getElementById('newRecAmt').value='';
-  loadRecurring();
-  toast('Added!','success');
+  if (!name||isNaN(amount)||amount<=0) { toast('Invalid input','error'); return; }
+  try {
+    await api('addRecurringExpense',{name,amount,category});
+    document.getElementById('newRecName').value=''; document.getElementById('newRecAmt').value='';
+    loadRecurring(); toast('Added!','success');
+  } catch(e) { toast('Failed: '+e.message,'error'); }
 }
 async function delRecurring(id) {
-  if(!confirm('Remove?')) return;
-  await gs('deleteRecurringExpense',id); loadRecurring();
+  if (!confirm('Remove?')) return;
+  try { await api('deleteRecurringExpense',{id}); loadRecurring(); }
+  catch(e) { toast('Failed: '+e.message,'error'); }
 }
 function renderRecurringDash() {
   const el=document.getElementById('recurringDashBody');
-  if(!recurData.length) { el.innerHTML='<div class="empty">No recurring expenses</div>'; return; }
-  el.innerHTML=recurData.map(r=>`<div class="rec-dash-row"><span style="font-size:0.82rem">${r.name}${r.category?` <span style="color:var(--ink3);font-size:0.72rem">(${r.category})</span>`:''}</span><span class="mono text-rose" style="font-size:0.82rem">${fmt(r.amount)}/mo</span></div>`).join('');
+  if (!recurData.length) { el.innerHTML='<div class="empty">No recurring expenses</div>'; return; }
+  el.innerHTML=recurData.map(r=>
+    `<div class="rec-dash-row">
+      <span style="font-size:0.82rem">${escHtml(r.name)}${r.category?` <span style="color:var(--ink3);font-size:0.72rem">(${escHtml(r.category)})</span>`:''}</span>
+      <span class="mono text-rose" style="font-size:0.82rem">${fmt(r.amount)}/mo</span>
+    </div>`
+  ).join('');
 }
 function renderRecurringSett() {
   const el=document.getElementById('recurringSettList');
-  if(!recurData.length) { el.innerHTML='<div class="empty">None</div>'; return; }
-  el.innerHTML=recurData.map(r=>`<div class="rec-row"><span style="font-size:0.82rem">${r.name} – <span class="mono text-rose">${fmt(r.amount)}/mo</span></span><button class="btn btn-danger btn-xs" onclick="delRecurring('${r.id}')">🗑</button></div>`).join('');
+  if (!recurData.length) { el.innerHTML='<div class="empty">None</div>'; return; }
+  el.innerHTML=recurData.map(r=>
+    `<div class="rec-row">
+      <span style="font-size:0.82rem">${escHtml(r.name)} – <span class="mono text-rose">${fmt(r.amount)}/mo</span></span>
+      <button class="btn btn-danger btn-xs" onclick="delRecurring('${r.id}')">🗑</button>
+    </div>`
+  ).join('');
 }
 
-// ── MILK (DASHBOARD INTEGRATION) ──
+// ══════════════════════════════════════════════
+// MILK
+// ══════════════════════════════════════════════
 function setMilkType(type) {
-  curMilkType = type;
-  document.getElementById('btnStd').className   = 'milk-type-btn' + (type==='standard' ? ' m-extra' : '');
-  document.getElementById('btnExtra').className = 'milk-type-btn' + (type==='extra' ? ' m-extra' : '');
-  document.getElementById('btnAbs').className   = 'milk-type-btn' + (type==='absent' ? ' m-absent' : '');
-
-  document.getElementById('rowStd').style.display   = (type==='standard') ? 'flex' : 'none';
-  document.getElementById('rowExtra').style.display = (type==='extra') ? 'flex' : 'none';
+  curMilkType=type;
+  document.getElementById('btnStd').className   = 'milk-type-btn' + (type==='standard'?' m-std':'');
+  document.getElementById('btnExtra').className = 'milk-type-btn' + (type==='extra'   ?' m-extra':'');
+  document.getElementById('btnAbs').className   = 'milk-type-btn' + (type==='absent'  ?' m-absent':'');
+  document.getElementById('rowStd').style.display   = type==='standard'?'flex':'none';
+  document.getElementById('rowExtra').style.display = type==='extra'   ?'flex':'none';
 }
 
 async function saveMilk() {
-  const record = {
-    date: document.getElementById('milkDate').value,
-    recordType: curMilkType,
-    notes: ''
-  };
-  if (!record.date) return toast('Choose a date', 'error');
-
-  if (curMilkType === 'standard') {
-    record.liters = parseFloat(document.getElementById('milkStdLiters').value) || 0;
-    record.pricePerLiter = parseFloat(document.getElementById('milkStdPrice').value) || 0;
-    if (record.liters <= 0 || record.pricePerLiter <= 0) return toast('Enter standard liters and rate', 'error');
-  } else if (curMilkType === 'extra') {
-    record.liters = parseFloat(document.getElementById('milkExtraLiters').value) || 0;
-    if (record.liters <= 0) return toast('Enter extra liters', 'error');
-  } 
-
+  const record={ date:document.getElementById('milkDate').value, recordType:curMilkType, notes:'' };
+  if (!record.date) { toast('Choose a date','error'); return; }
+  if (curMilkType==='standard') {
+    record.liters=parseFloat(document.getElementById('milkStdLiters').value)||0;
+    record.pricePerLiter=parseFloat(document.getElementById('milkStdPrice').value)||0;
+    if (record.liters<=0||record.pricePerLiter<=0) { toast('Enter standard liters and rate','error'); return; }
+  } else if (curMilkType==='extra') {
+    record.liters=parseFloat(document.getElementById('milkExtraLiters').value)||0;
+    if (record.liters<=0) { toast('Enter extra liters','error'); return; }
+  }
   try {
-    await gs('saveMilkRecord', record);
-    toast('Milk record saved!', 'success');
-    document.getElementById('milkStdLiters').value = '';
-    document.getElementById('milkExtraLiters').value = '';
-    
-    updateMilkDashboard();
-    loadMilk(); 
-  } catch (e) { toast('Save failed', 'error'); }
+    await api('saveMilkRecord',record);
+    toast('Milk record saved!','success');
+    document.getElementById('milkStdLiters').value='';
+    document.getElementById('milkExtraLiters').value='';
+    updateMilkDashboard(); loadMilk();
+  } catch(e) { toast('Save failed: '+e.message,'error'); }
 }
 
 async function updateMilkDashboard() {
-  const elCur = document.getElementById('milkEst');
-  const elPrev = document.getElementById('milkPrevEst');
-  if (!elCur || !elPrev) return;
   try {
-    const data = await gs('getMilkDashboardData');
-    elCur.textContent = fmt(data.currentMonthBill);
-    elPrev.textContent = fmt(data.previousMonthBill);
-  } catch (e) {
-    console.error(e);
-  }
+    const data=await api('getMilkDashboardData');
+    document.getElementById('milkEst').textContent     = fmt(data.currentMonthBill);
+    document.getElementById('milkPrevEst').textContent = fmt(data.previousMonthBill);
+  } catch(e) { console.error(e); }
 }
 
 async function loadMilk() {
   const s=document.getElementById('dashStart').value, e=document.getElementById('dashEnd').value;
   try {
-    const d = await gs('getMilkRecords',s,e);
-    renderMilkTable(d.records);
-  } catch(e2) { toast('Error loading milk records','error'); console.error(e2); }
+    const d=await api('getMilkRecords',{startDate:s,endDate:e});
+    renderMilkTable(d.records||[]);
+  } catch(e2) { toast('Error loading milk records','error'); }
 }
 
 function renderMilkTable(records) {
   const tb=document.getElementById('milkTableBody');
-  if(!records.length) { tb.innerHTML='<tr><td colspan="6" class="empty">No milk records found</td></tr>'; return; }
+  if (!records.length) { tb.innerHTML='<tr><td colspan="6" class="empty">No milk records found</td></tr>'; return; }
   tb.innerHTML=records.map(r=>{
-    let badgeClass = 'b-absent'; let badgeLabel = 'Absent';
-    if(r.recordType === 'extra') { badgeClass = 'b-extra'; badgeLabel = 'Extra'; }
-    if(r.recordType === 'standard') { badgeClass = 'b-standard'; badgeLabel = 'Standard'; }
-
-    let amountHtml = '';
-    if (r.recordType === 'absent') amountHtml = `<span class="text-emerald">+${fmt(r.amount)}</span>`;
-    else if (r.recordType === 'extra') amountHtml = `<span class="text-rose">−${fmt(r.amount)}</span>`;
-    else amountHtml = `<span style="color:var(--ink3)">—</span>`;
-
+    let bc='b-absent',bl='Absent';
+    if (r.recordType==='extra')    { bc='b-extra';    bl='Extra'; }
+    if (r.recordType==='standard') { bc='b-standard'; bl='Standard'; }
+    let amtHtml='<span style="color:var(--ink3)">—</span>';
+    if (r.recordType==='absent')   amtHtml=`<span class="text-emerald">+${fmt(r.amount)}</span>`;
+    else if (r.recordType==='extra') amtHtml=`<span class="text-rose">−${fmt(r.amount)}</span>`;
     return `<tr>
       <td class="mono" style="font-size:0.75rem">${r.date}</td>
-      <td><span class="badge ${badgeClass}">${badgeLabel}</span></td>
+      <td><span class="badge ${bc}">${bl}</span></td>
       <td class="mono">${fmtL(r.liters)}</td>
       <td class="mono">${fmt(r.pricePerLiter)}</td>
-      <td class="mono">${amountHtml}</td>
+      <td class="mono">${amtHtml}</td>
       <td style="white-space:nowrap;text-align:right">
         <button class="btn btn-ghost btn-xs" onclick='openEditMilk(${JSON.stringify(r)})'>✏️</button>
-        <button class="btn btn-danger btn-xs" onclick="delMilk('${r.id.replace(/'/g,"\\'")}')">🗑</button>
+        <button class="btn btn-danger btn-xs" onclick="delMilk('${r.id}')">🗑</button>
       </td>
-    </tr>`
+    </tr>`;
   }).join('');
 }
 
 function openEditMilk(r) {
-  document.getElementById('eMilkId').value=r.id;
-  document.getElementById('eMilkDateModal').value=r.date;
-  document.getElementById('eMilkType').value=r.recordType;
-  document.getElementById('eMilkLiters').value=r.liters;
-  document.getElementById('eMilkPrice').value=r.pricePerLiter;
+  document.getElementById('eMilkId').value       = r.id;
+  document.getElementById('eMilkDateModal').value = r.date;
+  document.getElementById('eMilkType').value      = r.recordType;
+  document.getElementById('eMilkLiters').value    = r.liters;
+  document.getElementById('eMilkPrice').value     = r.pricePerLiter;
   document.getElementById('editMilkModal').style.display='flex';
 }
 function closeEditMilk() { document.getElementById('editMilkModal').style.display='none'; }
@@ -1207,97 +1246,98 @@ async function submitUpdateMilk() {
     pricePerLiter:parseFloat(document.getElementById('eMilkPrice').value)||0,
     notes:''
   };
-  try { 
-    await gs('updateMilkRecord',rec); 
-    toast('Updated!','success'); 
-    closeEditMilk(); 
-    loadMilk(); 
-    updateMilkDashboard();
-  } catch(e) { toast('Update failed','error'); }
+  try { await api('updateMilkRecord',rec); toast('Updated!','success'); closeEditMilk(); loadMilk(); updateMilkDashboard(); }
+  catch(e) { toast('Update failed: '+e.message,'error'); }
 }
 async function delMilk(id) {
-  if(!confirm('Delete this milk record?')) return;
-  try { await gs('deleteMilkRecord',id); toast('Deleted','warn'); loadMilk(); updateMilkDashboard(); } catch(e) { toast('Delete failed','error'); }
+  if (!confirm('Delete this milk record?')) return;
+  try { await api('deleteMilkRecord',{id}); toast('Deleted','warn'); loadMilk(); updateMilkDashboard(); }
+  catch(e) { toast('Failed: '+e.message,'error'); }
 }
 
-// ── INIT APP (after login) ──
+// ══════════════════════════════════════════════
+// SECURITY HELPER
+// ══════════════════════════════════════════════
+function escHtml(str) {
+  return String(str||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+}
+
+// ══════════════════════════════════════════════
+// INIT APP
+// ══════════════════════════════════════════════
 async function initApp() {
   setupNav();
-  const [s,e] = monthRange(new Date()), td = today();
-  ['dashStart','txnStart'].forEach(id => document.getElementById(id).value=s);
-  ['dashEnd','txnEnd'].forEach(id => document.getElementById(id).value=e);
-  document.getElementById('txnDate').value=td;
-  document.getElementById('milkDate').value=td;
+  const [s,e]=monthRange(new Date()), td=today();
+  ['dashStart','txnStart'].forEach(id=>document.getElementById(id).value=s);
+  ['dashEnd','txnEnd'].forEach(id=>document.getElementById(id).value=e);
+  document.getElementById('txnDate').value  = td;
+  document.getElementById('milkDate').value = td;
+  document.getElementById('currentApiUrl').textContent = getApiUrl();
+  setMilkType('standard');
 
-  try { const sv=await gs('getUserSettings'); applyCountry((sv&&sv.country)?sv.country:'IN'); } catch(e) { applyCountry('IN'); }
   try {
-    const cats = await gs('getCategories');
-    allCats = cats||{Income:[],Expense:[]};
-    fillTxnCatDrop();
-    fillRecCatDrop();
+    const sv=await api('getUserSettings');
+    applyCountry((sv&&sv.settings&&sv.settings.country)?sv.settings.country:'PK');
+  } catch(e) { applyCountry('PK'); }
+
+  try {
+    const cats=await api('getCategories');
+    allCats=cats.categories||{Income:[],Expense:[]};
+    fillTxnCatDrop(); fillRecCatDrop();
     await Promise.all([refreshDashboard(), loadRecurring()]);
-  } catch(e) { toast('Error loading data.','error'); console.error(e); }
+  } catch(e) { toast('Error loading data: '+e.message,'error'); console.error(e); }
 }
 
-// ── CNIC INPUT FORMATTING ──
+// ══════════════════════════════════════════════
+// BOOTSTRAP — runs on page load
+// ══════════════════════════════════════════════
 document.addEventListener('DOMContentLoaded', () => {
-  const cnicInput = document.getElementById('loginCNIC');
-  const pinInput = document.getElementById('loginPIN');
-  
+  // CNIC input formatting
+  const cnicInput=document.getElementById('loginCNIC');
   if (cnicInput) {
-    cnicInput.addEventListener('input', function(e) {
-      const cursorPosition = this.selectionStart;
-      const oldLength = this.value.length;
-      this.value = formatCNICInput(this.value);
-      const newLength = this.value.length;
-      if (newLength > oldLength && (newLength === 6 || newLength === 14)) {
-        this.setSelectionRange(cursorPosition + 1, cursorPosition + 1);
-      } else {
-        this.setSelectionRange(cursorPosition, cursorPosition);
-      }
+    cnicInput.addEventListener('input', function() {
+      const pos=this.selectionStart, oldLen=this.value.length;
+      this.value=formatCNICInput(this.value);
+      const diff=this.value.length-oldLen;
+      this.setSelectionRange(pos+diff, pos+diff);
     });
-    cnicInput.addEventListener('keypress', function(e) {
-      if (!/[\d\-]/.test(e.key) && e.key !== 'Backspace' && e.key !== 'Delete' && e.key !== 'ArrowLeft' && e.key !== 'ArrowRight' && e.key !== 'Tab') {
-        e.preventDefault();
-      }
+    cnicInput.addEventListener('keypress', e=>{
+      if (!/[\d\-]/.test(e.key)&&!['Backspace','Delete','ArrowLeft','ArrowRight','Tab'].includes(e.key)) e.preventDefault();
     });
   }
-  
+  const pinInput=document.getElementById('loginPIN');
   if (pinInput) {
-    pinInput.addEventListener('input', function(e) {
-      this.value = this.value.replace(/\D/g, '').substring(0, 4);
-    });
-    pinInput.addEventListener('keypress', function(e) {
-      if (!/\d/.test(e.key) && e.key !== 'Backspace' && e.key !== 'Delete' && e.key !== 'ArrowLeft' && e.key !== 'ArrowRight' && e.key !== 'Tab') {
-        e.preventDefault();
-      }
+    pinInput.addEventListener('input', function(){ this.value=this.value.replace(/\D/g,'').substring(0,4); });
+    pinInput.addEventListener('keypress', e=>{
+      if (!/\d/.test(e.key)&&!['Backspace','Delete','ArrowLeft','ArrowRight','Tab'].includes(e.key)) e.preventDefault();
     });
   }
-  
-  document.addEventListener('keypress', function(e) {
-    if (e.key === 'Enter' && document.getElementById('loginScreen').style.display !== 'none') {
-      handleLogin();
-    }
+
+  // Enter key on login screen
+  document.addEventListener('keypress', e=>{
+    if (e.key==='Enter' && document.getElementById('loginScreen').style.display!=='none') handleLogin();
   });
 
-  // Attempt auto-login if token exists
-  if (authToken) {
-    gs('whoAmI').then(res => {
-      if(res && res.cnic) {
-        document.getElementById('loginScreen').style.display = 'none';
-        document.getElementById('appContent').style.display = 'block';
-        const userName = res.name || 'User';
-        document.getElementById('userNameDisplay').textContent = userName;
-        document.getElementById('userAv').textContent = userName[0].toUpperCase();
-        initApp();
-      } else {
-        localStorage.removeItem('ledger_auth');
-        authToken = null;
-      }
-    }).catch(e => {
-        localStorage.removeItem('ledger_auth');
-        authToken = null;
-    });
+  // Routing: check if API URL is configured
+  const apiUrl=getApiUrl();
+  if (!apiUrl) {
+    openConfig();
+    return;
+  }
+
+  // Check if already logged in (token in localStorage)
+  const savedToken=localStorage.getItem(LS_TOKEN_KEY);
+  const savedUser =localStorage.getItem(LS_USER_KEY);
+  if (savedToken && savedUser) {
+    // Validate token with server
+    const user=JSON.parse(savedUser);
+    document.getElementById('userNameDisplay').textContent=user.name||'User';
+    document.getElementById('userAv').textContent=(user.name||'U')[0].toUpperCase();
+    document.getElementById('loginScreen').style.display ='none';
+    document.getElementById('appContent').style.display  ='block';
+    initApp();
+  } else {
+    showLogin();
   }
 });
 </script>
