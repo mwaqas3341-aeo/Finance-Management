@@ -9,29 +9,29 @@
 <style>
 /* ═══════════════════ DESIGN TOKENS ═══════════════════ */
 :root {
-  --bg:         #080b10;
-  --bg1:        #0d1117;
-  --bg2:        #111820;
-  --bg3:        #151d28;
-  --bg4:        #1a2333;
-  --border:     rgba(255,255,255,0.07);
-  --border2:    rgba(255,255,255,0.12);
-  --ink:        #e8f0fe;
-  --ink2:       #8fa0bc;
-  --ink3:       #4a5d7a;
-  --ink4:       #2d3a4f;
-  --emerald:    #00d68f;
-  --emerald-d:  rgba(0,214,143,0.1);
-  --rose:       #ff4d6d;
-  --rose-d:     rgba(255,77,109,0.1);
-  --azure:      #4d9fff;
-  --azure-d:    rgba(77,159,255,0.1);
+  --bg:         #0b1e2e;
+  --bg1:        #0e2436;
+  --bg2:        #123247;
+  --bg3:        #163d54;
+  --bg4:        #1c4a63;
+  --border:     rgba(120,200,190,0.10);
+  --border2:    rgba(120,200,190,0.18);
+  --ink:        #e8f4f1;
+  --ink2:       #7ea3b3;
+  --ink3:       #4a7686;
+  --ink4:       #2c4c58;
+  --emerald:    #5dcaa5;
+  --emerald-d:  rgba(93,202,165,0.12);
+  --rose:       #e24b4a;
+  --rose-d:     rgba(226,75,74,0.12);
+  --azure:      #14b8a6;
+  --azure-d:    rgba(20,184,166,0.12);
   --amber:      #ffb340;
   --amber-d:    rgba(255,179,64,0.1);
-  --milk:       #a78bfa;
-  --milk-d:     rgba(167,139,250,0.1);
-  --milk2:      #34d399;
-  --milk2-d:    rgba(52,211,153,0.1);
+  --milk:       #22b8cf;
+  --milk-d:     rgba(34,184,207,0.12);
+  --milk2:      #2dd4bf;
+  --milk2-d:    rgba(45,212,191,0.12);
   --r:          8px;
   --r2:         12px;
   --r3:         16px;
@@ -53,9 +53,9 @@ body {
 body::before {
   content: ''; position: fixed; inset: 0; z-index: 0;
   background:
-    radial-gradient(ellipse 60% 35% at 15% 0%,  rgba(77,159,255,0.08) 0%, transparent 70%),
-    radial-gradient(ellipse 50% 30% at 85% 100%, rgba(167,139,250,0.06) 0%, transparent 70%),
-    radial-gradient(ellipse 40% 40% at 50% 50%,  rgba(0,214,143,0.03) 0%, transparent 70%);
+    radial-gradient(ellipse 60% 35% at 15% 0%,  rgba(20,184,166,0.14) 0%, transparent 70%),
+    radial-gradient(ellipse 50% 30% at 85% 100%, rgba(45,212,191,0.10) 0%, transparent 70%),
+    radial-gradient(ellipse 40% 40% at 50% 50%,  rgba(93,202,165,0.06) 0%, transparent 70%);
   pointer-events: none;
 }
 ::-webkit-scrollbar { width: 3px; height: 3px; }
@@ -80,7 +80,7 @@ body::before {
 .login-card input:focus { outline: none; border-color: var(--azure); }
 .login-card input::placeholder { color: var(--ink4); font-family: var(--font); letter-spacing: normal; }
 .login-btn { width: 100%; padding: 13px; background: var(--azure); color: #000; border: none; border-radius: var(--r2); font-family: var(--font); font-size: 0.9rem; font-weight: 700; cursor: pointer; transition: var(--trans); margin-top: 4px; }
-.login-btn:hover { background: #6db3ff; transform: translateY(-1px); }
+.login-btn:hover { background: #34d9c4; transform: translateY(-1px); }
 .login-btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
 .login-error { color: var(--rose); font-size: 0.78rem; text-align: center; margin-top: 12px; min-height: 20px; }
 .login-tabs { display: flex; gap: 4px; margin-bottom: 20px; }
@@ -91,7 +91,7 @@ body::before {
 /* ═══ TOPNAV ═══ */
 .topnav {
   position: sticky; top: 0; z-index: 300; height: var(--nav-h);
-  background: rgba(8,11,16,0.88); backdrop-filter: blur(20px) saturate(180%);
+  background: rgba(11,30,46,0.88); backdrop-filter: blur(20px) saturate(180%);
   -webkit-backdrop-filter: blur(20px) saturate(180%);
   border-bottom: 1px solid var(--border); display: flex; align-items: center;
   padding: 0 16px; gap: 6px;
@@ -101,7 +101,7 @@ body::before {
 .brand-dot { color: var(--azure); }
 .nav-pills { display: flex; gap: 2px; }
 .nav-pill { background: transparent; border: none; color: var(--ink3); padding: 7px 14px; font-family: var(--font); font-size: 0.8rem; font-weight: 600; cursor: pointer; border-radius: var(--r2); display: flex; align-items: center; gap: 5px; transition: var(--trans); white-space: nowrap; }
-.nav-pill:hover { color: var(--ink2); background: rgba(255,255,255,0.05); }
+.nav-pill:hover { color: var(--ink2); background: rgba(20,184,166,0.08); }
 .nav-pill.active { color: var(--azure); background: var(--azure-d); }
 .nav-end { margin-left: auto; display: flex; align-items: center; gap: 8px; }
 .user-chip { display: flex; align-items: center; gap: 6px; background: var(--bg3); border: 1px solid var(--border); border-radius: 20px; padding: 4px 10px 4px 4px; font-size: 0.72rem; color: var(--ink2); font-family: var(--mono); }
@@ -156,7 +156,7 @@ body::before {
 .card { background: var(--bg2); border: 1px solid var(--border); border-radius: var(--r3); overflow: hidden; margin-bottom: 12px; transition: border-color var(--trans); }
 .card:hover { border-color: var(--border2); }
 .card-head { display: flex; align-items: center; justify-content: space-between; padding: 13px 16px; cursor: pointer; font-weight: 700; font-size: 0.84rem; border-bottom: 1px solid transparent; transition: background var(--trans); user-select: none; }
-.card-head:hover { background: rgba(255,255,255,0.03); }
+.card-head:hover { background: rgba(20,184,166,0.04); }
 .card.open .card-head { border-bottom-color: var(--border); }
 .card-body { padding: 14px 16px; }
 .card.closed .card-body { display: none; }
@@ -186,14 +186,14 @@ textarea.fi { min-height: 56px; resize: vertical; }
 /* ═══ BUTTONS ═══ */
 .btn { display: inline-flex; align-items: center; justify-content: center; gap: 6px; padding: 9px 16px; border-radius: var(--r2); font-family: var(--font); font-size: 0.8rem; font-weight: 700; cursor: pointer; border: none; transition: var(--trans); white-space: nowrap; }
 .btn-primary { background: var(--azure); color: #000; }
-.btn-primary:hover { background: #6db3ff; transform: translateY(-1px); }
+.btn-primary:hover { background: #34d9c4; transform: translateY(-1px); }
 .btn-primary:active { transform: translateY(0); }
 .btn-ghost  { background: var(--bg3); border: 1px solid var(--border); color: var(--ink2); }
 .btn-ghost:hover  { border-color: var(--azure); color: var(--azure); }
 .btn-danger { background: var(--rose-d); border: 1px solid var(--rose); color: var(--rose); }
 .btn-danger:hover { background: rgba(255,77,109,0.2); }
 .btn-milk   { background: var(--milk-d); border: 1px solid var(--milk); color: var(--milk); }
-.btn-milk:hover   { background: rgba(167,139,250,0.2); }
+.btn-milk:hover   { background: rgba(34,184,207,0.2); }
 .btn-sm  { padding: 7px 13px; font-size: 0.76rem; }
 .btn-xs  { padding: 4px 9px;  font-size: 0.7rem; }
 .btn-fw  { width: 100%; }
@@ -219,11 +219,12 @@ textarea.fi { min-height: 56px; resize: vertical; }
 /* ═══ TABLE ═══ */
 .tbl-wrap { overflow-x: auto; border-radius: var(--r3); }
 table { width: 100%; border-collapse: collapse; font-size: 0.8rem; }
-thead th { background: var(--bg3); padding: 10px 13px; text-align: left; font-size: 0.64rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.07em; color: var(--ink3); border-bottom: 1px solid var(--border); white-space: nowrap; }
+thead th { background: var(--bg3); padding: 10px 13px; text-align: left; font-size: 0.64rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.07em; color: var(--ink3); border-bottom: 1px solid var(--border2); white-space: nowrap; }
 tbody td { padding: 10px 13px; border-bottom: 1px solid var(--border); color: var(--ink2); vertical-align: middle; }
 tbody tr:last-child td { border-bottom: none; }
 tbody tr { transition: background var(--trans); }
-tbody tr:hover { background: rgba(255,255,255,0.025); }
+tbody tr:nth-child(even) { background: rgba(20,184,166,0.025); }
+tbody tr:hover { background: rgba(20,184,166,0.07); }
 .mono  { font-family: var(--mono); }
 .empty { text-align: center; padding: 28px 16px; color: var(--ink3); font-size: 0.82rem; }
 
@@ -1150,9 +1151,9 @@ function renderMilkTable(records) {
     let bc='b-absent',bl='Absent';
     if (r.recordType==='extra')    { bc='b-extra';    bl='Extra'; }
     if (r.recordType==='standard') { bc='b-standard'; bl='Standard'; }
-    let amtHtml='<span style="color:var(--ink3)">—</span>';
-    if (r.recordType==='absent')   amtHtml=`<span class="text-emerald">+${fmt(r.amount)}</span>`;
-    else if (r.recordType==='extra') amtHtml=`<span class="text-rose">−${fmt(r.amount)}</span>`;
+    let amtHtml='<span class="mono" style="color:var(--ink3)">—</span>';
+    if (r.recordType==='absent')   amtHtml=`<span class="mono text-emerald">+${fmt(r.amount)}</span>`;
+    else if (r.recordType==='extra') amtHtml=`<span class="mono text-rose">−${fmt(r.amount)}</span>`;
     return `<tr>
       <td class="mono" style="font-size:0.75rem">${r.date}</td>
       <td><span class="badge ${bc}">${bl}</span></td>
