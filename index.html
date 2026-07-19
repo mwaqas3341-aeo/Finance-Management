@@ -62,31 +62,6 @@ body::before {
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb { background: var(--ink4); border-radius: 3px; }
 
-/* ═══ CONFIG BANNER ═══ */
-#configBanner {
-  position: fixed; inset: 0; z-index: 2000; background: var(--bg);
-  display: flex; align-items: center; justify-content: center; padding: 20px;
-}
-.config-card {
-  background: var(--bg2); border: 2px solid var(--amber);
-  border-radius: var(--r4); padding: 32px 28px; width: 100%; max-width: 520px;
-  animation: slideUp .3s ease;
-}
-.config-card h2 { font-family: var(--font2); font-size: 1.3rem; margin-bottom: 6px; color: var(--amber); }
-.config-card p  { color: var(--ink2); font-size: 0.82rem; margin-bottom: 20px; line-height: 1.6; }
-.config-card code {
-  display: block; background: var(--bg3); border: 1px solid var(--border2);
-  border-radius: var(--r); padding: 10px 14px; font-family: var(--mono);
-  font-size: 0.75rem; color: var(--emerald); margin-bottom: 20px;
-  word-break: break-all;
-}
-.config-card label { display: block; font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: var(--ink3); margin-bottom: 6px; }
-.config-card input { width: 100%; background: var(--bg3); border: 1px solid var(--border); color: var(--ink); padding: 11px 14px; border-radius: var(--r2); font-family: var(--mono); font-size: 0.82rem; margin-bottom: 14px; }
-.config-card input:focus { outline: none; border-color: var(--amber); }
-.config-save-btn { width: 100%; padding: 13px; background: var(--amber); color: #000; border: none; border-radius: var(--r2); font-family: var(--font); font-size: 0.9rem; font-weight: 700; cursor: pointer; transition: var(--trans); }
-.config-save-btn:hover { background: #ffc85e; }
-.config-note { font-size: 0.72rem; color: var(--ink3); text-align: center; margin-top: 12px; }
-
 /* ═══ LOGIN SCREEN ═══ */
 .login-overlay {
   position: fixed; inset: 0; z-index: 1000;
@@ -303,19 +278,6 @@ tbody tr:hover { background: rgba(255,255,255,0.025); }
 </head>
 <body>
 
-<!-- ══════════ CONFIG BANNER (shown if API URL not set) ══════════ -->
-<div id="configBanner" style="display:none">
-  <div class="config-card">
-    <h2>⚙️ Setup Required</h2>
-    <p>Paste your Google Apps Script Web App URL below. You only need to do this once — it will be saved in your browser.</p>
-    <code id="configExample">https://script.google.com/macros/s/AKfycb.../exec</code>
-    <label for="configUrlInput">Google Apps Script Web App URL</label>
-    <input type="url" id="configUrlInput" placeholder="https://script.google.com/macros/s/AKfycbw8jvGVOSod2YF9pPMlehBV8TUcO1r2CpqUbOxy4fAuZGXOAO0E0DNDcHKs6RQsCmOmMw/exec">
-    <button class="config-save-btn" onclick="saveConfig()">Save & Continue →</button>
-    <p class="config-note">Need help? See the README.md included in this project.</p>
-  </div>
-</div>
-
 <!-- ══════════ LOGIN SCREEN ══════════ -->
 <div class="login-overlay" id="loginScreen" style="display:none">
   <div class="login-card">
@@ -342,9 +304,6 @@ tbody tr:hover { background: rgba(255,255,255,0.025); }
 
     <button class="login-btn" id="loginBtn" onclick="handleLogin()">🔐 Sign In</button>
     <div class="login-error" id="loginError"></div>
-    <div style="text-align:center;margin-top:14px">
-      <button class="btn btn-ghost btn-sm" onclick="openConfig()" style="font-size:0.68rem;color:var(--ink3)">⚙️ Change API URL</button>
-    </div>
   </div>
 </div>
 
@@ -563,11 +522,6 @@ tbody tr:hover { background: rgba(255,255,255,0.025); }
       </div>
       <div id="recurringSettList"></div>
     </div>
-    <div class="scard">
-      <h3>⚙️ API Configuration</h3>
-      <p style="font-size:0.78rem;color:var(--ink3);margin-bottom:10px">Current URL: <span id="currentApiUrl" style="font-family:var(--mono);font-size:0.7rem;color:var(--emerald)"></span></p>
-      <button class="btn btn-ghost btn-sm" onclick="openConfig()">Change API URL</button>
-    </div>
   </div>
 </div>
 </div><!-- end appContent -->
@@ -631,32 +585,13 @@ tbody tr:hover { background: rgba(255,255,255,0.025); }
 'use strict';
 
 // ══════════════════════════════════════════════
-// CONFIG — API URL stored in localStorage
+// CONFIG — API URL is fixed (no user-facing option)
 // ══════════════════════════════════════════════
-const LS_API_KEY   = 'ledger_api_url';
+const API_URL       = 'https://script.google.com/macros/s/AKfycbwC4SrAe0-ruMwJ3cMWe3qoBOseb17tk6aRS4YA-wE51fOWnqf-oXTXYghk94itK5I41Q/exec';
 const LS_TOKEN_KEY = 'ledger_token';
 const LS_USER_KEY  = 'ledger_user';
 
-function getApiUrl() { return localStorage.getItem(LS_API_KEY) || ''; }
-function saveApiUrl(url) { localStorage.setItem(LS_API_KEY, url.trim()); }
-
-function openConfig() {
-  document.getElementById('configUrlInput').value = getApiUrl();
-  document.getElementById('configBanner').style.display = 'flex';
-  document.getElementById('loginScreen').style.display  = 'none';
-  document.getElementById('appContent').style.display   = 'none';
-}
-
-function saveConfig() {
-  const url = document.getElementById('configUrlInput').value.trim();
-  if (!url || !url.startsWith('https://')) {
-    alert('Please enter a valid HTTPS URL.'); return;
-  }
-  saveApiUrl(url);
-  document.getElementById('configBanner').style.display = 'none';
-  document.getElementById('currentApiUrl').textContent  = url;
-  showLogin();
-}
+function getApiUrl() { return API_URL; }
 
 // ══════════════════════════════════════════════
 // API — REST bridge (replaces google.script.run)
@@ -664,8 +599,6 @@ function saveConfig() {
 // ══════════════════════════════════════════════
 async function api(action, payload, requiresAuth) {
   requiresAuth = requiresAuth !== false;
-  const url = getApiUrl();
-  if (!url) throw new Error('API URL not configured');
 
   const body = { action, payload: payload || {} };
   if (requiresAuth) {
@@ -674,12 +607,19 @@ async function api(action, payload, requiresAuth) {
     body.token = token;
   }
 
-  // Use text/plain to avoid CORS preflight
-  const resp = await fetch(url, {
-    method:  'POST',
-    headers: { 'Content-Type': 'text/plain' },
-    body:    JSON.stringify(body)
-  });
+  let resp;
+  try {
+    // Use text/plain to avoid CORS preflight
+    resp = await fetch(API_URL, {
+      method:  'POST',
+      headers: { 'Content-Type': 'text/plain' },
+      body:    JSON.stringify(body)
+    });
+  } catch (networkErr) {
+    // "Failed to fetch" — no response reached the browser at all
+    // (offline, DNS/network blocked, or the request was blocked before it left the device)
+    throw new Error('Network error: could not reach the server. Check your internet connection and try again.');
+  }
 
   if (!resp.ok) {
     const text = await resp.text();
@@ -820,7 +760,6 @@ async function handleLogout() {
 function showLogin() {
   document.getElementById('loginScreen').style.display  = 'flex';
   document.getElementById('appContent').style.display   = 'none';
-  document.getElementById('configBanner').style.display = 'none';
 }
 
 // ══════════════════════════════════════════════
@@ -1272,7 +1211,6 @@ async function initApp() {
   ['dashEnd','txnEnd'].forEach(id=>document.getElementById(id).value=e);
   document.getElementById('txnDate').value  = td;
   document.getElementById('milkDate').value = td;
-  document.getElementById('currentApiUrl').textContent = getApiUrl();
   setMilkType('standard');
 
   try {
@@ -1317,13 +1255,6 @@ document.addEventListener('DOMContentLoaded', () => {
   document.addEventListener('keypress', e=>{
     if (e.key==='Enter' && document.getElementById('loginScreen').style.display!=='none') handleLogin();
   });
-
-  // Routing: check if API URL is configured
-  const apiUrl=getApiUrl();
-  if (!apiUrl) {
-    openConfig();
-    return;
-  }
 
   // Check if already logged in (token in localStorage)
   const savedToken=localStorage.getItem(LS_TOKEN_KEY);
