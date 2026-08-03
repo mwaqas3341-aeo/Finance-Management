@@ -1,0 +1,42 @@
+name: Nightly data sync
+
+on:
+  schedule:
+    # 23:30 UTC every day — adjust the hour to land inside your target
+    # local window once you know your timezone's UTC offset.
+    - cron: '30 23 * * *'
+  workflow_dispatch: {}   # lets you trigger it manually from the Actions tab
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Fetch export from Apps Script
+        env:
+          APPS_SCRIPT_EXPORT_SECRET: ${{ secrets.APPS_SCRIPT_EXPORT_SECRET }}
+          API_URL: https://script.google.com/macros/s/AKfycbwC4SrAe0-ruMwJ3cMWe3qoBOseb17tk6aRS4YA-wE51fOWnqf-oXTXYghk94itK5I41Q/exec
+        run: |
+          mkdir -p data
+          curl -sS -X POST "$API_URL" \
+            -H "Content-Type: text/plain" \
+            -d "{\"action\":\"exportForGithub\",\"payload\":{\"secret\":\"$APPS_SCRIPT_EXPORT_SECRET\"}}" \
+            -o data/reference.json
+
+          # Fail the job loudly if Apps Script returned an error/HTML instead of JSON,
+          # rather than silently committing garbage.
+          python3 -c "import json,sys; json.load(open('data/reference.json'))" || {
+            echo "::error::Apps Script export did not return valid JSON"; exit 1;
+          }
+
+      - name: Commit updated data
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add data/reference.json
+          git diff --quiet --cached || git commit -m "chore: nightly data sync $(date -u +%Y-%m-%d)"
+          git push
