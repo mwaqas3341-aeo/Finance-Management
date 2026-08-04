@@ -422,7 +422,7 @@ tbody tr:hover { background: rgba(20,184,166,0.07); }
 
         <!-- Milk Records Table -->
         <div class="card closed" id="cMilkTable">
-          <div class="card-head" onclick="toggleCard('cMilkTable')"><div class="card-head-left"><span class="card-icon">📋</span>Milk Records</div><span class="chev">▾</span></div>
+          <div class="card-head" onclick="toggleMilkTable()"><div class="card-head-left"><span class="card-icon">📋</span>Milk Records</div><span class="chev">▾</span></div>
           <div class="card-body" style="padding:0">
             <div class="tbl-wrap">
               <table>
@@ -863,6 +863,15 @@ function toggleCard(id) {
   card.classList.toggle('closed', open);
 }
 
+// Milk Records table starts collapsed and is fetched separately from the
+// rest of the dashboard — only load it the moment it's actually opened,
+// not on every dashboard refresh. (Safe to call every time it's opened:
+// api()'s own short-lived cache means re-opening within ~20s is free.)
+function toggleMilkTable() {
+  toggleCard('cMilkTable');
+  if (document.getElementById('cMilkTable').classList.contains('open')) loadMilk();
+}
+
 // ══════════════════════════════════════════════
 // DATE HELPERS
 // ══════════════════════════════════════════════
@@ -889,10 +898,11 @@ function setLastMonth() {
 async function refreshDashboard() {
   const s=document.getElementById('dashStart').value, e=document.getElementById('dashEnd').value;
   if (!s||!e) return;
-  // Fire all three independent requests at once instead of one-after-another.
+  // Fire dashboard + milk-bill requests together; milk RECORDS table is
+  // loaded lazily (see toggleMilkTable()) since it starts collapsed and
+  // most dashboard visits never open it.
   const dashP = api('getDashboardData', { startDate:s, endDate:e });
-  updateMilkDashboard();   // independent — no need to wait on dashboard data
-  loadMilk();              // independent — no need to wait on dashboard data
+  updateMilkDashboard();
   try {
     const d = await dashP;
     const prev=d.prevMonthBalance||0, inc=d.totalIncome||0, exp=d.totalExpenses||0;
