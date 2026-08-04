@@ -276,6 +276,7 @@ tbody tr:hover { background: rgba(20,184,166,0.07); }
   body { background: #fff; color: #000; }
 }
 </style>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
 
@@ -586,96 +587,40 @@ tbody tr:hover { background: rgba(20,184,166,0.07); }
 'use strict';
 
 // ══════════════════════════════════════════════
-// CONFIG — API URL is fixed (no user-facing option)
+// SUPABASE CONFIG
+// URL is already filled in from your project link. Paste your anon
+// public key below — Project Settings → API → "anon" "public" key.
+// (The anon key is meant to be public/client-side; Row Level Security
+// on every table is what actually protects the data.)
 // ══════════════════════════════════════════════
-const API_URL       = 'https://script.google.com/macros/s/AKfycbwC4SrAe0-ruMwJ3cMWe3qoBOseb17tk6aRS4YA-wE51fOWnqf-oXTXYghk94itK5I41Q/exec';
-const LS_TOKEN_KEY = 'ledger_token';
-const LS_USER_KEY  = 'ledger_user';
+const SUPABASE_URL      = 'https://qqsbepqpkrpovfpyifzo.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFxc2JlcHFwa3Jwb3ZmcHlpZnpvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQzNDEzNjQsImV4cCI6MjA5OTkxNzM2NH0.5sPY4OmhMdqv20XTsDK8pHK8x8rMpRMioyKvdzLTgYc';
 
-function getApiUrl() { return API_URL; }
+const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-// ══════════════════════════════════════════════
-// PERF: response cache + in-flight de-dupe
-// Read-only actions are cached briefly so switching
-// tabs / re-rendering doesn't re-hit Apps Script.
-// Any mutating action clears the whole cache so data
-// never goes stale after a write.
-// ══════════════════════════════════════════════
-const _cache      = new Map();  // key -> { t: timestamp, data }
-const _inFlight   = new Map();  // key -> Promise (de-dupe concurrent identical calls)
-const CACHE_TTL   = {
-  getUserSettings:        5 * 60 * 1000,
-  getCategories:          5 * 60 * 1000,
-  getRecurringExpenses:   60 * 1000,
-  getDashboardData:       20 * 1000,
-  getTransactions:        20 * 1000,
-  getMilkDashboardData:   20 * 1000,
-  getMilkRecords:         20 * 1000,
-};
-const READ_ONLY = new Set(Object.keys(CACHE_TTL));
+// CNIC-based login is kept as-is on screen; under the hood it's mapped
+// to a synthetic email so it can use Supabase's built-in auth (real
+// password hashing, real session/JWT handling, RLS tied to auth.uid()
+// automatically) instead of a hand-rolled Users/Sessions table.
+const EMAIL_DOMAIN = '@ledger.local';
+function cnicToEmail(cnic) { return cnic + EMAIL_DOMAIN; }
 
-function _cacheKey(action, payload) { return action + ':' + JSON.stringify(payload || {}); }
-
-function invalidateCache() { _cache.clear(); }
-
-async function api(action, payload, requiresAuth) {
-  requiresAuth = requiresAuth !== false;
-
-  const isRead = READ_ONLY.has(action);
-  const key = _cacheKey(action, payload);
-
-  if (isRead) {
-    const hit = _cache.get(key);
-    if (hit && (Date.now() - hit.t) < CACHE_TTL[action]) return hit.data;
-    if (_inFlight.has(key)) return _inFlight.get(key); // de-dupe simultaneous calls
-  }
-
-  const body = { action, payload: payload || {} };
-  if (requiresAuth) {
-    const token = localStorage.getItem(LS_TOKEN_KEY);
-    if (!token) throw new Error('Not authenticated');
-    body.token = token;
-  }
-
-  const doFetch = (async () => {
-    let resp;
-    try {
-      // Use text/plain to avoid CORS preflight
-      resp = await fetch(API_URL, {
-        method:  'POST',
-        headers: { 'Content-Type': 'text/plain' },
-        body:    JSON.stringify(body)
-      });
-    } catch (networkErr) {
-      // "Failed to fetch" — no response reached the browser at all
-      // (offline, DNS/network blocked, or the request was blocked before it left the device)
-      throw new Error('Network error: could not reach the server. Check your internet connection and try again.');
-    }
-
-    if (!resp.ok) {
-      // Never surface the raw response body (can be a full HTML page and
-      // has caused the giant unreadable red error screen in the past).
-      let snippet = '';
-      try { snippet = (await resp.text()).replace(/<[^>]*>/g, ' ').trim().slice(0, 120); } catch (_) {}
-      throw new Error(`Server error (HTTP ${resp.status}). Please try again.` + (snippet ? ` [${snippet}]` : ''));
-    }
-
-    let data;
-    try { data = await resp.json(); }
-    catch (parseErr) { throw new Error('Server returned an unexpected response. Please try again.'); }
-
-    if (data && data.error) throw new Error(data.error);
-
-    if (isRead) _cache.set(key, { t: Date.now(), data });
-    if (!isRead) invalidateCache(); // any write can change downstream reads
-
-    return data;
-  })();
-
-  if (isRead) _inFlight.set(key, doFetch);
-  try { return await doFetch; }
-  finally { if (isRead) _inFlight.delete(key); }
+let _currentUserId = null;
+async function currentUserId() {
+  if (_currentUserId) return _currentUserId;
+  const { data: { user } } = await sb.auth.getUser();
+  _currentUserId = user ? user.id : null;
+  return _currentUserId;
 }
+
+function translateAuthError_(msg) {
+  if (!msg) return 'Something went wrong. Please try again.';
+  if (/already registered/i.test(msg))          return 'This CNIC is already registered.';
+  if (/invalid login credentials/i.test(msg))   return 'Invalid CNIC or PIN.';
+  if (/password.*at least/i.test(msg))          return 'PIN must meet the minimum length set in Supabase Auth settings.';
+  return msg;
+}
+
 // ══════════════════════════════════════════════
 // COUNTRIES
 // ══════════════════════════════════════════════
@@ -756,26 +701,33 @@ async function handleLogin() {
   btn.disabled = true;
   btn.innerHTML = '<span class="spinner"></span> Please wait…';
 
+  const email = cnicToEmail(cnic);
+
   try {
     if (loginMode === 'register') {
       const name = document.getElementById('loginName').value.trim();
       if (!name) { errEl.textContent = 'Enter your full name.'; btn.disabled=false; btn.textContent='📝 Create Account'; return; }
-      const res = await api('register', { cnic, name, pin }, false);
-      toast(res.message || 'Registered! Please sign in.', 'success');
+
+      const { error } = await sb.auth.signUp({
+        email, password: pin,
+        options: { data: { name, cnic } }
+      });
+      if (error) throw error;
+
+      toast('Registered! Please sign in.', 'success');
       switchLoginTab('login');
-      btn.disabled = false; btn.textContent='🔐 Sign In'; return;
+      btn.disabled = false; btn.textContent='🔐 Sign In';
+      return;
     }
 
-    const res = await api('login', { cnic, pin }, false);
-    if (res.success && res.token) {
-      localStorage.setItem(LS_TOKEN_KEY, res.token);
-      localStorage.setItem(LS_USER_KEY, JSON.stringify(res.user));
-      onLoginSuccess(res.user);
-    } else {
-      errEl.textContent = res.error || 'Invalid credentials.';
-    }
+    const { data, error } = await sb.auth.signInWithPassword({ email, password: pin });
+    if (error) throw error;
+
+    _currentUserId = data.user.id;
+    const user = { cnic, name: (data.user.user_metadata && data.user.user_metadata.name) || 'User' };
+    onLoginSuccess(user);
   } catch(e) {
-    errEl.textContent = e.message || 'Connection error.';
+    errEl.textContent = translateAuthError_(e.message);
   } finally {
     btn.disabled = false;
     btn.textContent = loginMode==='register' ? '📝 Create Account' : '🔐 Sign In';
@@ -792,9 +744,8 @@ function onLoginSuccess(user) {
 }
 
 async function handleLogout() {
-  try { await api('logout'); } catch(e) {}
-  localStorage.removeItem(LS_TOKEN_KEY);
-  localStorage.removeItem(LS_USER_KEY);
+  try { await sb.auth.signOut(); } catch(e) {}
+  _currentUserId = null;
   document.getElementById('appContent').style.display  = 'none';
   document.getElementById('loginScreen').style.display = 'flex';
   document.getElementById('loginCNIC').value = '';
@@ -809,7 +760,7 @@ function showLogin() {
 }
 
 // ══════════════════════════════════════════════
-// COUNTRY
+// COUNTRY / SETTINGS
 // ══════════════════════════════════════════════
 function applyCountry(code) {
   const c = COUNTRIES[code] || COUNTRIES.PK;
@@ -828,15 +779,23 @@ function fillCountryDrop(id) {
 }
 function openCountryModal() { fillCountryDrop('countrySelect'); document.getElementById('countryModal').style.display='flex'; }
 function closeCountryModal() { document.getElementById('countryModal').style.display='none'; }
+
+async function getUserSettingsData() {
+  const { data, error } = await sb.from('user_settings').select('country').maybeSingle();
+  if (error) throw error;
+  return { country: (data && data.country) || 'PK' };
+}
 async function saveCountry() {
   const code = document.getElementById('countrySelect').value;
   if (!code) { toast('Select a country.','error'); return; }
   try {
-    await api('saveUserSettings', { country:code });
+    const uid = await currentUserId();
+    const { error } = await sb.from('user_settings').upsert({ user_id: uid, country: code });
+    if (error) throw error;
     applyCountry(code); closeCountryModal();
     refreshDashboard(); loadTxns();
     toast('Currency updated','success');
-  } catch(e) { toast('Save failed','error'); }
+  } catch(e) { toast('Save failed: ' + e.message,'error'); }
 }
 
 // ══════════════════════════════════════════════
@@ -863,10 +822,7 @@ function toggleCard(id) {
   card.classList.toggle('closed', open);
 }
 
-// Milk Records table starts collapsed and is fetched separately from the
-// rest of the dashboard — only load it the moment it's actually opened,
-// not on every dashboard refresh. (Safe to call every time it's opened:
-// api()'s own short-lived cache means re-opening within ~20s is free.)
+// Milk Records table starts collapsed — only fetch it once it's opened.
 function toggleMilkTable() {
   toggleCard('cMilkTable');
   if (document.getElementById('cMilkTable').classList.contains('open')) loadMilk();
@@ -898,13 +854,11 @@ function setLastMonth() {
 async function refreshDashboard() {
   const s=document.getElementById('dashStart').value, e=document.getElementById('dashEnd').value;
   if (!s||!e) return;
-  // Fire dashboard + milk-bill requests together; milk RECORDS table is
-  // loaded lazily (see toggleMilkTable()) since it starts collapsed and
-  // most dashboard visits never open it.
-  const dashP = api('getDashboardData', { startDate:s, endDate:e });
-  updateMilkDashboard();
+  const dashP = sb.rpc('get_dashboard_data', { p_start: s, p_end: e });
+  updateMilkDashboard(); // independent — runs alongside, not after
   try {
-    const d = await dashP;
+    const { data: d, error } = await dashP;
+    if (error) throw error;
     const prev=d.prevMonthBalance||0, inc=d.totalIncome||0, exp=d.totalExpenses||0;
     const total=prev+inc, rem=total-exp;
     document.getElementById('kPrev').textContent      = fmt(prev);
@@ -922,10 +876,10 @@ async function refreshDashboard() {
 function renderCatRows(arr, id, color) {
   const el = document.getElementById(id);
   if (!arr||!arr.length) { el.innerHTML='<div class="empty">No data</div>'; return; }
-  const total = arr.reduce((s,i)=>s+i.total,0)||1;
-  arr.sort((a,b)=>b.total-a.total);
+  const total = arr.reduce((s,i)=>s+Number(i.total),0)||1;
+  arr = [...arr].sort((a,b)=>b.total-a.total);
   el.innerHTML = arr.map(c => {
-    const pct = Math.round((c.total/total)*100);
+    const pct = Math.round((Number(c.total)/total)*100);
     return `<div class="cat-row">
       <span class="cat-name">${escHtml(c.category)}</span>
       <span class="cat-count text-muted">${c.count}x</span>
@@ -978,7 +932,12 @@ async function saveTxn() {
   };
   if (!txn.date||!txn.category||isNaN(txn.amount)||txn.amount<=0) { toast('Fill all required fields','error'); return; }
   try {
-    await api('saveTransaction', txn);
+    const uid = await currentUserId();
+    const { error } = await sb.from('transactions').insert({
+      user_id: uid, date: txn.date, type: txn.type, category: txn.category,
+      amount: txn.amount, description: txn.description || ''
+    });
+    if (error) throw error;
     toast('Saved!','success');
     document.getElementById('txnAmt').value=''; document.getElementById('txnDesc').value='';
     document.getElementById('txnDate').value=today(); setTxnType('Income');
@@ -991,12 +950,21 @@ async function loadTxns() {
   const filter=document.getElementById('txnTypeFlt').value;
   if (!s||!e) return;
   try {
-    const res=await api('getTransactions',{startDate:s,endDate:e,typeFilter:filter});
-    document.getElementById('tKpiIncome').textContent   = fmt(res.totalIncome);
-    document.getElementById('tKpiExpenses').textContent = fmt(res.totalExpenses);
-    document.getElementById('tKpiNet').textContent      = fmt(res.netBalance);
-    document.getElementById('tKpiNet').className        = 'kpi-val ' + (res.netBalance>=0?'text-emerald':'text-rose');
-    renderTxnTable(res.transactions);
+    let q = sb.from('transactions').select('id,date,type,category,amount,description')
+      .gte('date', s).lte('date', e).order('date', { ascending:false });
+    if (filter) q = q.eq('type', filter);
+    const { data, error } = await q;
+    if (error) throw error;
+
+    let totalIncome=0, totalExpenses=0;
+    (data||[]).forEach(t => { if (t.type==='Income') totalIncome += Number(t.amount); else totalExpenses += Number(t.amount); });
+    const netBalance = totalIncome - totalExpenses;
+
+    document.getElementById('tKpiIncome').textContent   = fmt(totalIncome);
+    document.getElementById('tKpiExpenses').textContent = fmt(totalExpenses);
+    document.getElementById('tKpiNet').textContent      = fmt(netBalance);
+    document.getElementById('tKpiNet').className        = 'kpi-val ' + (netBalance>=0?'text-emerald':'text-rose');
+    renderTxnTable(data||[]);
   } catch(e2) { toast('Error loading transactions: ' + e2.message,'error'); }
 }
 
@@ -1037,18 +1005,26 @@ function populateEditCats() {
   (allCats[type]||[]).forEach(c=>sel.innerHTML+=`<option>${escHtml(c)}</option>`);
 }
 async function submitUpdate() {
-  const txn={
-    id:document.getElementById('eTxnId').value, date:document.getElementById('eTxnDate').value,
-    type:document.getElementById('eTxnType').value, category:document.getElementById('eTxnCat').value,
-    amount:parseFloat(document.getElementById('eTxnAmt').value), description:document.getElementById('eTxnDesc').value
-  };
-  try { await api('updateTransaction',txn); toast('Updated!','success'); closeEdit(); loadTxns(); refreshDashboard(); }
-  catch(e) { toast('Update failed: ' + e.message,'error'); }
+  const id = document.getElementById('eTxnId').value;
+  try {
+    const { error } = await sb.from('transactions').update({
+      date: document.getElementById('eTxnDate').value,
+      type: document.getElementById('eTxnType').value,
+      category: document.getElementById('eTxnCat').value,
+      amount: parseFloat(document.getElementById('eTxnAmt').value),
+      description: document.getElementById('eTxnDesc').value
+    }).eq('id', id);
+    if (error) throw error;
+    toast('Updated!','success'); closeEdit(); loadTxns(); refreshDashboard();
+  } catch(e) { toast('Update failed: ' + e.message,'error'); }
 }
 async function delTxn(id) {
   if (!confirm('Delete this transaction?')) return;
-  try { await api('deleteTransaction',{id}); toast('Deleted','warn'); loadTxns(); refreshDashboard(); }
-  catch(e) { toast('Delete failed: ' + e.message,'error'); }
+  try {
+    const { error } = await sb.from('transactions').delete().eq('id', id);
+    if (error) throw error;
+    toast('Deleted','warn'); loadTxns(); refreshDashboard();
+  } catch(e) { toast('Delete failed: ' + e.message,'error'); }
 }
 
 async function exportCSV() {
@@ -1056,13 +1032,17 @@ async function exportCSV() {
   const filter=document.getElementById('txnTypeFlt').value;
   if (!s||!e) { toast('Choose a period first','error'); return; }
   try {
-    const res=await api('getTransactions',{startDate:s,endDate:e,typeFilter:filter});
+    let q = sb.from('transactions').select('date,type,category,amount,description')
+      .gte('date', s).lte('date', e).order('date', { ascending:false });
+    if (filter) q = q.eq('type', filter);
+    const { data, error } = await q;
+    if (error) throw error;
     let csv='Date,Type,Category,Amount,Description\n';
-    res.transactions.forEach(t=>{csv+=`${t.date},${t.type},"${t.category}",${t.amount},"${t.description||''}"\n`;});
+    (data||[]).forEach(t=>{csv+=`${t.date},${t.type},"${t.category}",${t.amount},"${t.description||''}"\n`;});
     const a=document.createElement('a'); a.href='data:text/csv;charset=utf-8,'+encodeURIComponent(csv);
     a.download=`transactions_${s}_${e}.csv`; a.click();
     toast('CSV exported!','success');
-  } catch(e) { toast('Export failed','error'); }
+  } catch(e) { toast('Export failed: ' + e.message,'error'); }
 }
 
 // ══════════════════════════════════════════════
@@ -1070,10 +1050,16 @@ async function exportCSV() {
 // ══════════════════════════════════════════════
 async function loadCatsForSettings() {
   try {
-    const res=await api('getCategories');
-    allCats=res.categories||{Income:[],Expense:[]};
+    allCats = await getCategoriesData();
     renderSettingsCats(); fillTxnCatDrop(); fillRecCatDrop();
-  } catch(e) { toast('Error loading categories','error'); }
+  } catch(e) { toast('Error loading categories: ' + e.message,'error'); }
+}
+async function getCategoriesData() {
+  const { data, error } = await sb.from('categories').select('type,name').order('name');
+  if (error) throw error;
+  const result = { Income: [], Expense: [] };
+  (data||[]).forEach(r => { if (result[r.type]) result[r.type].push(r.name); });
+  return result;
 }
 function renderSettingsCats() {
   document.getElementById('incomeCatList').innerHTML  = (allCats.Income||[]).map(c=>catChipHTML('Income',c)).join('')||'<div class="empty">No categories</div>';
@@ -1092,18 +1078,28 @@ function catChipHTML(type,c) {
 async function addCat(type) {
   const inp=document.getElementById(type==='Income'?'newIncomeCat':'newExpenseCat');
   const name=inp.value.trim(); if (!name) return;
-  try { await api('addCategory',{type,name}); inp.value=''; loadCatsForSettings(); toast('Added!','success'); }
-  catch(e) { toast('Failed: '+e.message,'error'); }
+  try {
+    const uid = await currentUserId();
+    const { error } = await sb.from('categories').insert({ user_id: uid, type, name });
+    if (error) throw error;
+    inp.value=''; loadCatsForSettings(); toast('Added!','success');
+  } catch(e) { toast('Failed: '+e.message,'error'); }
 }
 async function editCat(type,old) {
   const n=prompt('Rename:',old); if (!n||n===old) return;
-  try { await api('updateCategory',{type,oldName:old,newName:n}); loadCatsForSettings(); refreshDashboard(); toast('Renamed','success'); }
-  catch(e) { toast('Failed: '+e.message,'error'); }
+  try {
+    const { error } = await sb.rpc('rename_category', { p_type: type, p_old_name: old, p_new_name: n });
+    if (error) throw error;
+    loadCatsForSettings(); refreshDashboard(); toast('Renamed','success');
+  } catch(e) { toast('Failed: '+e.message,'error'); }
 }
 async function deleteCat(type,name) {
   if (!confirm(`Delete "${name}"?`)) return;
-  try { await api('deleteCategory',{type,name}); loadCatsForSettings(); refreshDashboard(); toast('Deleted','warn'); }
-  catch(e) { toast('Failed: '+e.message,'error'); }
+  try {
+    const { error } = await sb.from('categories').delete().eq('type', type).eq('name', name);
+    if (error) throw error;
+    loadCatsForSettings(); refreshDashboard(); toast('Deleted','warn');
+  } catch(e) { toast('Failed: '+e.message,'error'); }
 }
 
 // ══════════════════════════════════════════════
@@ -1111,8 +1107,9 @@ async function deleteCat(type,name) {
 // ══════════════════════════════════════════════
 async function loadRecurring() {
   try {
-    const res=await api('getRecurringExpenses');
-    recurData=res.expenses||[];
+    const { data, error } = await sb.from('recurring_expenses').select('id,name,amount,category').order('created_at');
+    if (error) throw error;
+    recurData = data || [];
     renderRecurringDash(); renderRecurringSett();
   } catch(e) { console.error('Recurring load error',e); }
 }
@@ -1122,15 +1119,20 @@ async function addRecurring() {
   const category=document.getElementById('newRecCat').value;
   if (!name||isNaN(amount)||amount<=0) { toast('Invalid input','error'); return; }
   try {
-    await api('addRecurringExpense',{name,amount,category});
+    const uid = await currentUserId();
+    const { error } = await sb.from('recurring_expenses').insert({ user_id: uid, name, amount, category });
+    if (error) throw error;
     document.getElementById('newRecName').value=''; document.getElementById('newRecAmt').value='';
     loadRecurring(); toast('Added!','success');
   } catch(e) { toast('Failed: '+e.message,'error'); }
 }
 async function delRecurring(id) {
   if (!confirm('Remove?')) return;
-  try { await api('deleteRecurringExpense',{id}); loadRecurring(); }
-  catch(e) { toast('Failed: '+e.message,'error'); }
+  try {
+    const { error } = await sb.from('recurring_expenses').delete().eq('id', id);
+    if (error) throw error;
+    loadRecurring();
+  } catch(e) { toast('Failed: '+e.message,'error'); }
 }
 function renderRecurringDash() {
   const el=document.getElementById('recurringDashBody');
@@ -1177,7 +1179,13 @@ async function saveMilk() {
     if (record.liters<=0) { toast('Enter extra liters','error'); return; }
   }
   try {
-    await api('saveMilkRecord',record);
+    // Uses save_milk_record RPC so the "default to latest standard rate"
+    // behavior for extra/absent entries stays server-side, same as before.
+    const { error } = await sb.rpc('save_milk_record', {
+      p_date: record.date, p_record_type: record.recordType,
+      p_liters: record.liters || 0, p_price: record.pricePerLiter || 0, p_notes: record.notes || ''
+    });
+    if (error) throw error;
     toast('Milk record saved!','success');
     document.getElementById('milkStdLiters').value='';
     document.getElementById('milkExtraLiters').value='';
@@ -1187,7 +1195,8 @@ async function saveMilk() {
 
 async function updateMilkDashboard() {
   try {
-    const data=await api('getMilkDashboardData');
+    const { data, error } = await sb.rpc('get_milk_dashboard');
+    if (error) throw error;
     document.getElementById('milkEst').textContent     = fmt(data.currentMonthBill);
     document.getElementById('milkPrevEst').textContent = fmt(data.previousMonthBill);
   } catch(e) { console.error(e); }
@@ -1196,9 +1205,17 @@ async function updateMilkDashboard() {
 async function loadMilk() {
   const s=document.getElementById('dashStart').value, e=document.getElementById('dashEnd').value;
   try {
-    const d=await api('getMilkRecords',{startDate:s,endDate:e});
-    renderMilkTable(d.records||[]);
-  } catch(e2) { toast('Error loading milk records','error'); }
+    const { data, error } = await sb.from('milk_records')
+      .select('id,date,record_type,liters,price_per_liter,notes')
+      .gte('date', s).lte('date', e).order('date', { ascending:false });
+    if (error) throw error;
+    const records = (data||[]).map(r => ({
+      id: r.id, date: r.date, recordType: r.record_type,
+      liters: Number(r.liters), pricePerLiter: Number(r.price_per_liter),
+      amount: Number(r.liters) * Number(r.price_per_liter), notes: r.notes || ''
+    }));
+    renderMilkTable(records);
+  } catch(e2) { toast('Error loading milk records: ' + e2.message,'error'); }
 }
 
 function renderMilkTable(records) {
@@ -1235,21 +1252,26 @@ function openEditMilk(r) {
 }
 function closeEditMilk() { document.getElementById('editMilkModal').style.display='none'; }
 async function submitUpdateMilk() {
-  const rec={
-    id:document.getElementById('eMilkId').value,
-    date:document.getElementById('eMilkDateModal').value,
-    recordType:document.getElementById('eMilkType').value,
-    liters:parseFloat(document.getElementById('eMilkLiters').value)||0,
-    pricePerLiter:parseFloat(document.getElementById('eMilkPrice').value)||0,
-    notes:''
-  };
-  try { await api('updateMilkRecord',rec); toast('Updated!','success'); closeEditMilk(); loadMilk(); updateMilkDashboard(); }
-  catch(e) { toast('Update failed: '+e.message,'error'); }
+  const id = document.getElementById('eMilkId').value;
+  try {
+    const { error } = await sb.from('milk_records').update({
+      date: document.getElementById('eMilkDateModal').value,
+      record_type: document.getElementById('eMilkType').value,
+      liters: parseFloat(document.getElementById('eMilkLiters').value)||0,
+      price_per_liter: parseFloat(document.getElementById('eMilkPrice').value)||0,
+      notes: ''
+    }).eq('id', id);
+    if (error) throw error;
+    toast('Updated!','success'); closeEditMilk(); loadMilk(); updateMilkDashboard();
+  } catch(e) { toast('Update failed: '+e.message,'error'); }
 }
 async function delMilk(id) {
   if (!confirm('Delete this milk record?')) return;
-  try { await api('deleteMilkRecord',{id}); toast('Deleted','warn'); loadMilk(); updateMilkDashboard(); }
-  catch(e) { toast('Failed: '+e.message,'error'); }
+  try {
+    const { error } = await sb.from('milk_records').delete().eq('id', id);
+    if (error) throw error;
+    toast('Deleted','warn'); loadMilk(); updateMilkDashboard();
+  } catch(e) { toast('Failed: '+e.message,'error'); }
 }
 
 // ══════════════════════════════════════════════
@@ -1271,16 +1293,14 @@ async function initApp() {
   document.getElementById('milkDate').value = td;
   setMilkType('standard');
 
-  // getUserSettings and getCategories are independent — fetch together.
-  const settingsP = api('getUserSettings').catch(() => null);
-  const catsP     = api('getCategories').catch(e => { throw e; });
+  const settingsP = getUserSettingsData().catch(() => ({ country:'PK' }));
+  const catsP     = getCategoriesData();
 
-  const [sv] = await Promise.all([settingsP]);
-  applyCountry((sv&&sv.settings&&sv.settings.country)?sv.settings.country:'PK');
+  const sv = await settingsP;
+  applyCountry(sv.country || 'PK');
 
   try {
-    const cats=await catsP;
-    allCats=cats.categories||{Income:[],Expense:[]};
+    allCats = await catsP;
     fillTxnCatDrop(); fillRecCatDrop();
     await Promise.all([refreshDashboard(), loadRecurring()]);
   } catch(e) { toast('Error loading data: '+e.message,'error'); console.error(e); }
@@ -1289,8 +1309,7 @@ async function initApp() {
 // ══════════════════════════════════════════════
 // BOOTSTRAP — runs on page load
 // ══════════════════════════════════════════════
-document.addEventListener('DOMContentLoaded', () => {
-  // CNIC input formatting
+document.addEventListener('DOMContentLoaded', async () => {
   const cnicInput=document.getElementById('loginCNIC');
   if (cnicInput) {
     cnicInput.addEventListener('input', function() {
@@ -1311,19 +1330,19 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // Enter key on login screen
   document.addEventListener('keypress', e=>{
     if (e.key==='Enter' && document.getElementById('loginScreen').style.display!=='none') handleLogin();
   });
 
-  // Check if already logged in (token in localStorage)
-  const savedToken=localStorage.getItem(LS_TOKEN_KEY);
-  const savedUser =localStorage.getItem(LS_USER_KEY);
-  if (savedToken && savedUser) {
-    // Validate token with server
-    const user=JSON.parse(savedUser);
-    document.getElementById('userNameDisplay').textContent=user.name||'User';
-    document.getElementById('userAv').textContent=(user.name||'U')[0].toUpperCase();
+  // supabase-js persists the session itself (localStorage, under its own
+  // key) — no need for a manual token/localStorage dance here.
+  const { data: { session } } = await sb.auth.getSession();
+  if (session && session.user) {
+    _currentUserId = session.user.id;
+    const cnic = (session.user.email || '').split('@')[0];
+    const name = (session.user.user_metadata && session.user.user_metadata.name) || 'User';
+    document.getElementById('userNameDisplay').textContent = name;
+    document.getElementById('userAv').textContent = (name[0]||'U').toUpperCase();
     document.getElementById('loginScreen').style.display ='none';
     document.getElementById('appContent').style.display  ='block';
     initApp();
@@ -1331,6 +1350,7 @@ document.addEventListener('DOMContentLoaded', () => {
     showLogin();
   }
 });
+
 </script>
 </body>
 </html>
